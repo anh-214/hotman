@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @section('title')
-    Đăng nhập
+    Quên mật khẩu
 @endsection
 
 @section('content')    
@@ -18,9 +18,6 @@
                 <div class="card-header pb-0 text-left bg-transparent">
                   <h3 class="font-weight-bolder text-info text-gradient">Đừng lo lắng</h3>
                   <p class="mb-0">Nhập email của bạn để tiến hành tạo lại mật khẩu mới</p>
-                  @isset($loginFailed)
-                    <small class="form-text text-muted"><span class="text-danger">{{$loginFailed}}</span></small>
-                  @endisset
                 </div>
                 <div class="card-body">
                   <form role="form" method="POST">
@@ -28,6 +25,8 @@
                     <label>Email</label>
                     <div class="mb-3">
                       <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon" name="email">
+                      <div class="invalid-feedback" id="errorEmail">
+                      </div>
                     </div>
                     <div class="text-center">
                       <button type="button" class="btn bg-gradient-info w-100 mt-4 mb-0" id="btnForgotPassword">Tạo mật khẩu mới</button>
@@ -46,13 +45,65 @@
       </div>
     </section>
   </main>
-  
+
+{{-- modal notification update --}}
+<div class="modal fade" id="notificationResetPasswordModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="textNotificationResetPasswordModal">
+              Vui lòng kiểm tra email của bạn
+          </div>
+          <div class="modal-footer">
+              <button class="btn bg-gradient-info" id="closeNotificationResetPasswordModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+          </div>
+      </div>
+  </div>
+</div>
 @endsection
 @push('js')
   <script>
     $(document).ready(function(){
       $("#btnForgotPassword").click(function(){
-        
+        $checkEmail = false
+        let $regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        $emailInput = $("input[name=email]")
+        if ($emailInput.val() == ''){
+                $emailInput.addClass('is-invalid')
+                $("#errorEmail").text("Trường này không được để trống")
+                $checkEmail = false
+            } else if ($regexEmail.test($emailInput.val()) == false){
+                $emailInput.addClass('is-invalid')
+                $("#errorEmail").text("Nhập đúng định dạng email")
+                $checkEmail = false
+            } else {
+                $emailInput.removeClass('is-invalid')
+                $("#errorEmail").text("")
+                $checkEmail = true
+            }
+            if ($checkEmail == true){
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/admin/forgotpassword",
+                    timeout: 3000,
+                    data: {"_token": "{{ csrf_token() }}", 'email': $emailInput.val()},
+                    success: function(data){
+                        if (data.result == 'notExists'){
+                          $emailInput.addClass('is-invalid')
+                          $("#errorEmail").text("Email này chưa được đăng ký")
+                        } else {
+                          $("#notificationResetPasswordModal").modal('show')
+                        }
+                    },
+                });
+            }
+      })   
+      $('#closeNotificationResetPasswordModal').click(function(){
+        location.reload()
       })
     });
   </script>

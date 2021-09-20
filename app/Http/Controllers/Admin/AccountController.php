@@ -15,17 +15,14 @@ use Image;
 use Illuminate\Support\Str;
 class AccountController extends Controller
 {
-    public function index(){
-        $select = 'manager';
-        $admins = DB::table('admins')->get();
-        return view('backend.dashboard.manager',compact(['select','admins']));
-    }
+
     public function delete(Request $request){
         if( $request->ajax()){
             $id = $request->input('deleteId');
             $password = $request->input('confirmPassword');
             if (Hash::check($password, Auth::guard('admin')->user()->password)){
-                DB::table('admins')->where('id', $id)->delete();
+                Admin::where('id', $id)->delete();
+                Storage::disk('admin-avatar')->delete($id.'.png');
                 return response()->json([
                     'result' => 'success'
                 ]);
@@ -41,9 +38,6 @@ class AccountController extends Controller
         if( $request->ajax()){
             $name = $request->input('name');
             $id = $request->input('id');
-            DB::table('admins')->where('id', $id)->update([
-                'name' => $name,
-            ]);
             if ($file = $request->input('upload')){
                 $image_parts = explode(";base64,", $file);
                 $image_type_aux = explode("image/", $image_parts[0]);
@@ -51,8 +45,15 @@ class AccountController extends Controller
                 $image_base64 = base64_decode($image_parts[1]);
                 $imageName = $id.'.png';
                 Storage::disk('admin-avatar')->put($imageName, $image_base64);
-                DB::table('admins')->where('id',$id)->update([
-                    'avatar' => $imageName
+                Admin::where('id',$id)->update([
+                    'avatar' => $imageName,
+                    'name' => $name,
+                    'updated_at' => now()
+                ]);
+            } else {
+                Admin::findOrFail($id)->update([
+                    'name' => $name,
+                    'updated_at' => now()
                 ]);
             };
             return response()->json([
@@ -71,7 +72,7 @@ class AccountController extends Controller
         ]);
         Admin::create($request->input());
 
-        DB::table('admins')->where('email',$request->input('email'))->update([
+        Admin::where('email',$request->input('email'))->update([
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(60),
         ]);
@@ -94,12 +95,8 @@ class AccountController extends Controller
             ]);
         }
     }
-    public function profile(){
-        $select = 'profile';
-        $admin = Auth::guard('admin')->user();
-        return view('backend.dashboard.profile',compact(['select','admin']));
-    }
-    public function updateProfile(Request $request){
+    
+    public function changePassword(Request $request){
         if( $request->ajax()){
             $oldPassword = $request->input('oldPassword');
             $password = $request->input('password');

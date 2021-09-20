@@ -78,6 +78,17 @@ return [
                 'log',
             ],
         ],
+        'mailtrap' => [
+            'transport' => 'smtp',
+            'host' => 'smtp.mailtrap.io',
+            'port' =>  465,
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => '41c6d4afa4cc6f',
+            'password' => 'a291a4409af4de',
+            // 'timeout' => null,
+            // 'auth_mode' => null,
+        ],
+
     ],
 
     /*
@@ -92,7 +103,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'chutrairau@gmail.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 

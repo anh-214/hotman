@@ -25,9 +25,9 @@
                 <h5 class="mb-1">
                     {{$admin->name}}
                 </h5>
-                {{-- <p class="mb-0 font-weight-bold text-sm">
-                    CEO / Co-Founder
-                </p> --}}
+                <p class="mb-0 font-weight-bold text-sm">
+                    {{$admin->email}}
+                </p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
@@ -379,9 +379,8 @@
     max-width: 1000px !important;
     
     }
-    /* .modal-custom{
-        max-width: 500px !important;
-    } */
+    .btn{
+        margin-bottom: 0px
     }
     </style>
 @endpush
@@ -463,9 +462,9 @@
                     $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/profile/update",
+                    url: "/admin/profile/changepassword",
                     timeout: 3000,
-                    data: {"_token": "{{ csrf_token() }}", 'oldPassword': $oldPasswordInput.val(), 'password': $("input[name=emailInput]").val(), 'password': $passwordInput.val()},
+                    data: {"_token": "{{ csrf_token() }}", 'oldPassword': $oldPasswordInput.val(), 'password': $passwordInput.val()},
                     success: function(data){
                         if (data.result == 'success'){
                             // location.reload()
@@ -571,7 +570,7 @@
                             $.ajax({
                                 type: "POST",
                                 dataType: "json",
-                                url: "/admin/manager/update",
+                                url: "/admin/profile/update",
                                 data: {"_token": "{{ csrf_token() }}", 'upload': base64data, 'id': $("#confirmUpdateId").val(), 'name': $("#updateNameInput").val()},
                                 success: function(data){
                                     $("#notificationUpdateModal").modal('show')

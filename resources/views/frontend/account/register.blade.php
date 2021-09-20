@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+@extends('frontend.account.layouts.app')
 
 @section('title')
     Đăng ký

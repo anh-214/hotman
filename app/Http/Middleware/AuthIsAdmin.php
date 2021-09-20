@@ -20,7 +20,7 @@ class AuthIsAdmin
         if (Auth::guard('admin')->check()){
             return $next($request);
         } else {
-            return back();
+            return redirect('/admin/login');
         }
     }
 }

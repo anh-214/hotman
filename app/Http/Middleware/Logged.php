@@ -18,7 +18,7 @@ class Logged
     public function handle(Request $request, Closure $next)
     {
         if (Auth::guard('admin')->check()){
-            return back();
+            return redirect('admin/dashboard');
         } else {
             return $next($request);    
         }

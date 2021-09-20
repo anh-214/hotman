@@ -52,10 +52,10 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{$admin->created_at}}</span>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <a type="button" class="text-secondary font-weight-bold text-xl" >
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" >
                                                 <span class="badge badge-sm bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="{{$admin->id}}" data-name="{{$admin->name}}">Cập nhật</span>
                                             </a>
-                                            <a type="button" class="text-secondary font-weight-bold text-xl" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-email="{{$admin->email}}" data-id="{{$admin->id}}">
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-email="{{$admin->email}}" data-id="{{$admin->id}}">
                                             <span class="badge badge-sm bg-gradient-danger" >Xóa</span>
                                             </a>
                                         </td>
@@ -294,48 +294,6 @@
                 </div>
             </div> --}}
         </div>
-        
-        {{-- notification session modal --}}
-        {{-- @if (session()->has('deleteSuccess'))
-        <div class="modal fade" id="notificationModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                            {{session()->get('deleteSuccess')}}
-                            @php session()->forget('deleteSuccess')
-                            @endphp
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @elseif (session()->has('deleteFailed'))
-        <div class="modal fade" id="notificationModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                            {{session()->get('deleteFailed')}}
-                            @php session()->forget('deleteFailed')
-                            @endphp
-                        
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>                    
-        @endif      --}}
 
         {{-- modal delete --}}
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -456,7 +414,7 @@
                     <div class="modal-body">
                         <form class="needs-validation" enctype="multipart/form-data" method="POST">
                             @csrf
-                            <div class="mb-3">
+                            <div class="mb-3 no-border-bottom">
                                 @error('email')
                                 <small class="form-text text-muted"><span class="text-danger">{{$message}}</span></small>
                                 @enderror
@@ -544,9 +502,19 @@
     /* .modal-custom{
         max-width: 500px !important;
     } */
+    .no-border-bottom{
+        margin-bottom: 0px
     }
-    </style>
+    .modal-footer{
+        border-top: 0px;
+        padding-bottom: 0px
+    }
+    .modal-body{
+        padding-bottom: 0px
+    }
+</style>
 @endpush
+
 @push('js')
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>

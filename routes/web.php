@@ -20,3 +20,7 @@ Route::get('/logout',[AuthenticateController::class,'logout']);
 Route::get('/register', function(){
     return view('frontend.account.register');
 });
+
+Route::get('contact', function () {
+    return view('frontend.contact');
+});

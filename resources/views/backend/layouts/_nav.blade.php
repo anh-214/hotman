@@ -1,7 +1,4 @@
- <!-- Navbar -->
- {{-- session --}}
- 
-{{-- modal --}}
+
 
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
     
@@ -14,17 +11,11 @@
                 </a>
             </li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
-                @if ($select == 'manager') {{'Quản lí tài khoản'}}
-                @elseif ($select == 'dashboard') {{'Dashboard'}}
-                @elseif ($select == 'profile') {{'Hồ sơ của tôi'}}
-                @endif
+                {{$select}}
             </li>
         </ol>
         <h6 class="font-weight-bolder mb-0">
-            @if ($select == 'manager') {{'Quản lí tài khoản'}}
-            @elseif ($select == 'dashboard') {{'Dashboard'}}
-            @elseif ($select == 'profile') {{'Hồ sơ của tôi'}}
-            @endif
+            {{$select}}
         </h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
