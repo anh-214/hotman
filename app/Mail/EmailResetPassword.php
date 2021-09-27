@@ -7,7 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
-class EmailResetPassword extends Mailable implements ShouldQueue
+// class EmailResetPassword extends Mailable implements ShouldQueue
+class EmailResetPassword extends Mailable
 {
     use Queueable, SerializesModels;
     protected $token;
@@ -29,6 +30,6 @@ class EmailResetPassword extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('mail.index',['email'=> $this->email,'token'=> $this->token])->subject('Reset mật khẩu');
+        return $this->view('mail.resetPassword',['email'=> $this->email,'token'=> $this->token])->subject('Reset mật khẩu');
     }
 }

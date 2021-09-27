@@ -57,9 +57,11 @@ Route::group(['prefix' => '/admin'],function () {
         Route::post('/types/getImages',[TypeController::class,'getImages']);
         Route::post('/types/getProductId',[TypeController::class,'getProductId']);
 
+        Route::get('/importcsv',[TypeController::class,'showImportCsvForm']);
+        Route::post('/importcsv',[TypeController::class,'importCsv']);
         
     });
-    Route::get('/login', [AuthenticateController::class,'showLoginForm'])->middleware('logged');
+    Route::get('/login', [AuthenticateController::class,'showLoginForm'])->middleware('adminlogged');
     Route::get('/forgotpassword',[AuthenticateController::class,'showForgotPasswordForm']);
     Route::post('/forgotpassword',[AuthenticateController::class,'forgotPassword']);
     Route::get('/createpassword/{token}',[AuthenticateController::class, 'verifyTokenCreatePassword']);

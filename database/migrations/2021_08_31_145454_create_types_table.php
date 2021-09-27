@@ -19,11 +19,10 @@ class CreateTypesTable extends Migration
             $table->string('price')->nullable();
             $table->string('initial_price');
             $table->string('sizes');
-            $table->string('designs');
-            $table->string('details');
-            $table->string('material');
+            $table->text('designs');
+            $table->text('details');
+            $table->text('material');
             $table->string('colors');
-            $table->string('images')->nullable();;
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();

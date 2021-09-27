@@ -44,6 +44,7 @@ class AccountController extends Controller
                 $image_type = $image_type_aux[1];
                 $image_base64 = base64_decode($image_parts[1]);
                 $imageName = $id.'.png';
+                Storage::disk('admin-avatar')->delete($imageName);
                 Storage::disk('admin-avatar')->put($imageName, $image_base64);
                 Admin::where('id',$id)->update([
                     'avatar' => $imageName,

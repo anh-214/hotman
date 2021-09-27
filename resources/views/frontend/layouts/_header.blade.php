@@ -44,13 +44,20 @@
 				</div>
 			</div>
 			<!-- End Topbar --> --}}
+			@if (Auth::check())
+				@if (Auth::guard('web')->user()->phonenumber == null)
+					<div class="alert alert-warning" role="alert">
+						Vui lòng cập nhật thêm số điện thoại, <a style="color: black;font-weight:bold" href="{{url('/user/information')}}">nhấn vào đây</a>
+					</div>
+				@endif
+			@endif
 			<div class="middle-inner">
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-2 col-md-2 col-12">
 							<!-- Logo -->
 							<div class="logo">
-								<a href="index.html"><img src="{{asset('frontend/assets/images/logo.png')}}" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('backend/assets/images/logoHotMan.png')}}" alt="logo"></a>
 							</div>
 							<!--/ End Logo -->
 							<!-- Search Form -->
@@ -87,20 +94,45 @@
 						<div class="col-lg-2 col-md-3 col-12">
 							<div class="right-bar">
 								<!-- Search Form -->
-								<div class="sinlge-bar">
+								{{-- <div class="sinlge-bar">
 									<a href="#" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-								</div>
+								</div> --}}
 								<div class="sinlge-bar user">
 									<a href="#" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
 									{{--user --}}
 									<div class="shopping-user">
-										<div class="dropdown-user-header">
-											<a href="{{url('/login')}}" type="button" class="btn btn-primary">Đăng nhập</a>
-										</div>
-										<div class="dropdown-user-register">
-											<span>Bạn chưa có tài khoản ?</span>
-											<a href="{{url('/register')}}" >Đăng Ký</a>
-										</div>
+										@if (Auth::guard('web')->check())
+											<div class="dropdown-user-header" style="text-align: left;">
+												<p>
+													Xin chào, <span>{{Auth::guard('web')->user()->name}}</span>
+												</p>
+												<img src="
+												@if (filter_var(Auth::guard('web')->user()->avatar, FILTER_VALIDATE_URL))
+													{{Auth::guard('web')->user()->avatar}}
+												@else
+													{{Storage::disk('user-avatar')->url(Auth::guard('web')->user()->avatar == null ? 'unknown.png' : Auth::guard('web')->user()->avatar)}}
+												@endif
+												" alt="">
+											</div>
+											<div class="dropdown-user-action">
+												<p><a href="{{url('/user/information')}}">Thông tin tài khoản</a></p>
+												@if (Auth::guard('web')->user()->password_is_null == 'False')
+													<p><a href="{{url('/user/changepassword')}}">Đổi mật khẩu</a></p>
+												@endif
+												@if (Auth::guard('web')->user()->password_is_null == 'True')
+													<p id="showModalConfirmCreatePassword" style="cursor: pointer;">Tạo mật khẩu (Không bắt buộc)</p>
+												@endif
+												<a href="{{url('/user/logout')}}" style="color: #F7941D">Đăng xuất</a>
+											</div>
+										@else
+											<div class="dropdown-user-header">
+												<a href="{{url('/user/login')}}" type="button" class="btn btn-primary">Đăng nhập</a>
+											</div>
+											<div class="dropdown-user-register">
+												<span>Bạn chưa có tài khoản ?</span>
+												<a href="{{url('/user/register')}}" >Đăng Ký</a>
+											</div>
+										@endif
 									</div>
 								</div>
 								<div class="sinlge-bar shopping">
@@ -192,8 +224,10 @@
 				<div class="col-12">
 					<div class="bread-inner">
 						<ul class="bread-list">
-							<li><a href="index1.html">Home<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="blog-single.html">Contact</a></li>
+							<li><a href="{{url('/home')}}">Home</a></li>
+							@foreach ( $breadCrumbs as $breadCrumb )
+								<li class=""><i class="ti-arrow-right"></i><a href="{{url($breadCrumb['link'])}}">{{$breadCrumb['name']}}</a></li>
+							@endforeach
 						</ul>
 					</div>
 				</div>
@@ -201,4 +235,5 @@
 		</div>
 	</div>
 	<!-- End Breadcrumbs -->
-  
+	{{-- toast --}}
+

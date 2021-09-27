@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <input type="hidden" name="type_id" value="{{$type->id}}">
                                 @foreach ($colors as $color)
-                                    <label>{{$color}}</label>
+                                    <label>Chọn ảnh cho màu: {{$color}}</label>
                                 @php
                                     $color = str_replace(" ","-",$color);
                                 @endphp

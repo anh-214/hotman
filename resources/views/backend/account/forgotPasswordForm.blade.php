@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+@extends('backend.account.layouts.app')
 @section('title')
     Quên mật khẩu
 @endsection

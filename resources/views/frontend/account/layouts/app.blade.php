@@ -18,10 +18,49 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('backend/assets/css/soft-ui-dashboard.css?v=1.0.3') }}" rel="stylesheet" />
     @stack('link')
+    @stack('css')
 </head>
 <body>
-        @yield('content')
-        @include('frontend.account.layouts._footer')
+<div class="g-sidenav-show  bg-gray-100">
+
+    {{-- <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3  navbar-transparent mt-4">
+        <div class="container">
+        
+        <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon mt-2">
+            <span class="navbar-toggler-bar bar1"></span>
+            <span class="navbar-toggler-bar bar2"></span>
+            <span class="navbar-toggler-bar bar3"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
+            <ul class="navbar-nav navbar-nav-hover mx-auto">
+            <li class="nav-item dropdown dropdown-hover mx-2">
+                <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false">
+                Trang chủ
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-hover mx-2">
+                <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
+                Về chúng tôi
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-hover mx-2">
+                <a role="button" href="{{url('/contact')}}" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " >
+                Liên hệ
+                </a>
+            </li>
+            </ul>
+            <ul class="navbar-nav d-lg-block d-none">
+            
+            </ul>
+        </div>
+        </div>
+    </nav> --}}
+    @yield('content')
+    @include('frontend.account.layouts._footer')
+</div>
     <script src="{{asset('backend/assets/js/core/popper.min.js') }}"></script>
     <script src="{{asset('backend/assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{asset('backend/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>

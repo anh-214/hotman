@@ -27,7 +27,7 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="p-2 mx-0">
+                                    <th class="p-4">
                                         <span class="custom-checkbox">
                                             <input type="checkbox" id="selectAll">
                                             <label for="selectAll"></label>
@@ -88,7 +88,7 @@
                                 @isset($products) 
                                 @foreach ($products as $product )
                                     <tr>
-                                        <td class="p-2 mx-0">
+                                        <td class="p-4">
                                             <span class="custom-checkbox">
                                                 <input type="checkbox" class="checkbox" name="checkbox[]" value="{{$product->id}}">
                                                 <label></label>

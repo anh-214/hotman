@@ -58,6 +58,12 @@ return [
             'url' => env('APP_URL').'/storage/admin/avatars',
             'visibility' => 'public',
         ],
+        'user-avatar' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/user/avatars'),
+            'url' => env('APP_URL').'/storage/user/avatars',
+            'visibility' => 'public',
+        ],
         'type-image' => [
             'driver' => 'local',
             'root' => storage_path('app/public/types/'),

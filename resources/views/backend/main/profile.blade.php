@@ -3,6 +3,7 @@
 @section('title')
     Hồ sơ của tôi
 @endsection
+
 @push('link')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>    
 @endpush
@@ -179,13 +180,11 @@
                                 <input type="file" class="form-control image" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="upload" accept="image/*">
                             </div>
                         </div>
-                        <div class="img-container">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="preview" id="preview"></div>
                                 </div>
                             </div>
-                        </div>
                         <div class="d-flex flex-row-reverse">
                             <button type="button" id="updateInformationButton" class="btn btn-success">Cập nhật</button>
                         </div>
@@ -343,7 +342,6 @@
                     </button>         
                 </div>
                 <div class="modal-body">
-                    <div class="img-container">
                         <div class="row">
                             <div class="col-md-8">
                                 <img id="image">
@@ -352,7 +350,6 @@
                                 <div class="preview"></div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closePreview">Thoát</button>

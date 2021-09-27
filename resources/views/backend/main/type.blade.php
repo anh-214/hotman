@@ -31,10 +31,10 @@
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
+                        <table class="table align-items-center mb-1">
                             <thead>
                                 <tr>
-                                    <th class="p-2 mx-0">
+                                    <th class="p-4">
                                         <span class="custom-checkbox">
                                             <input type="checkbox" id="selectAll">
                                             <label for="selectAll"></label>
@@ -58,7 +58,7 @@
                             <tbody>
                                 @foreach ($types as $type )
                                     <tr>
-                                        <td class="p-2 mx-0">
+                                        <td class="p-4">
                                             <span class="custom-checkbox">
                                                 <input type="checkbox" class="checkbox" name="checkbox[]" value="{{$type->id}}">
                                                 <label></label>
@@ -157,7 +157,7 @@
                 <h5 class="modal-title">Ảnh sản phẩm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pb-3">
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                     </div>

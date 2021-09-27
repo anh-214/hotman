@@ -8,10 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Type extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'price',
+        'initial_price',
+        'sizes',
+        'colors',
+        'designs',
+        'details',
+        'material',
+        'product_id'
+    ];
     public function images(){
         return $this->hasMany(Image::class,'type_id');
     }
     public function product(){
         return $this->belongsTo(Product::class);
     }
+    
 }

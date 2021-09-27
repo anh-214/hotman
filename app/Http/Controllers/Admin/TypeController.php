@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\TypesImport;
 use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPSTORM_META\type;
 
@@ -239,4 +241,12 @@ class TypeController extends Controller
             return json_encode($links);
         }
     }
+    public function showImportCsvForm(){
+        return view('backend.type.importCsv');
+    }
+    public function importCsv(Request $request){
+        Excel::import(new TypesImport, $request->file('csvfile'));
+        return back();
+    }
+    
 }

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', 'gmail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,8 +41,9 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'auth_mode' => null,
+            'pretend' => false,
+            // 'timeout' => null,
+            // 'auth_mode' => null,
         ],
 
         'ses' => [
@@ -89,6 +90,15 @@ return [
             // 'auth_mode' => null,
         ],
 
+        'gmail' => [
+            'transport' => 'smtp',
+            'host' => 'smtp.gmail.com',
+            'port' =>  465,
+            'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
+            'username' => 'thuyanh1x2@gmail.com',
+            'password' => 'qpzxrjihlfsgrubx',
+        ],
+
     ],
 
     /*
@@ -103,8 +113,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'chutrairau@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'thuyanh1x2@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'HOTMAN'),
     ],
 
     /*
@@ -125,5 +135,13 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+    'stream' => [
+        'ssl' => [
+            'allow_self_signed' => true,
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ]
 
 ];

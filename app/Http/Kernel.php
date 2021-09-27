@@ -3,7 +3,11 @@
 namespace App\Http;
 
 use App\Http\Middleware\AuthIsAdmin;
-use App\Http\Middleware\Logged;
+use App\Http\Middleware\AdminLogged;
+use App\Http\Middleware\UserLogged;
+use App\Http\Middleware\AuthIsUser;
+use App\Http\Middleware\PasswordIsNull;
+use App\Http\Middleware\NotSocialiteUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,6 +70,11 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'authisadmin' => AuthIsAdmin::class,
-        'logged' => Logged::class,
+        'authisuser' => AuthIsUser::class,
+        'adminlogged' => AdminLogged::class,
+        'userlogged' => UserLogged::class,
+        'notSocialiteUser' => NotSocialiteUser::class,
+        'passwordIsNull' => PasswordIsNull::class,
+
     ];
 }

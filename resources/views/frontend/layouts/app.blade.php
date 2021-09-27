@@ -13,7 +13,7 @@
 	<link rel="icon" type="image/png" href="{{asset('frontend/assets/images/favicon.png')}}">
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- StyleSheet -->
 	
 	<!-- Bootstrap -->
@@ -42,6 +42,7 @@
 	<link rel="stylesheet" href="{{asset('frontend/assets/style.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/responsive.css')}}">
     @stack('link')
+	@stack('css')
 	
 	
 </head>
@@ -49,8 +50,11 @@
     @include('frontend.layouts._header')
     @yield('content')
     @include('frontend.layouts._footer')
+
     <!-- Jquery -->
     <script src="{{asset('frontend/assets/js/jquery.min.js')}}"></script>
+	{{-- <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script> --}}
+
     <script src="{{asset('frontend/assets/js/jquery-migrate-3.0.0.js')}}"></script>
 	<script src="{{asset('frontend/assets/js/jquery-ui.min.js')}}"></script>
 	<!-- Popper JS -->
@@ -92,5 +96,61 @@
 	<!-- Active JS -->
 	<script src="{{asset('frontend/assets/js/active.js')}}"></script>
     @stack('js')
+	@if (Auth::guard('web')->check())
+	@if (Auth::guard('web')->user()->password_is_null == 'True')
+	<div class="modal fade" id="modalConfirmCreatePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="width:50%;">
+			<div class="modal-content">
+				<div class="modal-body" style="padding:30px 0 30px 30px;height: 20%;">
+				<h5 class="modal-title d-flex pt-2 pr-2">Thông báo</h5>
+				<p>Bạn vẫn có thể đăng nhập bình thường bằng Google, Github, Facebook mà không cần mật khẩu</p>
+				<p>Bạn vẫn muốn tạo mật khẩu chứ ? Mật khẩu mới sẽ được gửi về email của bạn</p>
+				<p>Trong lần đăng nhập tiếp theo bạn có thể đăng nhập bằng email và mật khẩu hoặc dùng Google, Github, Facebook </p>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+				<button type="button" class="btn btn-primary" id="btnCreatePassword" >Tạo mật khẩu</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalResultCreatePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="width:50%;">
+			<div class="modal-content">
+				<div class="modal-body" style="padding:30px 0 30px 30px;height: 20%;">
+				<h5 class="modal-title d-flex pt-2 pr-2">Thông báo</h5>
+				<p>Chúng tôi đã gửi mật khẩu về email của bạn, Vui lòng kiểm tra email và tiến hành đăng nhập lại !</p>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick=" window.location.assign('{{url('user/login')}}') ">Thoát</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function(){
+				$('#showModalConfirmCreatePassword').click(function(){
+					$('#modalConfirmCreatePassword').modal('show')
+				})
+				$('#btnCreatePassword').click(function(){
+					$('#modalConfirmCreatePassword').modal('hide')
+					$.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: "/user/createpassword",
+                            data: {"_token": "{{ csrf_token() }}", 'email': "{{Auth::guard('web')->user()->email}}"},
+                            success: function(data){
+                                if (data.result == 'sent'){
+                                    $('#modalResultCreatePassword').modal('show')
+                                }
+                            }
+                        });
+				})
+			})
+	</script>
+	@endif
+	@endif
+
+
 </body>
 </html>
