@@ -13,7 +13,7 @@ class Type extends Model
         'price',
         'initial_price',
         'sizes',
-        'colors',
+        'color',
         'designs',
         'details',
         'material',
@@ -25,5 +25,8 @@ class Type extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
-    
+    public function latest($column = 'created_at')
+    {
+        return $this->orderBy($column, 'desc');
+    } 
 }

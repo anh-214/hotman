@@ -14,7 +14,8 @@ class AccountController extends Controller
         $breadCrumbs = [
             [
                 'name' => 'User',
-                'link' => '/user',
+                // 'link' => '/user',
+                'link' => '#',
             ],
             [
                 'name' => 'Information',
@@ -39,6 +40,7 @@ class AccountController extends Controller
                     'avatar' => $imageName,
                     'updated_at' => now()
                 ]);
+                session()->flash('success', 'Cập nhật ảnh đại diện thành công');
                 return response()->json([
                     'result' => 'success',
                 ]);
@@ -52,6 +54,7 @@ class AccountController extends Controller
                 'phonenumber' => $phonenumber,
                 'updated_at' => now()
             ]);
+            session()->flash('success', 'Cập nhật thông tin thành công');
             return back();
         }
     }

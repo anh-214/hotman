@@ -16,13 +16,13 @@ class CreateTypesTable extends Migration
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('price')->nullable();
-            $table->string('initial_price');
+            $table->text('price');
+            $table->text('initial_price');
             $table->string('sizes');
             $table->text('designs');
             $table->text('details');
             $table->text('material');
-            $table->string('colors');
+            $table->string('color');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();

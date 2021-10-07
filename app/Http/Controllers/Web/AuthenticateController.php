@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\verifyEmail;
+use Illuminate\Support\Facades\Password;
 
 class AuthenticateController extends Controller
 {
@@ -44,7 +45,7 @@ class AuthenticateController extends Controller
     public function logout(){
         Auth::guard('web')->logout();
         
-        return redirect('/user/login');
+        return back();
     }
     public function showRegisterForm(){
         return view('frontend.account.register');
@@ -166,7 +167,19 @@ class AuthenticateController extends Controller
             'password_is_null' => 'False'
         ]);
         Mail::to($email)->send(new SendPassword($email,$password));
-        session()->put('createPassword', 'success');
+        session()->flash('createPassword', 'success');
         return back();
     }
+
+    //public function forgotPassword (Request $request){
+    //     $request->validate(['email' => 'required|email']);
+        
+    //     $status = Password::sendResetLink(
+    //         $request->only('email')
+    //     );
+    //     return $status === Password::RESET_LINK_SENT
+    //     ? back()->with(['status' => __($status)])
+    //     : back()->withErrors(['email' => __($status)]);
+    
+    // }
 }

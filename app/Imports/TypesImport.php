@@ -40,7 +40,7 @@ class TypesImport implements ToModel, WithHeadingRow
             'designs' => $row['designs'],
             'details' => $row['details'],
             'material' => $row['material'],
-            'colors' => $row['colors'],
+            'color' => $row['colors'],
             'product_id' => 1,
             'created_at' => now(),
             'updated_at' => now()

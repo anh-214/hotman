@@ -73,6 +73,10 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
+        // 'admins' => [
+        //     'driver' => 'database',
+        //     'table' => 'admins',
+        // ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

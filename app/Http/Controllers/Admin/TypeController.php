@@ -47,13 +47,8 @@ class TypeController extends Controller
         }
     }
     public function create(Request $request){
-        // optimal data colors
-        $colors = $request->input('colorsType');
-        $colors = explode(",",$colors);
-        for ($i=0; $i<count($colors);$i++){
-            $colors[$i] = trim($colors[$i]," ");
-        }
-        $colors = implode(",",$colors);
+        // dd($request->file('images'));
+        $color = $request->input('colorType');
         // optimal data sizes
         $sizes = $request->input('sizesType');
         $sizes = explode(",",$sizes);
@@ -61,13 +56,13 @@ class TypeController extends Controller
             $sizes[$i] = trim($sizes[$i]," ");
         }
         $sizes = implode(",",$sizes);
-       
-        $result =  Type::insert([
+        
+        $result =  Type::create([
                 'name' => $request->input('nameType'),
                 'price' => $request->input('priceType'),
                 'initial_price' => $request->input('initialPriceType'),
                 'sizes' => $sizes,
-                'colors' => $colors,
+                'color' => $color,
                 'designs' => $request->input('designsType'),
                 'details' => $request->input('detailsType'),
                 'material' => $request->input('materialType'),
@@ -75,26 +70,44 @@ class TypeController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-        if ($result){
-            $type = Type::where('name',$request->input('nameType'))->where('product_id',$request->input('product_id'))->first();
-            $colors = $request->input('colorsType');
-            $colors = explode(",",$colors);
-            for ($i=0; $i<count($colors);$i++){
-                $colors[$i] = trim($colors[$i]," ");
+        
+        $files = $request->file('images');
+        if ($files != null){
+            $count = 0;
+            foreach ($files as $file){
+                $file->storeAs('',$result->id.'-'.$count.'.'.$file->getClientOriginalExtension(),'type-image');
+                Image::insert([
+                    'name'=> $result->id.'-'.$count.'.'.$file->getClientOriginalExtension(),
+                    'color' => $color,
+                    'type_id' => $result->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+                $count += 1;
             }
-            $active = 'types';
-            $select = 'Thêm ảnh sản phẩm';
-            return view('backend.type.addImage',compact('active','select','colors','type'));
         }
+        // add link
+        $links = $request->input('linkImages');
+        if ($links != null){
+            $links = explode(",",$links);
+            foreach ($links as $link){
+                if (filter_var($link, FILTER_VALIDATE_URL)) {    
+                    Image::insert([
+                        'name'=> $link,
+                        'color' => $color,
+                        'type_id' => $result->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                };
+            }
+        }
+        return redirect('admin/types');
     }
     public function update(Request $request){
         // optimal data colors
-        $colors = $request->input('colorsType');
-        $colors = explode(",",$colors);
-        for ($i=0; $i<count($colors);$i++){
-            $colors[$i] = trim($colors[$i]," ");
-        }
-        $colors = implode(",",$colors);
+        // dd($request);
+        $color = $request->input('colorType');
         // optimal data sizes
         $sizes = $request->input('sizesType');
         $sizes = explode(",",$sizes);
@@ -108,76 +121,53 @@ class TypeController extends Controller
                 'price' => $request->input('priceType'),
                 'initial_price' => $request->input('initialPriceType'),
                 'sizes' => $sizes,
-                'colors' => $colors,
+                'color' => $color,
                 'designs' => $request->input('designsType'),
                 'details' => $request->input('detailsType'),
                 'material' => $request->input('materialType'),
                 'product_id' => $request->input('product_id'),
                 'updated_at' => now()
             ]);
-        if ($result){
+
+        $files = $request->file('images');
+        // dd($files);
+        if ($files != null){
             Type::findOrFail($type_id)->images()->delete();
-            $type = Type::where('id',$type_id)->first();
-            $colors = $request->input('colorsType');
-            $colors = explode(",",$colors);
-            for ($i=0; $i<count($colors);$i++){
-                $colors[$i] = trim($colors[$i]," ");
+            $count = 0;
+            foreach ($files as $file){
+                $file->storeAs('',$type_id.'-'.$count.'.'.$file->getClientOriginalExtension(),'type-image');
+                Image::insert([
+                    'name'=> $type_id.'-'.$count.'.'.$file->getClientOriginalExtension(),
+                    'color' => $color,
+                    'type_id' => $type_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+                $count += 1;
             }
-            $active = 'types';
-            $select = 'Cập nhật ảnh sản phẩm';
-            return view('backend.type.addImage',compact('active','select','colors','type'));
         }
-    }
-    public function upload(Request $request){
-        $type_id = $request->input('type_id');
-        $colors = Type::findOrFail($type_id)->colors;
-        $colors = explode(",",$colors);
-        $rqs = array();
-        foreach ($colors as $color){
-            $color = str_replace(" ","-",$color);
-            array_push($rqs,$type_id.'-'.$color);
-        }
-        // upload image
-        foreach ($rqs as $rq){
-            $files = $request->file($rq);
-            if ($files != null){
-                $count = 0;
-                foreach ($files as $file){
-                    $color = preg_split('/\d+-/',$rq);
-                    $file->storeAs('',$rq.'-'.$count.'.'.$file->getClientOriginalExtension(),'type-image');
+        // add link
+        $links = $request->input('linkImages');
+        if ($links != null){
+            if ($files == null){
+                Type::findOrFail($type_id)->images()->delete();
+            }
+            $links = explode(",",$links);
+            foreach ($links as $link){
+                if (filter_var($link, FILTER_VALIDATE_URL)) {    
                     Image::insert([
-                        'name'=> $rq.'-'.$count.'.'.$file->getClientOriginalExtension(),
-                        'color' => $color[1],
+                        'name'=> $link,
+                        'color' => $color,
                         'type_id' => $type_id,
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
-                    $count += 1;
-                }
+                };
             }
-        }
-        // add link
-        foreach ($rqs as $rq){
-            $links = $request->input('link-'.$rq);
-            if ($links != null){
-                $links = explode(",",$links);
-                foreach ($links as $link){
-                    if (filter_var($link, FILTER_VALIDATE_URL)) {    
-                        $color = preg_split('/\d+-/',$rq);
-                        Image::insert([
-                            'name'=> $link,
-                            'color' => $color[1],
-                            'type_id' => $type_id,
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                    };
-                }
-            }
-            
         }
         return redirect('admin/types');
     }
+    
     public function delete(Request $request){
         if( $request->ajax()){
             $password = $request->input('confirmPassword');

@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\Web\AuthenticateController;
 use App\Http\Controllers\Web\AccountController;
+use App\Http\Controllers\Web\ProductController;
+use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\TypeController;
+use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\MainController;
 use App\Http\Controllers\Web\SocialiteController;
 use App\Mail\SendPassword;
 use Illuminate\Support\Facades\Auth;
@@ -42,24 +47,34 @@ Route::group(['prefix' => '/user'],function () {
         Route::get('/changepassword',[AuthenticateController::class,'showChangePassword'])->middleware('notSocialiteUser');
         Route::post('/changepassword',[AuthenticateController::class,'changePassword'])->middleware('notSocialiteUser');
         Route::post('/createpassword',[AuthenticateController::class,'createPassword'])->middleware('passwordIsNull');
+
     });
     
 });
 
-Route::get('contact', function () {
-    $breadCrumbs = [
-        [
-            'name' => 'Contact',
-            'link' => '/contact',
-        ]
-    ];
-    return view('frontend.contact',compact('breadCrumbs'));
+Route::get('contact',[MainController::class,'contactView']);
+Route::get('home',[MainController::class,'home']);
+Route::get("/category/{category_id}",[CategoryController::class,'categoryView']);
+Route::get("/category/{category_id}/product/{product_id}",[ProductController::class,'productView']);
+Route::get("/category/{category_id}/product/{product_id}/type/{type_id}",[TypeController::class,'typeView']);
+
+Route::post("product/quickshop",[ProductController::class,'quickShop']);
+Route::post('product/getimages',[ProductController::class,'getImages']);
+
+// cart
+Route::get('cart', [CartController::class, 'cart']);
+Route::post('add-to-cart', [CartController::class, 'addToCart']);
+Route::post('update-cart', [CartController::class, 'update']);
+Route::post('remove-from-cart', [CartController::class, 'remove']);
+Route::get('cart/checkout', [CartController::class, 'showCheckoutForm']);
+
+Route::group(['middleware'=> 'authisuser'], function(){ 
+    Route::post('/getdistricts',[CartController::class,'getDistricts']);
+    Route::post('/getwards',[CartController::class,'getWards']);
+    Route::post('cart/checkout', [CartController::class, 'checkout']);
+    Route::get('cart/checkout', [CartController::class, 'showCheckoutForm']);
 });
-Route::get('/home', function(){
-    if (Auth::guard('web')->check()){
-        die(Auth::guard('web')->user()->name);
-    }
-});
+
 Route::get('/mail', function () {
     $email = '123';
     $password = 'abc';

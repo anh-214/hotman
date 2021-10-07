@@ -10,12 +10,12 @@
 	<!-- Title Tag  -->
     <title>@yield('title','Document')</title>
 	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="{{asset('frontend/assets/images/favicon.png')}}">
+	<link rel="icon" type="image/png" href="{{asset('frontend/assets/images/faviconHotMan.png')}}">
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- StyleSheet -->
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="{{asset('frontend/assets/css/bootstrap.css')}}">
 	<!-- Magnific Popup -->
@@ -41,6 +41,7 @@
 	<link rel="stylesheet" href="{{asset('frontend/assets/css/reset.css')}}">
 	<link rel="stylesheet" href="{{asset('frontend/assets/style.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/responsive.css')}}">
+	{{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
     @stack('link')
 	@stack('css')
 	
@@ -53,8 +54,6 @@
 
     <!-- Jquery -->
     <script src="{{asset('frontend/assets/js/jquery.min.js')}}"></script>
-	{{-- <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script> --}}
-
     <script src="{{asset('frontend/assets/js/jquery-migrate-3.0.0.js')}}"></script>
 	<script src="{{asset('frontend/assets/js/jquery-ui.min.js')}}"></script>
 	<!-- Popper JS -->
@@ -62,7 +61,8 @@
 	<!-- Bootstrap JS -->
 	<script src="{{asset('frontend/assets/js/bootstrap.min.js')}}"></script>
 	<!-- Color JS -->
-	<script src="{{asset('frontend/assets/js/colors.js')}}"></script>
+	{{-- <script src="{{asset('frontend/assets/js/colors.js')}}"></script> --}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/color-js/1.0.1/color.js" integrity="sha512-zXHWlN+vi1A8FcoJN7NUprrM2pTph/b20Um9WeTfNF/2Fn0yeD8kzD+TMYRwhSuYTIzZwP4hkRaJNfGvM9rrAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<!-- Slicknav JS -->
 	<script src="{{asset('frontend/assets/js/slicknav.min.js')}}"></script>
 	<!-- Owl Carousel JS -->
@@ -95,6 +95,43 @@
 	{{-- <script src="{{asset('frontend/assets/js/map-script.js')}}"></script> --}}
 	<!-- Active JS -->
 	<script src="{{asset('frontend/assets/js/active.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+	<script>
+		$(document).ready(function(){
+			@if(session()->has('success'))
+				toastr.options.fadeOut = 2000;
+				toastr.success("{{session('success')}}");
+			@endif
+			@if(session()->has('fail'))
+				toastr.options.fadeOut = 2000;
+				toastr.error("{{session('fail')}}");
+			@endif
+			$('.remove').click(function(){
+				let id = $(this).attr('data-id');
+				let regex_checkout = /checkout/
+				
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "{{url('remove-from-cart')}}",
+					data: {"_token": "{{ csrf_token() }}", 'id': id},
+					success: function(data){
+						if (data.result == 'success'){
+							if (regex_checkout.test(window.location.href)){
+								window.location.assign("{{url('home')}}")
+								
+							} else {
+								window.location.reload()
+							}
+							
+						}
+					}
+				})
+				
+			})
+		})
+	</script>
     @stack('js')
 	@if (Auth::guard('web')->check())
 	@if (Auth::guard('web')->user()->password_is_null == 'True')
@@ -128,6 +165,7 @@
 		</div>
 	</div>
 	<script>
+		
 		$(document).ready(function(){
 				$('#showModalConfirmCreatePassword').click(function(){
 					$('#modalConfirmCreatePassword').modal('show')
@@ -146,6 +184,7 @@
                             }
                         });
 				})
+				
 			})
 	</script>
 	@endif

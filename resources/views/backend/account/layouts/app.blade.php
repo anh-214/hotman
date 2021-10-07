@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Document')</title>
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('backend/assets/images/apple-icon.png')}}">
-    <link rel="icon" type="image/png" href="{{ asset('backend/assets/images/favicon.png')}}">
+    <link rel="icon" type="image/png" href="{{ asset('backend/assets/images/faviconHotMan.png')}}">
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->

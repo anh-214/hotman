@@ -56,6 +56,7 @@ class MainController extends Controller
         $categories = Category::all(['id','name']); 
         if ($request->has(['category_id'])){
             $products = Category::findOrFail($request->input('category_id'))->products()->paginate(15);
+            $products->appends(['category_id'=> $request->input('category_id')]);
             return view('backend.main.product',compact('select','active','products','categories'));
         };
         $products = Product::with('category')->paginate(15);
@@ -68,6 +69,7 @@ class MainController extends Controller
 
         if ($request->has(['product_id'])){
             $types = Product::findOrFail($request->input('product_id'))->types()->paginate(15);
+            $types->appends(['product_id'=> $request->input('product_id')]);
             return view('backend.main.type',compact('select','active','types'));
         };
         $types = Type::paginate(15);

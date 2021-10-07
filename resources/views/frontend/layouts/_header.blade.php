@@ -78,11 +78,14 @@
 						<div class="col-lg-8 col-md-7 col-12">
 							<div class="search-bar-top">
 								<div class="search-bar">
+									@php
+										$categories = \App\Models\Category::all(['id','name']);
+									@endphp
 									<select>
 										<option selected="selected">All Category</option>
-										<option>watch</option>
-										<option>mobile</option>
-										<option>kid’s item</option>
+										@foreach ($categories as $category)
+											<option value="{{$category->id}}">{{$category->name}}</option>	
+										@endforeach
 									</select>
 									<form>
 										<input name="search" placeholder="Search Products Here....." type="search">
@@ -136,33 +139,41 @@
 									</div>
 								</div>
 								<div class="sinlge-bar shopping">
-									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">2</span></a>
+									@php $count = 0 @endphp
+									@if(session('cart'))
+										@foreach(session('cart') as $id => $details)
+											@php $count += 1 @endphp
+										@endforeach
+									@endif
+									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{$count}}</span></a>
 									<!-- Shopping Item -->
 									<div class="shopping-item">
 										<div class="dropdown-cart-header">
-											<span>2 Items</span>
-											<a href="#">View Cart</a>
+											<span>{{$count}} Sản phẩm</span>
+											{{-- <a href="{{url('cart')}}"></a> --}}
 										</div>
 										<ul class="shopping-list">
-											<li>
-												<a href="#" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
-												<a class="cart-img" href="#"><img src="https://via.placeholder.com/70x70" alt="#"></a>
-												<h4><a href="#">Woman Ring</a></h4>
-												<p class="quantity">1x - <span class="amount">$99.00</span></p>
-											</li>
-											<li>
-												<a href="#" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
-												<a class="cart-img" href="#"><img src="https://via.placeholder.com/70x70" alt="#"></a>
-												<h4><a href="#">Woman Necklace</a></h4>
-												<p class="quantity">1x - <span class="amount">$35.00</span></p>
-											</li>
+											@php $total = 0;@endphp
+											@if(session('cart'))
+												@foreach(session('cart') as $id => $details)
+													@php $total += $details['price'] * $details['quantity'];
+													@endphp
+												<li>
+													<a data-id="{{$id}}" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
+													<a class="cart-img" href="{{$details['link']}}"><img src="{{$details['image']}}" alt="#"></a>
+													<h4><a href="{{$details['link']}}">{{ $details['name'] }}</a></h4>
+													<p>Size: {{$details['size']}}</p>
+													<p class="quantity">{{$details['quantity']}}x - <span class="amount">{{ number_format($details['price'] * $details['quantity']) }} đ</span></p>
+												</li>
+												@endforeach
+											@endif
 										</ul>
 										<div class="bottom">
 											<div class="total">
-												<span>Total</span>
-												<span class="total-amount">$134.00</span>
+												<span>Tổng</span>
+												<span class="total-amount">{{ number_format($total) }} đ</span>
 											</div>
-											<a href="checkout.html" class="btn animate">Checkout</a>
+											<a href="{{url('cart')}}" class="btn animate">Xem giỏ hàng</a>
 										</div>
 									</div>
 									<!--/ End Shopping Item -->
@@ -186,16 +197,32 @@
 											<div class="nav-inner">	
 												<ul class="nav main-menu menu navbar-nav">
 													<li class="active"><a href="#">Home</a></li>
-													<li><a href="#">Product</a></li>												
-													<li><a href="#">Service</a></li>
-													<li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
+													<li><a href="#">Categories<i class="ti-angle-down"></i></a>
+														<ul class="dropdown">
+															@foreach ($categories as $category)
+																@php
+																	$products = \App\Models\Category::findOrFail($category->id)->products()->get()
+																@endphp
+																<li><a href="{{url('category/'.$category->id)}}">{{$category->name}}<i class="ti-angle-down"></i></a>
+																	<ul class="dropdown-child">
+																		@foreach ($products as $product)
+																			<li><a href="{{url('category/'.$category->id.'/product/'.$product->id)}}">{{$product->name}}</a></li>																	
+																		@endforeach
+																		
+																	</ul>
+																</li>
+															@endforeach
+														</ul>
+													</li>												
+													{{-- <li><a href="#">Service</a></li> --}}
+													{{-- <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
 														<ul class="dropdown">
 															<li><a href="shop-grid.html">Shop Grid</a></li>
 															<li><a href="cart.html">Cart</a></li>
 															<li><a href="checkout.html">Checkout</a></li>
 														</ul>
-													</li>
-													<li><a href="#">Pages</a></li>									
+													</li> --}}
+													{{-- <li><a href="#">Pages</a></li>									 --}}
 													<li><a href="#">Blog<i class="ti-angle-down"></i></a>
 														<ul class="dropdown">
 															<li><a href="blog-single-sidebar.html">Blog Single Sidebar</a></li>

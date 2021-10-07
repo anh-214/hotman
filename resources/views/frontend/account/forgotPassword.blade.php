@@ -82,7 +82,6 @@
 $(document).ready(function(){
     @if (Session::has('createPassword'))
     $('#resultModal').modal('show')
-    {{session()->forget('createPassword')}}
     @endif
     $("#btn-forgot").click(function(){
         $email = $('input[name=email]');

@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive px-3">
-                        <form method="POST" id="createForm" action="{{url('admin/types/update')}}">
+                        <form method="POST" id="createForm" action="{{url('admin/types/update')}}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{$type->id}}">
                             <div class="form-group">
@@ -31,6 +31,25 @@
                                 <input type="text" class="form-control" name="nameType" value="{{$type->name}}">
                                 <div class="invalid-feedback" id="errorName">
                                 </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Thuộc thể loại</label>
+                                <select id="category_id" class="form-control" name="category_id" > 
+                                    <option>Chọn ...</option>
+                                    @foreach ($categories as $category )
+                                        <option value="{{$category->id}}" @if ($category->id == $oldCategoryId) {{'selected'}} @endif>{{$category->name}}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" id="errorCategoryId">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Thuộc sản phẩm</label>
+                                <select id="product_id" name="product_id" class="form-control">
+                                    @foreach ($oldProducts as $oldProduct)
+                                        <option value="{{$oldProduct->id}}" @if ($oldProduct->id == $oldProductId) {{'selected'}} @endif>{{$oldProduct->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -55,51 +74,45 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Màu sắc</label>
-                                    <input type="text" class="form-control" name="colorsType" placeholder="Nhập màu sắc cách nhau bằng dấu phẩy, VD: xanh đậm,xám khói" value="{{$type->colors}}">
+                                    <input type="text" class="form-control" name="colorType" placeholder="Nhập màu sắc cách nhau bằng dấu phẩy, VD: xanh đậm,xám khói" value="{{$type->color}}">
                                     <div class="invalid-feedback" id="errorColors">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label>Thêm ảnh loại sản phẩm</label>
+                                <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/png, image/jpeg">
+                                <div class="invalid-feedback" id="errorImages">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Thêm ảnh loại sản phẩm bằng đường link (Nếu có)</label>
+                                <input type="text" class="form-control my-1" placeholder="Chèn link để thêm ảnh từ nguồn bên ngoài, cách nhau bằng dấu phẩy" name="linkImages">
+                                <div class="invalid-feedback" id="errorLinkImages">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label>Kiểu dáng</label>
-                                <input type="text" class="form-control" name="designsType" value="{{$type->designs}}">
+                                <textarea type="text" class="form-control" name="designsType">{{$type->designs}}</textarea>
                                 <div class="invalid-feedback" id="errorDesigns">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Chi tiết sản phẩm</label>
-                                <input type="text" class="form-control" name="detailsType" value="{{$type->details}}">
+                                <textarea type="text" class="form-control" name="detailsType">{{$type->details}}</textarea>
                                 <div class="invalid-feedback" id="errorDetails">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>Chất liệu</label>
-                                    <input type="text" class="form-control" name="materialType" value="{{$type->material}}">
-                                    <div class="invalid-feedback" id="errorMaterial">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Category</label>
-                                    <select id="category_id" class="form-control" name="category_id" > 
-                                        <option>Chọn ...</option>
-                                        @foreach ($categories as $category )
-                                            <option value="{{$category->id}}" @if ($category->id == $oldCategoryId) {{'selected'}} @endif>{{$category->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback" id="errorCategoryId">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Product</label>
-                                    <select id="product_id" name="product_id" class="form-control">
-                                        @foreach ($oldProducts as $oldProduct)
-                                            <option value="{{$oldProduct->id}}" @if ($oldProduct->id == $oldProductId) {{'selected'}} @endif>{{$oldProduct->name}}</option>
-                                        @endforeach
-                                    </select>
+                           
+                            <div class="form-group col-md-12">
+                                <label>Chất liệu</label>
+                                <textarea type="text" class="form-control" name="materialType">{{$type->material}}</textarea>
+                                <div class="invalid-feedback" id="errorMaterial">
                                 </div>
                             </div>
-                            <button type="button" id="btnCreate" class="btn btn-primary">Cập nhật</button>
+                            <div class="d-flex flex-row-reverse">
+                                <button type="button" id="btnCreate" class="btn btn-primary">Cập nhật</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -127,7 +140,6 @@
                     url: "/admin/types/getProductId",
                     data: {"_token": "{{ csrf_token() }}", 'category_id': $category_id},
                     success: function(data){
-                       
                         data.forEach(element => {
                             addOption(element.id,element.name)
                         });
@@ -169,7 +181,6 @@
                 }
             }
 
-
             if ($("input[name=sizesType]").val() == ''){
                 $("input[name=sizesType]").addClass('is-invalid')
                 $("#errorSizes").text('Vui lòng không để trống trường này')
@@ -193,55 +204,15 @@
                 
             }
 
-            if ($("input[name=colorsType]").val() == ''){
-                $("input[name=colorsType]").addClass('is-invalid')
-                $("#errorColors").text('Vui lòng không để trống trường này')
+            if ($("input[name=colorType]").val() == ''){
+                $("input[name=colorType]").addClass('is-invalid')
+                $("#errorColor").text('Vui lòng không để trống trường này')
             } else {
-                let colors = $("input[name=colorsType]").val()
-                let checkColor = true
-                colors = colors.split(",")
-                colors.forEach(color => {
-                    if (color == ''){
-                        checkColor = false
-                    } 
-                });
-                if (checkColor){
-                    $("input[name=colorsType]").removeClass('is-invalid')
-                    $("#errorColors").text('')
-                    count += 1
-                } else {
-                    $("input[name=colorsType]").addClass('is-invalid')
-                    $("#errorColors").text('Sai định dạng màu sắc')
-                }
-            }
-
-
-            if ($("input[name=designsType]").val() == ''){
-                $("input[name=designsType]").addClass('is-invalid')
-                $("#errorDesigns").text('Vui lòng không để trống trường này')
-            } else {
-                $("input[name=designsType]").removeClass('is-invalid')
-                $("#errorDesigns").text('')
+                $("input[name=colorType]").removeClass('is-invalid')
+                $("#errorColor").text('')
                 count += 1
             }
 
-            if ($("input[name=detailsType]").val() == ''){
-                $("input[name=detailsType]").addClass('is-invalid')
-                $("#errorDetails").text('Vui lòng không để trống trường này')
-            } else {
-                $("input[name=detailsType]").removeClass('is-invalid')
-                $("#errorDetails").text('')
-                count += 1
-            }
-
-            if ($("input[name=materialType]").val() == ''){
-                $("input[name=materialType]").addClass('is-invalid')
-                $("#errorMaterial").text('Vui lòng không để trống trường này')
-            } else {
-                $("input[name=materialType]").removeClass('is-invalid')
-                $("#errorMaterial").text('')
-                count += 1
-            }
             if ($("#category_id").val() == 'Chọn ...'){
                 $("#category_id").addClass('is-invalid')
                 $("#errorCategoryId").text('Vui lòng không để trống trường này')
@@ -250,12 +221,55 @@
                 $("#errorCategoryId").text('')
                 count += 1
             }
+            if ($("textarea[name=designsType]").val() == ''){
+                $("textarea[name=designsType]").addClass('is-invalid')
+                $("#errorDesigns").text('Vui lòng không để trống trường này')
+            } else {
+                $("textarea[name=designsType]").removeClass('is-invalid')
+                $("#errorDesigns").text('')
+                count += 1
+            }
+            if ($('textarea[name=detailsType]').val() == ''){
+                $("textarea[name=detailsType]").addClass('is-invalid')
+                $("#errorDetails").text('Vui lòng không để trống trường này')
+            } else {
+                $("textarea[name=detailsType]").removeClass('is-invalid')
+                $("#errorDetails").text('')
+                count += 1
+            }
+            if ($('textarea[name=materialType]').val() == ''){
+                $("textarea[name=materialType]").addClass('is-invalid')
+                $("#errorMaterial").text('Vui lòng không để trống trường này')
+            } else {
+                $("textarea[name=materialType]").removeClass('is-invalid')
+                $("#errorMaterial").text('')
+                count += 1
+            }
+            if ($('input[name=linkImages]').val() != ''){
+                let links = $("input[name=linkImages]").val()
+                let checkLink = true
+                links = links.split(",")
+                links.forEach(link => {
+                    console.log(link)
+                    if (window.location.href.indexOf(link) > -1){
+                        checkLink = false
+                    } else {
+                        checkLink = true
+                    }
+                });
+                if (checkLink==false){
+                    $("input[name=linkImages]").addClass('is-invalid')
+                    $("#errorLinkImages").text('Vui lòng nhập đúng định dạng url') 
+                } else {
+                    $("input[name=linkImages]").removeClass('is-invalid')
+                    $("#errorLinkImages").text('')
+                }
+            }
             if (count == 8){
                 $("#createForm").submit();
             }
-        })
-
         
+        })
     });
 </script>
 @endpush

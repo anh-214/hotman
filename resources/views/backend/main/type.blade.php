@@ -81,7 +81,7 @@
                                             <p class="text-xs font-weight-bold mb-0 text-center"> {{$type->initial_price}}</p>
                                         </td>
                                         <td>
-                                            <p type="button" class="text-xs font-weight-bold mb-0 text-center showImages" data-bs-toggle="modal" data-bs-target="#showImagesModal" data-id="{{$type->id}}">                                              
+                                            <p type="button" class="text-xs font-weight-bold mb-0 text-center showImages" data-id="{{$type->id}}">                                              
                                                     Xem
                                             </p>
                                         </td>
@@ -108,16 +108,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="text-xs font-weight-bold mb-0 hint-text">
-                                                @php
-                                                    $colors = explode(",",$type->colors);
-                                                @endphp
-                                                @foreach ($colors as $color)
-                                                    <option class="text-xs">{{$color}}</option>    
-                                                @endforeach
-                                                
-
-                                            </select>
+                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->color}}">{{$type->color}}</p>
                                         </td>
                                         <td>
                                             <p class="text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->product_id.' - '.$type->product->name}}">
@@ -257,7 +248,7 @@
             <div class="modal-body" id="textNotificationDeleteMutipleModal">
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationDeleteMutipleModal"  data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button class="btn btn-primary" id="closeNotificationDeleteMutipleModal"  data-bs-dismiss="modal" aria-label="Close" onclick="window.location.reload()">Đóng</button>
             </div>
         </div>
     </div>
@@ -404,7 +395,7 @@
         $modal = $('#showImagesModal')
         $(".showImages").click(function(){
             $id = $(this).attr('data-id')
-            console.log($id);
+            // console.log($id);
             deleteImages('showImagesModal','.carousel-inner')
             deleteImages('showImagesModal','.carousel-indicators')
             $.ajax({

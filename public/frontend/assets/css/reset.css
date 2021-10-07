@@ -1045,13 +1045,12 @@ object {
 	display:block;
 	height:100%;
 	width:550px;
-	height:100%;
 }
 .modal-dialog .quickview-slider-active img{
 	display:inline-block;
 }
 .modal-dialog {
-  margin: 12% auto 8%;
+  margin: 5% auto 8%;
   max-width: 1358px;
   width: 1358px;
 }
@@ -1147,8 +1146,8 @@ object {
 .modal-dialog .modal-content .modal-body {
 	padding: 0px;
 	overflow-y: auto;
-	max-height: 510px;
-	height: 700px;
+	max-height: 800px;
+	height: 900px;
 }
 .quickview-content {
 	padding: 40px 40px;
