@@ -15,18 +15,27 @@ class CategoryController extends Controller
         $product_infos = Category::findOrFail($category_id)->products()->get(['id','name']);
 
         $paginate = $request->query('paginate') < 9 ? 9 : $request->query('paginate');
-        $types = collect();
+        $hasQueryString = false;
+        $sort_by_price = $request->query('price') ? $request->query('price') : 'none';
 
+        $types = collect();
         if ($request->query('paginate') !== null) {
             $types = $category->types()->orderBy('price', 'asc');
+            $hasQueryString = true;
         }
 
         if ($request->query('price') !== null) {
             $types = $category->types()->orderBy('price', $request->query('price'));
+            $hasQueryString = true;
+        }
+
+        if (!$hasQueryString) {
+            $types = $category->types();
         }
 
         $types->paginate($paginate)->appends($request->query());
 
+        dd($types);
         // dd($types);
         $breadCrumbs = [
             [

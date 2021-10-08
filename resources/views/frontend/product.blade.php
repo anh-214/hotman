@@ -19,13 +19,13 @@
 			text-decoration: line-through;
 			margin-left: 20px;
 			color: red
-			
+
 		}
 	</style>
 @endpush
 @section('content')
 <div class="js">
-    
+
     <!-- Product Style -->
 		<section class="product-area shop-sidebar shop section">
 			<div class="container">
@@ -39,7 +39,7 @@
 										@foreach ($product_infos as $product_info)
 											<li><a href="{{url('/category/'.$category_info->id.'/product/'.$product_info->id)}}">{{$product_info->name}}</a></li>
 										@endforeach
-										
+
 									</ul>
 								</div>
 								<!--/ End Single Widget -->
@@ -70,16 +70,16 @@
 								</div>
 								<!--/ End Shop By Price -->
 								<!-- Single Widget -->
-								
+
 								@isset($latest_types)
 								<div class="single-widget recent-post">
 									<h3 class="title">Sản phẩm mới</h3>
 									{{-- @php $types = \App\Models\Category::where('id',$category_info->id)->first(); @endphp --}}
 									<!-- Single Post -->
 									@foreach ($latest_types as $latest_type)
-									@php 
+									@php
 										$latest_product = \App\Models\Product::where('id',$latest_type->product_id)->first();
-									@endphp 
+									@endphp
 										<div class="single-post first">
 											<div class="image">
 												<img src="@php
@@ -100,7 +100,7 @@
 											</div>
 										</div>
 									@endforeach
-									
+
 									<!-- End Single Post -->
 									{{-- <!-- Single Post -->
 										<div class="single-post first">
@@ -145,8 +145,8 @@
 								<div class="single-widget category">
 									<h3 class="title"></h3>
 									<ul class="categor-list">
-										
-										
+
+
 									</ul>
 								</div>
 								<!--/ End Single Widget --> --}}
@@ -171,8 +171,8 @@
 											<label>Sort By :</label>
 											<select id="select_price">
 												<option @if($sort_by_price == 'none') {{'selected'}} @endif>None</option>
-												<option value="up" @if($sort_by_price == 'up') {{'selected'}} @endif>Price Up</option>
-												<option value="down" @if($sort_by_price == 'down') {{'selected'}} @endif>Price Down</option>
+												<option value="asc" {{ $sort_by_price == 'asc' ? 'selected' : '' }}>Price Up</option>
+												<option value="desc" {{ $sort_by_price == 'desc' ? 'selected' : '' }}>Price Down</option>
 											</select>
 										</div>
 									</div>
@@ -186,20 +186,20 @@
 						</div>
 						<div class="row">
                             @foreach ($types as  $type)
-							@php 
+							@php
 								$product = \App\Models\Product::where('id',$type->product_id)->first();
-							@endphp 
+							@endphp
 							<div class="col-lg-4 col-md-6 col-12">
                                 <div class="single-product">
                                     <div class="product-img">
                                         <a href="{{url('category/'.$category_info->id.'/product/'.$product->id.'/type/'.$type->id)}}">
-										
+
                                             <img class="default-img" src="@php
-												if (filter_var($type->images[0]->name, FILTER_VALIDATE_URL)) { 
+												if (filter_var($type->images[0]->name, FILTER_VALIDATE_URL)) {
 													echo($type->images[0]->name);
 												} else {
 													echo(Storage::disk('type-image')->url($type->images[0]->name));
-												}   
+												}
 												@endphp" alt="#">
 											{{-- <img class="hover-img" src="https://via.placeholder.com/550x750" alt="#"> --}}
 										</a>
@@ -215,7 +215,7 @@
 										</div>
 									</div>
 									<div class="product-content">
-										
+
                                         <h3><a href="{{url('category/'.$category_info->id.'/product/'.$product->id.'/type/'.$type->id)}}">{{$type->name}}</a></h3>
 										<div class="product-price">
                                             <span>{{number_format($type->price).' đ'}}</span>
@@ -232,9 +232,9 @@
 				</div>
 			</div>
 		</section>
-		
-		<!--/ End Product Style 1  -->	
-    
+
+		<!--/ End Product Style 1  -->
+
 
     <!-- Start Shop Newsletter  -->
     <section class="shop-newsletter section">
@@ -410,7 +410,7 @@ $(document).ready(function(){
 			data: {"_token": "{{ csrf_token() }}", 'id': id},
 			success: function(data){
 				let count = 0;
-				data.forEach(link => {   
+				data.forEach(link => {
 					if (count == 0){
 						$(".carousel-inner").append(`<div class="carousel-item active">
 													<img class="d-block w-100" src="`+link+`" alt="slide `+count+`">
