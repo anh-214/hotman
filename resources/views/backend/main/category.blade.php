@@ -22,48 +22,45 @@
                         @endisset
                     </div>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2 mx-2">
+                <div class="card-body px-0 pt-0 pb-4 mx-2">
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="p-4">
+                                    @isset($categories)
+                                    <th class="px-4">
                                         <span class="custom-checkbox">
                                             <input type="checkbox" id="selectAll">
                                             <label for="selectAll"></label>
                                         </span>
                                     </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Update_at</th>
+                                    @endisset
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Update_at</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 {{-- view category --}}
                                 @isset($category)
-                                    <tr class="bg-light">
-                                        
+                                    <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$category->id}}</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="w-5">
-                                            <p class="text-xs font-weight-bold mb-0"> {{$category->name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$category->id}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$category->desc}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$category->name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$category->created_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$category->desc}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$category->updated_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$category->created_at}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$category->updated_at}}</p>
                                         </td>
                                         <td class="align-middle text-center">
                                             <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('/admin/products?category_id='.$category->id)}}">
@@ -82,30 +79,26 @@
                                 @isset($categories)
                                     @foreach ($categories as $category )
                                                 <tr>
-                                                    <td class="p-4">
+                                                    <td class="px-4">
                                                         <span class="custom-checkbox">
                                                             <input type="checkbox" class="checkbox" name="checkbox[]" value="{{$category->id}}">
                                                             <label></label>
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <h6 class="mb-0 text-sm">{{$category->id}}</h6>
-                                                            </div>
-                                                        </div>
+                                                        <p class="text-center text-xs font-weight-bold mb-0"> {{$category->id}}</p>
                                                     </td>
                                                     <td class="w-5">
-                                                        <p class="text-xs font-weight-bold mb-0"> {{$category->name}}</p>
+                                                        <p class="text-center text-xs font-weight-bold mb-0"> {{$category->name}}</p>
                                                     </td>
                                                     <td>
-                                                        <p class="text-xs font-weight-bold mb-0"> {{$category->desc}}</p>
+                                                        <p class="text-center text-xs font-weight-bold mb-0"> {{$category->desc}}</p>
                                                     </td>
                                                     <td>
-                                                        <p class="text-xs font-weight-bold mb-0"> {{$category->created_at}}</p>
+                                                        <p class="text-center text-xs font-weight-bold mb-0"> {{$category->created_at}}</p>
                                                     </td>
                                                     <td>
-                                                        <p class="text-xs font-weight-bold mb-0"> {{$category->updated_at}}</p>
+                                                        <p class="text-center text-xs font-weight-bold mb-0"> {{$category->updated_at}}</p>
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('/admin/products?category_id='.$category->id)}}">
@@ -158,21 +151,7 @@
         </div>
     </div>
 </div>
-{{-- modal notification --}}
-<div class="modal fade" id="notificationModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-            </div>
-            <div class="modal-body" id="textNotificationModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 {{-- modal delete multiple --}}
 <div class="modal fade" id="confirmDeleteMutipleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -198,21 +177,7 @@
         </div>
     </div>
 </div>
-{{-- modal notification delete multiple --}}
-<div class="modal fade" id="notificationDeleteMutipleModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-            </div>
-            <div class="modal-body" id="textNotificationDeleteMutipleModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationDeleteMutipleModal"  data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 {{-- modal update --}}
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -322,16 +287,7 @@
                     url: "/admin/categories/delete",
                     data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa thể loại thành công')
-                            $("#notificationModal").modal('show')
-                        } else {
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa thể loại thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationModal").modal('show')
-                        }
-                    
+                        window.location.reload()
                     }
                 });
             }
@@ -367,16 +323,7 @@
                     url: "/admin/categories/delete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa thể loại thành công')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        } else {
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa thể loại thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        }
-                    
+                        window.location.reload()                    
                     }
                 });
             }
@@ -464,15 +411,7 @@
                         url: "/admin/categories/update",
                         data: {"_token": "{{ csrf_token() }}", 'id': $("input[name=updateId]").val(), 'name': $("#nameCategory").val(),'desc': $("#descCategory").val()},
                         success: function(data){
-                            if (data.result == 'success'){
-                                $("#updateModal").modal('hide')
-                                $("#textNotificationModal").text('Cập nhật thành công')
-                                $("#notificationModal").modal('show')
-                            } else {
-                                $("#updateModal").modal('hide')
-                                $("#textNotificationModal").text('Cập nhật thất bại')
-                                $("#notificationModal").modal('show')
-                            }
+                            window.location.reload()
                         }
                     });
             }

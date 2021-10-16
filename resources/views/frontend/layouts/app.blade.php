@@ -44,7 +44,22 @@
 	{{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
     @stack('link')
 	@stack('css')
-	
+	<style>
+		#resultSearch {
+			position: absolute;
+			top:100%;
+			left:30%;
+			z-index:9999;
+			box-shadow: 10px 10px 10px #5c5b5b85;
+			display:none
+		}
+		#resultSearch ul li a:hover {
+			font-weight: bolder
+		} 
+		#resultSearch ul li div.col-9 {
+			text-align: left
+		}
+	</style>
 	
 </head>
 <body>
@@ -95,6 +110,7 @@
 	{{-- <script src="{{asset('frontend/assets/js/map-script.js')}}"></script> --}}
 	<!-- Active JS -->
 	<script src="{{asset('frontend/assets/js/active.js')}}"></script>
+	<script src="{{asset('frontend/assets/js/cart-localstorage.js')}}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 	<script>
@@ -107,29 +123,47 @@
 				toastr.options.fadeOut = 2000;
 				toastr.error("{{session('fail')}}");
 			@endif
-			$('.remove').click(function(){
-				let id = $(this).attr('data-id');
-				let regex_checkout = /checkout/
-				
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "{{url('remove-from-cart')}}",
-					data: {"_token": "{{ csrf_token() }}", 'id': id},
-					success: function(data){
-						if (data.result == 'success'){
-							if (regex_checkout.test(window.location.href)){
-								window.location.assign("{{url('home')}}")
-								
-							} else {
-								window.location.reload()
-							}
-							
+			$(document).on('click','.remove',function(){
+				let regex = /checkout/
+				let regex1 = /cart/
+				let url = window.location.href
+				// console.log(regex.test(url))
+				if (regex.test(url) == false && regex1.test(url) == false){
+					let cart_id = $(this).attr('data-cart-id')
+					// console.log(cart_id)
+					let storageCart = JSON.parse(localStorage.getItem('cart'));
+					cart = storageCart.filter(cart => cart.cart_id !== cart_id );
+					localStorage.setItem('cart', JSON.stringify(cart));
+					refresh_cart()
+					pull_cart()
+				}
+
+            })
+			//  load cart
+			refresh_cart()
+			$('#search').on('keyup',function(){
+                $value = $(this).val();
+				$category_id = $('#selectSearch').val()
+				if ($value != ''){
+					$('#resultSearch').show();
+					$.ajax({
+						type: 'get',
+						url: "{{url('search')}}",
+						data: {
+							'category_id': $category_id,
+							'search': $value,
+						},
+						success:function(data){
+							$('#resultSearch ul').html(data);
 						}
-					}
-				})
-				
-			})
+					});
+				} else {
+					$('#resultSearch ul').html('');
+					$('#resultSearch').hide();
+				}
+                
+            })
+            $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
 		})
 	</script>
     @stack('js')
@@ -146,46 +180,18 @@
 				</div>
 				<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-				<button type="button" class="btn btn-primary" id="btnCreatePassword" >Tạo mật khẩu</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="modalResultCreatePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document" style="width:50%;">
-			<div class="modal-content">
-				<div class="modal-body" style="padding:30px 0 30px 30px;height: 20%;">
-				<h5 class="modal-title d-flex pt-2 pr-2">Thông báo</h5>
-				<p>Chúng tôi đã gửi mật khẩu về email của bạn, Vui lòng kiểm tra email và tiến hành đăng nhập lại !</p>
-				</div>
-				<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick=" window.location.assign('{{url('user/login')}}') ">Thoát</button>
+				<button type="button" class="btn btn-primary" onclick="window.location.assign('{{url('user/createpassword')}}')" >Tạo mật khẩu</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<script>
 		
-		$(document).ready(function(){
-				$('#showModalConfirmCreatePassword').click(function(){
-					$('#modalConfirmCreatePassword').modal('show')
-				})
-				$('#btnCreatePassword').click(function(){
-					$('#modalConfirmCreatePassword').modal('hide')
-					$.ajax({
-                            type: "POST",
-                            dataType: "json",
-                            url: "/user/createpassword",
-                            data: {"_token": "{{ csrf_token() }}", 'email': "{{Auth::guard('web')->user()->email}}"},
-                            success: function(data){
-                                if (data.result == 'sent'){
-                                    $('#modalResultCreatePassword').modal('show')
-                                }
-                            }
-                        });
-				})
-				
+	$(document).ready(function(){
+			$('#showModalConfirmCreatePassword').click(function(){
+				$('#modalConfirmCreatePassword').modal('show')
 			})
+		})
 	</script>
 	@endif
 	@endif

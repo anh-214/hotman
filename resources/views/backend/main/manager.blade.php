@@ -19,280 +19,60 @@
                         <span class="badge badge-sm bg-gradient-success" data-bs-toggle="modal" data-bs-target="#createModal">Tạo mới</span>
                     </a>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-2">
+                    <div class="card-body px-0 pt-0 pb-4">
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created_at</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-                            <th class="text-secondary opacity-7"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ( $admins as $admin )
-                                @if ($admin->id != Auth::guard('admin')->user()->id)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div>
-                                                    <img src="{{Storage::disk('admin-avatar')->url( $admin->avatar == null ? 'unknown.png' : $admin->avatar)}}" class="avatar avatar-sm me-3" alt="user1">
+                            <thead>
+                                <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created_at</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ( $admins as $admin )
+                                    @if ($admin->id != Auth::guard('admin')->user()->id)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="{{Storage::disk('admin-avatar')->url( $admin->avatar == null ? 'unknown.png' : $admin->avatar)}}" class="avatar avatar-sm me-3" alt="user1">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{$admin->name}}</h6>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$admin->name}}</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">{{$admin->email}}</p>
-                                        </td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="text-secondary text-xs font-weight-bold">{{$admin->created_at}}</span>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <a type="button" class="text-secondary font-weight-bold text-xs" >
-                                                <span class="badge badge-sm bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="{{$admin->id}}" data-name="{{$admin->name}}">Cập nhật</span>
-                                            </a>
-                                            <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-email="{{$admin->email}}" data-id="{{$admin->id}}">
-                                            <span class="badge badge-sm bg-gradient-danger" >Xóa</span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{$admin->email}}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-secondary text-xs font-weight-bold">@if($admin->role == '1'){{'Admin'}} @elseif ($admin->role == '2'){{'Manager'}} @else {{'Order'}} @endif</span>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-secondary text-xs font-weight-bold">{{$admin->created_at}}</span>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <a type="button" class="text-secondary font-weight-bold text-xs" >
+                                                    <span class="badge badge-sm bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="{{$admin->id}}" data-name="{{$admin->name}}" data-role="{{$admin->role}}">Cập nhật</span>
+                                                </a>
+                                                <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-email="{{$admin->email}}" data-id="{{$admin->id}}">
+                                                <span class="badge badge-sm bg-gradient-danger" >Xóa</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                     </div>
                 </div>
                 </div>
             </div>
-            {{-- <div class="row">
-                <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header pb-0">
-                    <h6>Projects table</h6>
-                    </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center justify-content-center mb-0">
-                        <thead>
-                            <tr>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
-                            <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Spotify</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$2,500</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">working</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">60%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-invision.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Invision</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$5,000</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">done</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">100%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-jira.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Jira</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$3,400</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">canceled</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">30%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Slack</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$1,000</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">canceled</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">0%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-webdev.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Webdev</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$14,000</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">working</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">80%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex px-2">
-                                <div>
-                                    <img src="../assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm rounded-circle me-2" alt="xd">
-                                </div>
-                                <div class="my-auto">
-                                    <h6 class="mb-0 text-sm">Adobe XD</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-sm font-weight-bold mb-0">$2,300</p>
-                            </td>
-                            <td>
-                                <span class="text-xs font-weight-bold">done</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                <span class="me-2 text-xs font-weight-bold">100%</span>
-                                <div>
-                                    <div class="progress">
-                                    <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </td>
-                            <td class="align-middle">
-                                <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                </button>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div> --}}
         </div>
 
         {{-- modal delete --}}
@@ -304,7 +84,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form method="POST">
+                    <form method="POST" action="{{url('admin/manager/delete')}}" id="deleteForm">
                         @csrf
                         <div class="mb-3">
                         <label for="confirmPasswordDelete" class="col-form-label"><h6>Nhập mật khẩu của bạn để xác nhận xóa tài khoản</h6><span id="confirmEmail"></span></label>
@@ -322,23 +102,6 @@
                 </div>
             </div>
         </div>
-        {{-- modal notification delete --}}
-        <div class="modal fade" id="notificationDeleteModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="textNotificationDeleteModal">
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" id="closeNotificationDeleteModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         {{-- modal update --}}
         <div class="modal fade" id="updateModal" data-bs-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-custom">
@@ -348,15 +111,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form enctype="multipart/form-data">
-                            @csrf
+                        <form>
                             <div class="mb-3">
-                                <label for="updateNameInput" class="col-form-label"><h6>Tên: </h6> </label>
-                                <input type="hidden" class="form-control" id="confirmUpdateId"  name="id" value="">
-                                <input type="text" class="form-control" id="updateNameInput" name="name" value="">
-                                <div class="invalid-feedback" id="errorUpdateNameInput">
+                                <label for="updateName" class="col-form-label"><h6>Tên: </h6> </label>
+                                <input type="hidden" class="form-control" id="confirmUpdateId" >
+                                <input type="text" class="form-control" id="updateName" >
+                                <div class="invalid-feedback" id="errorUpdateName">
                                 </div>
-                                <label for="updateNameInput" class="col-form-label"><h6>Avatar: </h6> </label>
+                                <label for="updateRole" class="col-form-label"><h6>Quyền: </h6> </label>
+                                <select class="form-control" id="updateRole">
+                                    <option value="" selected>Chọn</option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Manager</option>
+                                    <option value="3">Order</option>
+                                </select>
+                                <div class="invalid-feedback" id="errorUpdateRole">
+                                </div>
+                                <label  class="col-form-label"><h6>Avatar: </h6> </label>
                                 <div class="input-group">
                                     <input type="file" class="form-control image" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="upload" accept="image/*">
                                 </div>
@@ -384,25 +155,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- modal notification update --}}
-        <div class="modal fade" id="resultUpdateModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="textUpdateModal">
-                        Cập nhật thông tin thành công
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" id="closeResultUpdate" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         {{-- modal create --}}
         <div class="modal fade" id="createModal" data-bs-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-custom">
@@ -412,27 +164,36 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form class="needs-validation" enctype="multipart/form-data" method="POST">
+                        <form id="createForm" action="{{url('admin/manager/create')}}" class="needs-validation" enctype="multipart/form-data" method="POST">
                             @csrf
                             <div class="mb-3 no-border-bottom">
                                 @error('email')
                                 <small class="form-text text-muted"><span class="text-danger">{{$message}}</span></small>
                                 @enderror
                                 <label for="updateNameInput" class="col-form-label"><h6>Tên: </h6> </label>
-                                <input type="text" class="form-control" name="nameInput">
+                                <input type="text" class="form-control" name="name">
                                 <div class="invalid-feedback" id="errorNameInput">
                                 </div>
                                 <label for="updateNameInput" class="col-form-label"><h6>Email: </h6> </label>
-                                <input type="text" class="form-control" name="emailInput">
+                                <input type="text" class="form-control" name="email">
                                 <input type="hidden" name="emailExists">
                                 <div class="invalid-feedback" id="errorEmailInput">
                                 </div>
+                                <label for="updateNameInput" class="col-form-label"><h6>Quyền: </h6> </label>
+                                <select class="form-control" name="role">
+                                    <option value="" selected>Chọn</option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Manager</option>
+                                    <option value="3">Order</option>
+                                </select>
+                                <div class="invalid-feedback" id="errorRoleInput">
+                                </div>
                                 <label for="updateNameInput" class="col-form-label"><h6>Mật khẩu: </h6> </label>
-                                <input type="password" class="form-control" name="passwordInput" >
+                                <input type="text" class="form-control" name="password" >
                                 <div class="invalid-feedback" id="errorPasswordInput">
                                 </div>
                                 <label for="updateNameInput" class="col-form-label"><h6>Xác nhận mật khẩu: </h6> </label>
-                                <input type="password" class="form-control" name="confirmPasswordInput" >
+                                <input type="text" class="form-control" name="confirmPassword" >
                                 <div class="invalid-feedback" id="errorConfirmPasswordInput">
                                 </div>
                             </div>
@@ -550,28 +311,8 @@
             } else {
                 $("input[name=confirmPasswordDelete]").removeClass('is-invalid');
                 $("#errorPasswordDelete").text('')
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/admin/manager/delete",
-                    data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
-                    success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationDeleteModal").text('Xóa tài khoản thành công')
-                            $("#notificationDeleteModal").modal('show')
-                        } else {
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationDeleteModal").text('Xóa tài khoản thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationDeleteModal").modal('show')
-                        }
-                    
-                    }
-                });
+                $('#deleteForm').submit();
             }
-        })
-        $("#closeNotificationDeleteModal").click(function(){
-            location.reload()
         })
     });
 
@@ -584,6 +325,8 @@
         var image = document.getElementById('image');
         var cropper;
         let $checkName = false;
+        let $checkRole = false;
+
 
         $("#updateModal").on("change", ".image", function(e){
             if ($('#preview').is(":visible")){
@@ -621,9 +364,12 @@
             var button = $(event.relatedTarget) 
             var name = button.data('name')
             var id = button.data('id')
+            var role = button.data('role')
             var modal = $(this)
-            modal.find('#updateNameInput').val(name)
+            modal.find('#updateName').val(name)
             modal.find('#confirmUpdateId').val(id)
+            modal.find('option[value='+role+']').prop("selected", true)
+
         }).on('hidden.bs.modal', function () {
             cropper.destroy();
             cropper == null
@@ -649,19 +395,29 @@
             
         });
         $("#update").click(function(){
-            if ($('#updateNameInput').val() == ''){
-                $('#updateNameInput').addClass('is-invalid')
-                $("#errorUpdateNameInput").text("Trường này không được để trống")
+            if ($('#updateName').val() == ''){
+                $('#updateName').addClass('is-invalid')
+                $("#errorUpdateName").text("Trường này không được để trống")
                 $checkName = false
-            } else if ($('#updateNameInput').val().length <5){
+            } else if ($('#updateName').val().length <5){
                 $('#updateNameInput').addClass('is-invalid')
-                $("#errorUpdateNameInput").text("Trường này phải trên 5 kí tự")
+                $("#errorUpdateName").text("Trường này phải trên 5 kí tự")
                 $checkName = false
             } else {
-                $('#updateNameInput').removeClass('is-invalid')
-                $("#errorUpdateNameInput").text("")
+                $('#updateName').removeClass('is-invalid')
+                $("#errorUpdateName").text("")
                 $checkName = true
             }
+            if($('#updateRole').val() == '' ){
+                $('#updateRole').addClass('is-invalid')
+                $("#errorUpdateRole").text("Trường này chưa được chọn")
+                $checkRole = false
+            } else {
+                $('#updateRole').removeClass('is-invalid')
+                $("#errorUpdateRole").text("")
+                $checkRole = true
+            }
+
             if ($('.image').val() != '' && $checkName == true){
                 canvas = cropper.getCroppedCanvas({
                     width: 160,
@@ -677,10 +433,9 @@
                             type: "POST",
                             dataType: "json",
                             url: "/admin/manager/update",
-                            data: {"_token": "{{ csrf_token() }}", 'upload': base64data, 'id': $("input[name=id]").val(), 'name': $('#updateNameInput').val()},
+                            data: {"_token": "{{ csrf_token() }}", 'upload': base64data, 'id': $("#confirmUpdateId").val(), 'name': $('#updateName').val(),'role':$('#updateRole').val()},
                             success: function(data){
-                                $("#updateModal").modal('hide')
-                                $('#resultUpdateModal').modal('show')
+                                window.location.reload()
                             }
                         });
                     }
@@ -690,10 +445,9 @@
                     type: "POST",
                     dataType: "json",
                     url: "/admin/manager/update",
-                    data: {"_token": "{{ csrf_token() }}", 'id': $("input[name=id]").val(), 'name': $('#updateNameInput').val()},
+                    data: {"_token": "{{ csrf_token() }}", 'id': $("#confirmUpdateId").val(), 'name': $('#updateName').val(),'role':$('#updateRole').val()},
                     success: function(data){
-                        $("#updateModal").modal('hide')
-                        $('#resultUpdateModal').modal('show')
+                       window.location.reload()
                     }
                 });
             }
@@ -710,13 +464,15 @@
 <script>
     $(document).ready(function(){
 
-        $nameInput = $("input[name=nameInput]")
-        $emailInput = $("input[name=emailInput]")
-        $passwordInput = $("input[name=passwordInput]")
-        $confirmPasswordInput = $("input[name=confirmPasswordInput]")
+        $nameInput = $("input[name=name]")
+        $emailInput = $("input[name=email]")
+        $roleInput = $("select[name=role]")
+        $passwordInput = $("input[name=password]")
+        $confirmPasswordInput = $("input[name=confirmPassword]")
         let $regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         let $checkName = false
         let $checkEmail = false
+        let $checkRole = false
         let $checkPassword = false
 
         $nameInput.focusout(function(){
@@ -728,14 +484,11 @@
             } else if($name.length < 5 ){
                 $nameInput.addClass('is-invalid')
                 $("#errorNameInput").text("Trường này phải trên 5 kí tự")
-               
             } else {
                 $nameInput.removeClass('is-invalid')
                 $("#errorNameInput").text("")
-               
             }
         });
-        
         $emailInput.focusout(function(){
             if ($emailInput.val() == ''){
                 $emailInput.addClass('is-invalid')
@@ -788,7 +541,6 @@
                 $("#errorNameInput").text("")
                 $checkName = true
             }
-
             if ($emailInput.val() == ''){
                 $emailInput.addClass('is-invalid')
                 $("#errorEmailInput").text("Trường này không được để trống")
@@ -813,6 +565,16 @@
                 })
             }
 
+            if($roleInput.val() == '' ){
+                $roleInput.addClass('is-invalid')
+                $("#errorRoleInput").text("Trường này chưa được chọn")
+                $checkRole = false
+            } else {
+                $roleInput.removeClass('is-invalid')
+                $("#errorRoleInput").text("")
+                $checkRole = true
+            }
+
             if ($passwordInput.val() == ''){
                 $passwordInput.addClass('is-invalid')
                 $("#errorPasswordInput").text("Trường này không được để trống")
@@ -835,22 +597,24 @@
                 }
             }
 
-            if ($checkName == true && $checkEmail == true  && $checkPassword == true &&  $('input[name=emailExists]').val() == 'false'){
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/admin/manager/create",
-                    timeout: 5000,
-                    data: {"_token": "{{ csrf_token() }}", 'name': $("input[name=nameInput]").val(), 'email': $("input[name=emailInput]").val(), 'password': $("input[name=passwordInput]").val()},
-                    success: function(data){
-                        if (data.result == 'success'){
-                            location.reload()
-                        }
-                    },
-                    fail: function(err){
-                        console.log(err)
-                    }
-                });
+            if ($checkName == true && $checkEmail == true && $checkRole == true  && $checkPassword == true &&  $('input[name=emailExists]').val() == 'false'){
+
+                $('#createForm').submit()
+                // $.ajax({
+                //     type: "POST",
+                //     dataType: "json",
+                //     url: "/admin/manager/create",
+                //     timeout: 5000,
+                //     data: {"_token": "{{ csrf_token() }}", 'name': $("input[name=nameInput]").val(), 'email': $("input[name=emailInput]").val(), 'role':, 'password': $("input[name=passwordInput]").val()},
+                //     success: function(data){
+                //         if (data.result == 'success'){
+                //             location.reload()
+                //         }
+                //     },
+                //     fail: function(err){
+                //         console.log(err)
+                //     }
+                // });
             }
 
         });

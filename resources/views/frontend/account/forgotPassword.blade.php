@@ -1,7 +1,7 @@
 @extends('frontend.account.layouts.app')
 
 @section('title')
-    Đăng ký
+    Quên mật khẩu
 @endsection
 @push('css')
   <style>
@@ -34,10 +34,6 @@
             <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
             <div class="card z-index-0">
                 <div class="card-body">
-                @if(session()->has('resultFailed'))
-                    <small class="form-text text-muted"><span class="text-danger">{{session()->get('resultFailed')}}</span></small>
-                    {{session()->forget('resultFailed')}}
-                @endif
                 <form role="form" method="POST" class="py-3" action="{{url('user/forgotpassword')}}">
                     @csrf
                     <label>Email</label>
@@ -56,33 +52,9 @@
         </div>
     </section>
 
-@if(Session::has('createPassword'))
-@if(Session::get('createPassword') == 'success')
-  <div class="modal fade" id="resultModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textUpdateModal">
-                Mật khẩu đã được gửi đến email của bạn, kiểm tra email và tiến hành đăng nhập</a>
-            </div>
-            <div class="modal-footer">
-                <button class="btn custom-btn-register" data-bs-dismiss="modal" aria-label="Close" id="btn-close">Đóng</button>
-            </div>
-        </div>
-    </div>
-  </div>
-@endif
-@endif
-@endsection
 @push('js')
 <script>
 $(document).ready(function(){
-    @if (Session::has('createPassword'))
-    $('#resultModal').modal('show')
-    @endif
     $("#btn-forgot").click(function(){
         $email = $('input[name=email]');
         let $checkEmail = false;
@@ -101,13 +73,9 @@ $(document).ready(function(){
             $("#errorEmail").text("")
             $checkEmail = true
         }
-
         if ($checkEmail == true ){
             $('form').submit();
         }
-    })
-    $('#btn-close').click(function(){
-        window.location.assign("{{url('user/login')}}")
     })
 })
 </script>

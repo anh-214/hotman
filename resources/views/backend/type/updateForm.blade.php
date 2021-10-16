@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive px-3">
-                        <form method="POST" id="createForm" action="{{url('admin/types/update')}}" enctype="multipart/form-data">
+                        <form method="POST" id="updateForm" action="{{url('admin/types/update')}}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{$type->id}}">
                             <div class="form-group">
@@ -37,7 +37,7 @@
                                 <select id="category_id" class="form-control" name="category_id" > 
                                     <option>Chọn ...</option>
                                     @foreach ($categories as $category )
-                                        <option value="{{$category->id}}" @if ($category->id == $oldCategoryId) {{'selected'}} @endif>{{$category->name}}</option>
+                                        <option value="{{$category->id}}" @if ($category->id == $type->product->category_id) {{'selected'}} @endif>{{$category->name}}</option>
                                     @endforeach
                                 </select>
                                 <div class="invalid-feedback" id="errorCategoryId">
@@ -46,24 +46,34 @@
                             <div class="form-group col-md-12">
                                 <label>Thuộc sản phẩm</label>
                                 <select id="product_id" name="product_id" class="form-control">
-                                    @foreach ($oldProducts as $oldProduct)
-                                        <option value="{{$oldProduct->id}}" @if ($oldProduct->id == $oldProductId) {{'selected'}} @endif>{{$oldProduct->name}}</option>
+                                    <option>Chọn ...</option>
+                                    @foreach ($type->allProducts as $oldProduct)
+                                        <option value="{{$oldProduct->id}}" @if ($oldProduct->id == $type->product->id) {{'selected'}} @endif>{{$oldProduct->name}}</option>
                                     @endforeach
                                 </select>
+                                <div class="invalid-feedback" id="errorProductId">
+                                </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>Giá khuyến mại</label>
-                                    <input type="number" class="form-control" name="priceType" placeholder="Nếu không có khuyến mại, vui lòng để trống ô này" value="{{$type->price}}">
-                                    <div class="invalid-feedback" id="errorPrice">
-                                    </div>
+                            <div class="form-group col-md-12">
+                                <label>Giá gốc</label>
+                                <input type="number" class="form-control" name="initialPriceType" placeholder="Giá gốc của sản phẩm" value="{{$type->initial_price}}">
+                                <div class="invalid-feedback" id="errorInitialPrice">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label>Giá gốc</label>
-                                    <input type="number" class="form-control" name="initialPriceType" placeholder="Giá gốc của sản phẩm" value="{{$type->initial_price}}">
-                                    <div class="invalid-feedback" id="errorInitialPrice">
-                                    </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Thuộc chương trình khuyến mại</label>
+                                <select id="promotion_id" name="promotion_id" class="form-control">
+                                    <option data-discount = "0" value="none" selected>Không khuyến mãi</option>
+                                    @foreach ($promotions as $promotion)
+                                        <option data-discount = "{{$promotion->discount}}" value="{{$promotion->id}}" @if ($promotion->id == $type->promotion_id) {{'selected'}} @endif>{{$promotion->name.' - '.$promotion->discount.'%'}}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" id="errorPromotionId">
                                 </div>
+                            </div>
+                            <div class="form-group col-md-12" id="price" style="display:none">
+                                <label>Giá tính toán sau khi áp khuyến mại: <span></span> đ</label>
+                                
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -111,7 +121,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-row-reverse">
-                                <button type="button" id="btnCreate" class="btn btn-primary">Cập nhật</button>
+                                <button type="button" id="btnUpdate" class="btn btn-primary">Cập nhật</button>
                             </div>
                         </form>
                     </div>
@@ -127,6 +137,17 @@
 @push('js')
 <script>
     $(document).ready(function(){
+        $('#promotion_id').change(function(){
+            if ($('option:selected', this).val() == 'none'){
+                $('#price').hide()
+            } else {
+                let discount = $('option:selected', this).attr('data-discount');
+                let initial_price = $('input[name=initialPriceType]').val()
+                let price = initial_price-(initial_price*(parseInt(discount)/100))
+                $('#price span').text(parseInt(price).toLocaleString('it-IT'))
+                $('#price').show()
+            }
+        })
         $('#category_id').change(function(){
                 let select = document.getElementById("product_id");
                 let length = select.options.length;
@@ -134,6 +155,7 @@
                     select.options[i] = null;
                 }
                 let $category_id = $(this).val();
+                $("#product_id").append(`<option selected>Chọn ...</option>`);
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -151,7 +173,7 @@
         }
 
         // validation
-        $('#btnCreate').click(function(){
+        $('#btnUpdate').click(function(){
             let count = 0
             if ($("input[name=nameType]").val() == ''){
                 $("input[name=nameType]").addClass('is-invalid')
@@ -169,18 +191,7 @@
                 $("input[name=initialPriceType]").removeClass('is-invalid')
                 $("#errorInitialPrice").text('')
                 count += 1
-                if ($("input[name=priceType]").val() != ''){
-                    if ( parseInt($("input[name=priceType]").val()) < parseInt($("input[name=initialPriceType]").val())){           
-                        $("input[name=priceType]").removeClass('is-invalid')
-                        $("#errorPrice").text('')
-                    } else {
-                        $("input[name=priceType]").addClass('is-invalid')
-                        $("#errorPrice").text('Giá khuyến mại phải nhỏ hơn giá gốc')
-                        count -= 1
-                    }
-                }
             }
-
             if ($("input[name=sizesType]").val() == ''){
                 $("input[name=sizesType]").addClass('is-invalid')
                 $("#errorSizes").text('Vui lòng không để trống trường này')
@@ -219,6 +230,22 @@
             } else {
                 $("#category_id").removeClass('is-invalid')
                 $("#errorCategoryId").text('')
+                count += 1
+            }
+            if ($("#product_id").val() == 'Chọn ...'){
+                $("#product_id").addClass('is-invalid')
+                $("#errorProductId").text('Vui lòng không để trống trường này')
+            } else {
+                $("#product_id").removeClass('is-invalid')
+                $("#errorProductId").text('')
+                count += 1
+            }
+            if ($("#promotion_id").val() == 'Chọn'){
+                $("#promotion_id").addClass('is-invalid')
+                $("#errorPromotionId").text('Vui lòng không để trống trường này')
+            } else {
+                $("#promotion_id").removeClass('is-invalid')
+                $("#errorPromotionId").text('')
                 count += 1
             }
             if ($("textarea[name=designsType]").val() == ''){
@@ -265,8 +292,8 @@
                     $("#errorLinkImages").text('')
                 }
             }
-            if (count == 8){
-                $("#createForm").submit();
+            if (count == 10){
+                $("#updateForm").submit();
             }
         
         })

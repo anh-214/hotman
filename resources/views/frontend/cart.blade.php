@@ -21,39 +21,10 @@
 								<th class="text-center"><i class="ti-trash remove-icon"></i></th>
 							</tr>
 						</thead>
-						<tbody>
-                            @php $total = 0;@endphp
-                            @foreach ($cart as $id => $details)
-                                @php $total += $details['price'] * $details['quantity'];@endphp
-                                <tr>
-                                    <td class="image" data-title="No"><img src="{{$details['image']}}" alt="#"></td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name"><a href="{{$details['link']}}">{{$details['name']}}</a></p>
-                                        <p class="product-des">Size: {{$details['size']}}</p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>{{number_format($details['price'])}} đ</span></td>
-                                    <td class="qty" data-title="Qty"><!-- Input Order -->
-                                        <div class="input-group">
-                                            <div class="button minus">
-                                                <button type="button" class="btn btn-primary btn-number"  data-type="minus" data-field="quant[{{$details['id']}}]">
-                                                    <i class="ti-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" id_cart = "{{$id}}" name="quant[{{$details['id']}}]" class="input-number"  data-min="1" data-max="100" value="{{$details['quantity']}}">
-                                            <div class="button plus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[{{$details['id']}}]">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!--/ End Input Order -->
-                                    </td>
-                                    <td class="total-amount" data-title="Total"><span>{{number_format($details['price'] * $details['quantity'])}} đ</span></td>
-                                    <td data-id="{{$id}}" class="action remove" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-                                </tr>
-                            @endforeach
+						<tbody class="tbody-cart">
 						</tbody>
 					</table>
+					<input type="hidden" id="temp-input-number">
 					<!--/ End Shopping Summery -->
 				</div>
 			</div>
@@ -63,30 +34,13 @@
 					<div class="total-amount">
 						<div class="row">
 							<div class="col-lg-8 col-md-5 col-12">
-								{{-- <div class="left">
-									<div class="coupon">
-										<form action="#" target="_blank">
-											<input name="Coupon" placeholder="Enter Your Coupon">
-											<button class="btn">Apply</button>
-										</form>
-									</div>
-									<div class="checkbox">
-										<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Shipping (+10$)</label>
-									</div>
-								</div> --}}
 							</div>
 							<div class="col-lg-4 col-md-7 col-12">
 								<div class="right">
 									<ul>
-										<li>Tổng giỏ hàng<span>{{number_format($total)}} đ</span></li>
-                                        @if ($total >= 500000)
-										    <li>Giao hàng toàn quốc<span>Miễn phí</span></li>
-                                        @elseif ($total != 0)
-                                            @php $total += 30000 @endphp
-                                            <li>Giao hàng toàn quốc<span>30,000 đ</span></li>
-                                        @endif
-										{{-- <li>You Save<span>$20.00</span></li> --}}
-										<li class="last">Bạn phải trả<span>{{number_format($total)}} đ</span></li>
+										<li>Tổng giỏ hàng<span class="total-amount-all"></span></li>
+										<li class="ship-type"></li>
+										<li class="last">Bạn phải trả<span></span></li>
 									</ul>
 									<div class="button5">
 										<a href="{{url('cart/checkout')}}" class="btn">Thanh toán</a>
@@ -152,21 +106,135 @@
 @push('js')
     <script>
         $(document).ready(function(){
-            $('.input-number').change(function() {
-                valueCurrent = parseInt($(this).val());
-                id = $(this).attr('id_cart')
-                $.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "{{url('update-cart')}}",
-					data: {"_token": "{{ csrf_token() }}", 'id': id, 'quantity': valueCurrent},
-					success: function(data){
-						if (data.result == 'success'){
-							window.location.reload()
+			$(document).on('click','.remove-one-type',function(){
+                let cart_id = $(this).attr('data-cart-id')
+                // console.log(cart_id)
+                let storageCart = JSON.parse(localStorage.getItem('cart'));
+                cart = storageCart.filter(cart => cart.cart_id !== cart_id );
+                localStorage.setItem('cart', JSON.stringify(cart));
+                pull_cart();
+            })
+			pull_cart();
+			$(document).on('click','.btn-number', function(e){
+				e.preventDefault();
+				fieldName = $(this).attr('data-field');
+				type      = $(this).attr('data-type');
+				var input = $("input[name='"+fieldName+"']");
+				var currentVal = parseInt(input.val());
+				cart_id = input.attr('cart-id')
+				// alert(cart_id)
+				if (!isNaN(currentVal)) {
+					if(type == 'minus') {
+						if(currentVal > input.attr('data-min')) {
+							input.val(currentVal - 1).change();
+							// update localstorage
+							cart = JSON.parse(localStorage.getItem('cart'));
+							cart.forEach(element => {
+								if (element['cart_id'] == cart_id ){
+									element['quantity'] -= 1 ;
+								}
+							});
+							localStorage.setItem('cart', JSON.stringify(cart));
+							refresh_cart();
+							pull_cart()
+							// 
+						} 
+						if(parseInt(input.val()) == input.attr('data-min')) {
+							$(this).attr('disabled', true);
+						}
+					} else if(type == 'plus') {
+						if(currentVal < input.attr('data-max')) {
+							input.val(currentVal + 1).change();
+							// console.log(currentVal+1)
+							// update localstorage
+							cart = JSON.parse(localStorage.getItem('cart'));
+							cart.forEach(element => {
+								if (element['cart_id'] == cart_id ){
+									element['quantity'] = currentVal + 1 ;
+								}
+							});
+							localStorage.setItem('cart', JSON.stringify(cart));
+							refresh_cart();
+							pull_cart()
+							// 
+						}
+						if(parseInt(input.val()) == input.attr('data-max')) {
+							$(this).attr('disabled', true);
 						}
 					}
-				})
-            })
+				} else {
+					input.val(0);
+				}
+			});
+			$(document).on('focusin','.input-number',function(){
+				$(this).attr('oldValue',$(this).val());
+			});
+			$(document).on('keydown','.input-number',function(e){
+				minValue =  parseInt($(this).attr('data-min'));
+				maxValue =  parseInt($(this).attr('data-max'));
+				valueCurrent = parseInt($(this).val());
+				name = $(this).attr('name');
+
+				if ($.inArray(e.keyCode, [13]) !== -1){
+					if (valueCurrent>maxValue){
+						// alert('Giá trị vượt số lượng cho phép')
+						valueCurrent = $(this).attr('oldValue');
+					}
+					if (valueCurrent <minValue){
+						// alert('Giá trị thấp hơn số lượng cho phép')
+						valueCurrent = $(this).attr('oldValue');
+					}
+					cart_id = $(this).attr('cart-id')
+					cart = JSON.parse(localStorage.getItem('cart'));
+					cart.forEach(element => {
+						if (element['cart_id'] == cart_id ){
+							element['quantity'] = valueCurrent ;
+						}
+					});
+					localStorage.setItem('cart', JSON.stringify(cart));
+					refresh_cart();
+					pull_cart()
+				}
+			})
+			
+			$(document).on('change','.input-number',function() {
+				minValue =  parseInt($(this).attr('data-min'));
+				maxValue =  parseInt($(this).attr('data-max'));
+				valueCurrent = parseInt($(this).val());
+				name = $(this).attr('name');
+
+				if(valueCurrent >= minValue) {
+					$(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+				} else {
+					alert('Sorry, the minimum value was reached');
+					$(this).val($(this).attr('oldValue'));
+				}
+				if(valueCurrent <= maxValue) {
+					$(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+				} else {
+					alert('Sorry, the maximum value was reached');
+					$(this).val($(this).attr('oldValue'));
+					
+				}
+			});
+			$('.input-number').keydown(function (e) {
+					// Allow: backspace, delete, tab, escape, enter and .
+					if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+						// Allow: Ctrl+A
+						(e.keyCode == 65 && e.ctrlKey === true) || 
+						// Allow: home, end, left, right
+						(e.keyCode >= 35 && e.keyCode <= 39)) {
+							// let it happen, don't do anything
+							return;
+					}
+					// Ensure that it is a number and stop the keypress
+					if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+						e.preventDefault();
+						// alert('ahah')
+					}
+			});
+			
+
         })
     </script>
 @endpush

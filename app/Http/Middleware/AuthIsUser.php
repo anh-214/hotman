@@ -20,6 +20,7 @@ class AuthIsUser
         if (Auth::guard('web')->check()){
             return $next($request);
         } else {
+            session()->flash('fail', 'Vui lòng đăng nhập để tiếp tục');
             return redirect('/user/login');
         }
     }

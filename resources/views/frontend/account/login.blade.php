@@ -1,7 +1,7 @@
 @extends('frontend.account.layouts.app')
 
 @section('title')
-    Đăng ký
+    Đăng nhập
 @endsection
 @push('css')
   <style>
@@ -75,10 +75,6 @@
                 </div>
                 </div>
                 <div class="card-body">
-                @if(session()->has('resultFailed'))
-                    <small class="form-text text-muted"><span class="text-danger">{{session()->get('resultFailed')}}</span></small>
-                    {{session()->forget('resultFailed')}}
-                @endif
                 <form role="form" method="POST">
                     @csrf
                     <label>Email</label>
@@ -116,35 +112,9 @@
         </div>
         </div>
     </section>
-
-@if(Session::has('verifyEmail'))
-@if(Session::get('verifyEmail') == 'success')
-  <div class="modal fade" id="resultModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textUpdateModal">
-                Xác minh tài khoản thành công, tiến hành đăng nhập</a>
-            </div>
-            <div class="modal-footer">
-                <button class="btn custom-btn-register" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-  </div>
-@endif
-@endif
-@endsection
 @push('js')
 <script>
 $(document).ready(function(){
-    @if (Session::has('verifyEmail'))
-    $('#resultModal').modal('show')
-    {{session()->forget('verifyEmail')}}
-    @endif
     $("#btn-login").click(function(){
         $email = $('input[name=email]');
         $password = $('input[name=password]');

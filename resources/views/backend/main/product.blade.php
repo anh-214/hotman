@@ -22,55 +22,53 @@
                         @endisset
                     </div>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2 mx-2">
+                <div class="card-body px-0 pt-0 pb-4 mx-2">
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="p-4">
+                                    @isset($products) 
+                                    <th class="px-4">
                                         <span class="custom-checkbox">
                                             <input type="checkbox" id="selectAll">
                                             <label for="selectAll"></label>
                                         </span>
                                     </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Category_id_name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Updated_at</th>
+                                    @endisset
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Category</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Updated_at</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 {{-- view product --}}
                                 @isset($product) 
-                                    <tr class="bg-light">
+                                    <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$product->id}}</h6>
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->id}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->desc}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->desc}}</p>
                                         </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0"> 
+                                        <td class="">
+                                            <p class="text-center text-xs font-weight-bold mb-0"> 
                                                 <a href="{{url('admin/categories/?id='.$product->category_id)}}" type="button" class="text-secondary">
                                                     {{$product->category_id.' - '.$product->category->name}}
                                                 </a>
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->created_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->created_at}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->updated_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->updated_at}}</p>
                                         </td>
                                         <td class="align-middle text-center">
                                             <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('/admin/types?product_id='.$product->id)}}" >
@@ -88,37 +86,33 @@
                                 @isset($products) 
                                 @foreach ($products as $product )
                                     <tr>
-                                        <td class="p-4">
+                                        <td class="px-4">
                                             <span class="custom-checkbox">
                                                 <input type="checkbox" class="checkbox" name="checkbox[]" value="{{$product->id}}">
                                                 <label></label>
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$product->id}}</h6>
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->id}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->desc}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->desc}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> 
+                                            <p class="text-center text-xs font-weight-bold mb-0"> 
                                                 <a href="{{url('admin/categories/?id='.$product->category_id)}}" type="button" class="text-secondary">
                                                     {{$product->category_id.' - '.$product->category->name}}
                                                 </a>
                                             </p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->created_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->created_at}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0"> {{$product->updated_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"> {{$product->updated_at}}</p>
                                         </td>
                                         <td class="align-middle text-center">
                                             <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('/admin/types?product_id='.$product->id)}}" >
@@ -218,23 +212,6 @@
     </div>
 </div>
 @endisset
-{{-- modal notification --}}
-<div class="modal fade" id="notificationModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textNotificationModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 {{-- modal update --}}
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -304,22 +281,6 @@
         </div>
     </div>
 </div>
-{{-- modal notification delete multiple --}}
-<div class="modal fade" id="notificationDeleteMutipleModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textNotificationDeleteMutipleModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationDeleteMutipleModal"  data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 @push('css')
     <style>
@@ -357,15 +318,7 @@
                     url: "/admin/products/delete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa sản phẩm thành công')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        } else {
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        }
+                        window.location.reload()
                     
                     }
                 });
@@ -438,23 +391,10 @@
                     url: "/admin/products/delete",
                     data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa sản phẩm thành công')
-                            $("#notificationModal").modal('show')
-                        } else if (data.result == 'failed') {
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationModal").modal('show')
-                        
-                        }
-                    
+                        window.location.reload()                    
                     }
                 });
             }
-        })
-        $("#closeNotificationModal").click(function(){
-            location.reload()
         })
     });
 
@@ -541,21 +481,10 @@
                         url: "/admin/products/update",
                         data: {"_token": "{{ csrf_token() }}", 'id': $("input[name=updateId]").val(), 'name': $("#nameProduct").val(),'desc': $("#descProduct").val(), 'category_id': $("select[name=category_id_update]").val()},
                         success: function(data){
-                            if (data.result == 'success'){
-                                $("#updateModal").modal('hide')
-                                $("#textNotificationModal").text('Cập nhật thành công')
-                                $("#notificationModal").modal('show')
-                            } else {
-                                $("#updateModal").modal('hide')
-                                $("#textNotificationModal").text('Cập nhật thất bại')
-                                $("#notificationModal").modal('show')
-                            }
+                            window.location.reload()
                         }
                     });
             }
-        })
-        $("#closeNotificationModal").click(function(){
-            location.reload()
         })
     });
 

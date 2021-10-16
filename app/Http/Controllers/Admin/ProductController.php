@@ -14,7 +14,31 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
-{
+{   
+    public function products(Request $request){
+        $select = 'Products';
+        $active = 'products';
+        $search = '';
+        $categories = Category::all(['id','name']); 
+        $products = Product::with('category')->paginate(15);
+
+        if ($request->has('id')) {
+            $product = Product::where('id',$request->input('id'))->first();
+            $category = Category::where('id',$product->category_id)->first();
+            return view('backend.main.product',compact('select','active','product','categories','category'));
+        }
+
+        if ($request->has(['category_id'])){
+            $products = Category::findOrFail($request->input('category_id'))->products()->paginate(15);
+            $products->appends(['category_id'=> $request->input('category_id')]);
+        };
+        if ($request->has(['search'])){
+            $search = $request->input('search');
+            $products = Product::where('name', 'LIKE', '%' . $request->input('search') . '%')->paginate(15);
+            $products->appends(['search'=> $request->input('search')]);
+        };
+        return view('backend.main.product',compact('select','active','products','categories','search'));
+    }
     public function import(Request $request) {   
         $request->validate([
         'mcafile' => 'max:10240|required|mimes:csv,xlsx'
@@ -36,6 +60,7 @@ class ProductController extends Controller
             'created_at' => now(),
             'updated_at' => now()
         ]);
+        session()->flash('success','Thêm sản phẩm thành công');
         return back();
     }
     public function delete(Request $request){
@@ -58,10 +83,12 @@ class ProductController extends Controller
                         }
                         Product::where('id',$id)->delete();
                     }
+                    session()->flash('success','Xóa sản phẩm thành công');
                     return response()->json([
                         'result' => 'success'
                     ]);
                 } else {
+                    session()->flash('fail','Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
                     return response()->json([
                         'result' => 'failed'
                     ]);
@@ -82,10 +109,12 @@ class ProductController extends Controller
                     Type::where('id', $type->id)->delete();
                 }
                 Product::where('id',$id)->delete();
-                    return response()->json([
-                        'result' => 'success'
-                    ]);
+                session()->flash('success','Xóa sản phẩm thành công');
+                return response()->json([
+                    'result' => 'success'
+                ]);
             } else {
+                session()->flash('fail','Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
                 return response()->json([
                     'result' => 'failed'
                 ]);
@@ -106,13 +135,9 @@ class ProductController extends Controller
                         'updated_at' => now()
                     ]);
             if ($result){
+                session()->flash('success','Cập nhật sản phẩm thành công');
                 return response()->json([
                     'result' => 'success',
-                ]);
-
-            } else {
-                return response()->json([
-                    'result' => 'failed',
                 ]);
             }
         }

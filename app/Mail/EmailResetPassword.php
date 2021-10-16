@@ -18,9 +18,9 @@ class EmailResetPassword extends Mailable
      *
      * @return void
      */
-    public function __construct(string $email, string $token)
+    public function __construct(string $email, string $link)
     {   $this->email = $email;
-        $this->token = $token;
+        $this->link = $link;
     }
 
     /**
@@ -30,6 +30,6 @@ class EmailResetPassword extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.resetPassword',['email'=> $this->email,'token'=> $this->token])->subject('Reset mật khẩu');
+        return $this->view('mail.resetPassword',['email'=> $this->email,'link'=> $this->link])->subject('Reset mật khẩu');
     }
 }

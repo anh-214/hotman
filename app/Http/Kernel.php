@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminIsRole1;
+use App\Http\Middleware\AdminIsRole12;
 use App\Http\Middleware\AuthIsAdmin;
 use App\Http\Middleware\AdminLogged;
 use App\Http\Middleware\UserLogged;
@@ -72,9 +74,13 @@ class Kernel extends HttpKernel
         'authisadmin' => AuthIsAdmin::class,
         'authisuser' => AuthIsUser::class,
         'adminlogged' => AdminLogged::class,
-        'userlogged' => UserLogged::class,
+        'if-user-logged-return-back' => UserLogged::class,
         'notSocialiteUser' => NotSocialiteUser::class,
         'passwordIsNull' => PasswordIsNull::class,
+        'adminisrole1' => AdminIsRole1::class,
+        'adminisrole12' => AdminIsRole12::class,
+
+
 
     ];
 }

@@ -104,7 +104,7 @@ YTPlayer.opt.autoPlay){var YTPStart=jQuery.Event("YTPStart");YTPStart.time=YTPla
 //------------- DETAIL ADD - MINUS COUNT ORDER -------------//
 $('.btn-number').click(function(e){
     e.preventDefault();
-    
+    // alert('ahihi')
     fieldName = $(this).attr('data-field');
     type      = $(this).attr('data-type');
     var input = $("input[name='"+fieldName+"']");

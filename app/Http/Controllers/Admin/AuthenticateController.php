@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailResetPassword;
 use App\Models\Admin;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +28,11 @@ class AuthenticateController extends Controller
         $remember = $request->input('remember') == 'on' ? True : False;
         
         if (Auth::guard('admin')->attempt(['email' => $email, 'password' => $password], $remember)){
+            session()->flash('success','Đăng nhập thành công');
             return redirect('admin/dashboard');
         } else {
-            $loginFailed = 'Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu của bạn';
-            return view('backend.account.login', compact('loginFailed'));
+            session()->flash('fail','Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu của bạn');
+            return view('backend.account.login');
         }
     }
     public function logout(){
@@ -52,46 +54,64 @@ class AuthenticateController extends Controller
                 'token' => $token,
                 'created_at' => now(),
             ]);
-            Mail::to($request->input('email'))->send(new EmailResetPassword($request->input('email'),$token));
-            return response()->json([
-                'result' => 'exists',
-            ]);
+            $link = url('admin/createpassword/'.$token);
+            Mail::to($request->input('email'))->send(new EmailResetPassword($request->input('email'),$link));
+            // return response()->json([
+            //     'result' => 'exists',
+            // ]);
+            session()->flash('success','Vui lòng kiểm tra email của bạn để lấy mật khẩu');
+            return back();
+
         } else {
-            return response()->json([
-                'result' => 'notExists',
-            ]);
+            // return response()->json([
+            //     'result' => 'notExists',
+            // ]);
+            session()->flash('fail','Email này chưa được đăng ký');
+            return back();
         }
     }
 
-    public function verifyTokenCreatePassword($token){
-        $admin = DB::table('password_resets')->where('token',$token)->first();
-        if ($admin == null ){
-            return back();
+    public function showCreatePassword($token){
+        $token = DB::table('password_resets')->where('token',$token)->first();
+        if ($token == null ){
+            session()->flash('fail','Sai token');
+            return redirect('admin/login');
         } else {
-            return view('backend.account.createPassword',['token' => $token,'email'=> $admin->email]);
+            $token_latest = DB::table('password_resets')->where('email',$token->email)->latest()->first()->token;
+            if ($token_latest == $token->token){
+                if (Carbon::parse($token->created_at) < Carbon::yesterday()) {
+                    session()->flash('fail','Token đã hết hạn');
+                    return redirect('admin/login');
+                }
+                return view('backend.account.createPassword',['token' => $token->token,'email' => $token->email]);
+            } else {
+                session()->flash('fail','Token đã được sử dụng');
+                return redirect('admin/login');
+            }
         }
         
     }
 
-    public function createPassword(Request $request){
-        if( $request->ajax()){
+    public function createPassword(Request $request,$token){
             $password = $request->input('password');
-            $email = $request->input('email');
-            $token = $request->input('token');
+            $token = DB::table('password_resets')->where('token',$token)->first();
 
-            $admin = DB::table('password_resets')->where('token',$token)->first();
-            if ($admin->email == $email ){
-                Admin::where('email', $email)->update([
+            $token_latest = DB::table('password_resets')->where('email',$token->email)->latest()->first()->token;
+            if ($token_latest == $token->token){
+
+                if (Carbon::parse($token->created_at) < Carbon::yesterday()) {
+                    session()->flash('fail','Token đã hết hạn');
+                    return redirect('admin/login');
+                }
+                Admin::where('email', $token->email)->update([
                     'password' => Hash::make($password)
                 ]);
-                return response()->json([
-                    'result' => 'success'
-                ]);
+                session()->flash('success','Tạo mật khẩu mới thành công');
+                return redirect('admin/login');
             } else {
-                return response()->json([
-                    'result' => 'failed'
-                ]);
+                session()->flash('fail','Tạo mật khẩu thất bại');
+                return redirect('admin/login');
             }
-        }
+        
     }
 }

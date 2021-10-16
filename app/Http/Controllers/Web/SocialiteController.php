@@ -20,6 +20,7 @@ class SocialiteController extends Controller
             if ($check->google_id != null){ 
                 $login = User::where('google_id',$user->id)->first();
                 Auth::guard('web')->login($login);
+                session()->flash('success', 'Đăng nhập thành công');
                 return redirect('/home');
             } else {
                 User::where('email',$user->email)->update([
@@ -27,10 +28,10 @@ class SocialiteController extends Controller
                 ]);
                 $login = User::where('google_id',$user->id)->first();
                 Auth::guard('web')->login($login);
+                session()->flash('success', 'Đăng nhập thành công');
                 return redirect('/home');
             }
         } else {
-           
             User::create([
                 'name' => $user->name,
                 'email' => $user->email,
@@ -47,6 +48,7 @@ class SocialiteController extends Controller
             ]);
             $login = User::where('google_id',$user->id)->first();
             Auth::guard('web')->login($login);
+            session()->flash('success', 'Đăng ký thành công');
             return redirect('/home');
             
         }
@@ -63,6 +65,7 @@ class SocialiteController extends Controller
             if ($check->github_id != null){ 
                 $login = User::where('github_id',$user->id)->first();
                 Auth::guard('web')->login($login);
+                session()->flash('success', 'Đăng nhập thành công');
                 return redirect('/home');
             } else {
                 User::where('email',$user->email)->update([
@@ -70,6 +73,7 @@ class SocialiteController extends Controller
                 ]);
                 $login = User::where('github_id',$user->id)->first();
                 Auth::guard('web')->login($login);
+                session()->flash('success', 'Đăng nhập thành công');
                 return redirect('/home');
             }
         } else {
@@ -90,6 +94,7 @@ class SocialiteController extends Controller
             ]);
             $login = User::where('github_id',$user->id)->first();
             Auth::guard('web')->login($login);
+            session()->flash('success', 'Đăng ký thành công');
             return redirect('/home');
             
         }

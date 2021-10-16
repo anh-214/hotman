@@ -19,18 +19,12 @@
                             <input type="hidden" name="type_payment">
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="form-group">
-                                    <label>Họ và tên<span>*</span></label>
-                                    <input class="form-control" type="text" name="name" placeholder="" required value="{{Auth::guard('web')->user()->name}}">
-                                    <div class="invalid-feedback" id="errorName">
-                                    </div>
+                                    <label>Họ và tên: <label style="font-weight:bolder;color:black">{{Auth::guard('web')->user()->name}}</label></label>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="form-group">
-                                    <label>Số điện thoại<span>*</span></label>
-                                    <input class="form-control" type="text" name="phonenumber" placeholder="" required value="{{Auth::guard('web')->user()->phonenumber}}">
-                                    <div class="invalid-feedback" id="errorPhoneNumber">
-                                    </div>
+                                    <label>Số điện thoại: <label style="font-weight:bolder;color:black">@if(Auth::guard('web')->user()->phonenumber == null) <a href="{{url('user/information')}}" style="color: red">Cập nhật số điện thoại</a> @else {{Auth::guard('web')->user()->phonenumber}} @endif</label></label>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-12">
@@ -83,22 +77,12 @@
                 <div class="order-details">
                     <!-- Order Widget -->
                     <div class="single-widget">
-                        @php $total = 0;@endphp
-                        @foreach ($cart as $id => $details)
-                            @php $total += $details['price'] * $details['quantity'];@endphp
-                        @endforeach
                         <h2>Tổng hóa đơn</h2>
                         <div class="content">
                             <ul>
-                                <li>Tổng đơn hàng<span>{{number_format($total)}} đ</span></li>
-                                <li>(+) Giao hàng<span>@php if ($total>=500000){
-                                                                echo('Freeship');
-                                                            } else {
-                                                                $total += 30000;
-                                                                echo('30,000 đ');
-                                                            }
-                                @endphp</span></li>
-                                <li class="last">Tổng<span>{{number_format($total)}} đ</span></li>
+                                <li class="total-amount-checkout">Tổng đơn hàng<span> đ</span></li>
+                                <li>(+) Giao hàng<span class="type-ship-checkout"></span></li>
+                                <li class="last">Tổng<span></span></li>
                             </ul>
                         </div>
                     </div>
@@ -253,27 +237,13 @@
                 });
             })
             $('#btnorder').click(function(){
-                // alert('ahah')
-                $name = $('input[name=name]');
-                $phonenumber = $('input[name=phonenumber]');
                 $detailAddress = $('input[name=detailsAddress]')
                 let $province = $('#provinces')
                 let $district = $('#districts')
                 let $ward = $('#wards')
                 let $payment = $('input[name=payment]:checked')
                 $('input[name=type_payment]').val($payment.val())
-                let $regexPhone = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/
                 $count = 0
-
-                if ($name.val() == ''){
-                    $name.addClass('is-invalid')
-                    $("#errorName").text("Trường này không được để trống") 
-                } else {
-                    $name.removeClass('is-invalid')
-                    $("#errorName").text("")
-                    $count +=1
-                }
-
                 if ($province.val() == ''){
                     $province.addClass('is-invalid')
                     $("#errorProvince").text("Trường này không được để trống") 
@@ -309,21 +279,25 @@
                     $("#errorDetails").text("")
                     $count +=1
                 }
-                if ($phonenumber.val() == ''){
-                    $phonenumber.addClass('is-invalid')
-                    $("#errorPhoneNumber").text("Trường này không được để trống")
-                } else if ($regexPhone.test($phonenumber.val()) == false){
-                    $phonenumber.addClass('is-invalid')
-                    $("#errorPhoneNumber").text("Nhập đúng định dạng số điện thoại")
-                } else {
-                    $phonenumber.removeClass('is-invalid')
-                    $("#errorPhoneNumber").text("")
-                    $count +=1
-                }
-                if ($count == 6){
-                    $('form').submit();
+                if ($count == 4){
+                    cart = localStorage.getItem('cart');
+                    let type_cart = $('input[name=payment]:checked').val()
+                    // console.log(type_cart);
+                    $.ajax({
+						type: "POST",
+						dataType: "json",
+						url: "{{url('cart/checkout')}}",
+						data: {"_token": "{{ csrf_token() }}", 'cart': cart,'type_cart':type_cart, 'ward': $('select[name=ward]').val(), 'detailsAddress': $('input[name=detailsAddress]').val()},
+						success: function(data_ajax){
+							if (data_ajax.result == 'success'){
+                                localStorage.clear()
+                                window.location.assign("{{url('home')}}")
+                            }
+						}
+				    });
                 }
             })
+            checkout()
         })
     </script>
 @endpush

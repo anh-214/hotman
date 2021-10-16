@@ -25,7 +25,6 @@
 @endpush
 @section('content')
 <div class="js">
-    
     <!-- Product Style -->
 		<section class="product-area shop-sidebar shop section">
 			<div class="container">
@@ -36,120 +35,32 @@
 								<div class="single-widget category">
 									<h3 class="title">{{$category_info->name}}</h3>
 									<ul class="categor-list">
-										@foreach ($product_infos as $product_info)
-											<li><a href="{{url('/category/'.$category_info->id.'/product/'.$product_info->id)}}">{{$product_info->name}}</a></li>
+										@foreach ($category_info->products as $product_info)
+											<li><a href="{{url('product/'.$product_info->id)}}">{{$product_info->name}}</a></li>
 										@endforeach
 										
 									</ul>
 								</div>
-								<!--/ End Single Widget -->
-								<!-- Shop By Price -->
-								<div class="single-widget range">
-									<h3 class="title">Shop by Price</h3>
-									<div class="price-filter">
-										<div class="price-filter-inner">
-											<div id="slider-range"></div>
-												<div class="price_slider_amount">
-												<div class="label-input">
-													<span>Range:</span><input type="text" id="amount" name="price" placeholder="Add Your Price"/>
-												</div>
-											</div>
-										</div>
-									</div>
-									<ul class="check-box-list">
-										<li>
-											<label class="checkbox-inline" for="1"><input name="news" id="1" type="checkbox">$20 - $50<span class="count">(3)</span></label>
-										</li>
-										<li>
-											<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox">$50 - $100<span class="count">(5)</span></label>
-										</li>
-										<li>
-											<label class="checkbox-inline" for="3"><input name="news" id="3" type="checkbox">$100 - $250<span class="count">(8)</span></label>
-										</li>
-									</ul>
-								</div>
-								<!--/ End Shop By Price -->
-								<!-- Single Widget -->
-								
 								@isset($latest_types)
 								<div class="single-widget recent-post">
 									<h3 class="title">Sản phẩm mới</h3>
 									{{-- @php $types = \App\Models\Category::where('id',$category_info->id)->first(); @endphp --}}
 									<!-- Single Post -->
 									@foreach ($latest_types as $latest_type)
-									@php 
-										$latest_product = \App\Models\Product::where('id',$latest_type->product_id)->first();
-									@endphp 
 										<div class="single-post first">
 											<div class="image">
-												<img src="@php
-														$image = \App\Models\Image::where('type_id',$latest_type->id)->first();
-														echo ($image->name);
-													@endphp" alt="#">
+												<img src="{{$latest_type->images[0]->name}}" alt="#">
 											</div>
 											<div class="content">
-												<h5><a href="{{url('category/'.$category_info->id.'/product/'.$latest_product->id.'/type/'.$latest_type->id)}}">{{$latest_type->name}}</a></h5>
+												<h5><a href="{{url('type/'.$latest_type->id)}}">{{$latest_type->name}}</a></h5>
 												<p class="price">{{number_format($latest_type->price).' đ'}}</p>
-												{{-- <ul class="reviews">
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li><i class="ti-star"></i></li>
-													<li><i class="ti-star"></i></li>
-												</ul> --}}
 											</div>
 										</div>
 									@endforeach
 									
-									<!-- End Single Post -->
-									{{-- <!-- Single Post -->
-										<div class="single-post first">
-											<div class="image">
-												<img src="https://via.placeholder.com/75x75" alt="#">
-											</div>
-											<div class="content">
-												<h5><a href="#">Women Clothings</a></h5>
-												<p class="price">$99.50</p>
-												<ul class="reviews">
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li><i class="ti-star"></i></li>
-												</ul>
-											</div>
-										</div>
-										<!-- End Single Post -->
-										<!-- Single Post -->
-										<div class="single-post first">
-											<div class="image">
-												<img src="https://via.placeholder.com/75x75" alt="#">
-											</div>
-											<div class="content">
-												<h5><a href="#">Man Tshirt</a></h5>
-												<p class="price">$99.50</p>
-												<ul class="reviews">
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-													<li class="yellow"><i class="ti-star"></i></li>
-												</ul>
-											</div>
-										</div>
-										<!-- End Single Post --> --}}
-									</div>
-									@endisset
-									<!--/ End Single Widget -->
-									{{-- <!-- Single Widget -->
-								<div class="single-widget category">
-									<h3 class="title"></h3>
-									<ul class="categor-list">
-										
-										
-									</ul>
 								</div>
-								<!--/ End Single Widget --> --}}
+								@endisset
+								
 						</div>
 					</div>
 					<div class="col-lg-9 col-md-8 col-12">
@@ -159,7 +70,7 @@
 								<div class="shop-top">
 									<div class="shop-shorter">
 										<div class="single-shorter">
-											<label>Show :</label>
+											<label>Hiện :</label>
 											<select id="show_paginate">
 												<option value="9" @if($paginate == 9) {{'selected'}} @endif>09</option>
 												<option value="15" @if($paginate == 15) {{'selected'}} @endif>15</option>
@@ -168,32 +79,28 @@
 											</select>
 										</div>
 										<div class="single-shorter">
-											<label>Sort By :</label>
+											<label>Sắp xếp theo :</label>
 											<select id="select_price">
-												<option @if($sort_by_price == 'none') {{'selected'}} @endif>None</option>
-												<option value="up" @if($sort_by_price == 'up') {{'selected'}} @endif>Price Up</option>
-												<option value="down" @if($sort_by_price == 'down') {{'selected'}} @endif>Price Down</option>
+												<option value="none" @if($sort_by_price == 'none') {{'selected'}} @endif>Không</option>
+												<option value="asc" @if($sort_by_price == 'asc') {{'selected'}} @endif>Giá tăng dần</option>
+												<option value="desc" @if($sort_by_price == 'desc') {{'selected'}} @endif>Giá giảm dần</option>
 											</select>
 										</div>
 									</div>
-									<ul class="view-mode">
+									{{-- <ul class="view-mode">
 										<li class="active"><a href="shop-grid.html"><i class="fa fa-th-large"></i></a></li>
 										<li><a href="shop-list.html"><i class="fa fa-th-list"></i></a></li>
-									</ul>
+									</ul> --}}
 								</div>
 								<!--/ End Shop Top -->
 							</div>
 						</div>
 						<div class="row">
                             @foreach ($types as  $type)
-							@php 
-								$product = \App\Models\Product::where('id',$type->product_id)->first();
-							@endphp 
 							<div class="col-lg-4 col-md-6 col-12">
                                 <div class="single-product">
                                     <div class="product-img">
-                                        <a href="{{url('category/'.$category_info->id.'/product/'.$product->id.'/type/'.$type->id)}}">
-										
+                                        <a href="{{url('type/'.$type->id)}}">
                                             <img class="default-img" src="@php
 												if (filter_var($type->images[0]->name, FILTER_VALIDATE_URL)) { 
 													echo($type->images[0]->name);
@@ -201,7 +108,6 @@
 													echo(Storage::disk('type-image')->url($type->images[0]->name));
 												}   
 												@endphp" alt="#">
-											{{-- <img class="hover-img" src="https://via.placeholder.com/550x750" alt="#"> --}}
 										</a>
 										<div class="button-head">
                                             <div class="product-action">
@@ -215,9 +121,11 @@
 										</div>
 									</div>
 									<div class="product-content">
-										
-                                        <h3><a href="{{url('category/'.$category_info->id.'/product/'.$product->id.'/type/'.$type->id)}}">{{$type->name}}</a></h3>
+                                        <h3><a href="{{url('type/'.$type->id)}}">{{$type->name}}</a></h3>
 										<div class="product-price">
+											@if($type->initial_price != $type->price)
+											<span class="old">{{number_format($type->initial_price)}}đ</span>
+											@endif
                                             <span>{{number_format($type->price).' đ'}}</span>
 										</div>
 									</div>
@@ -303,11 +211,7 @@
                                             <div class="col-lg-12 col-12" id="size-color">
                                                 <h5 class="title">Size</h5>
                                                 <select class="form-select" id="select-size">
-                                                    <option selected>Chọn size</option>
-                                                    {{-- <option selected="selected">s</option>
-                                                    <option>m</option>
-                                                    <option>l</option>
-                                                    <option>xl</option> --}}
+                                                    {{-- <option selected>Chọn size</option> --}}
                                                 </select>
 												<div id="errorSize" style="color: red">
 												</div>
@@ -336,18 +240,7 @@
                                     </div>
                                     <div class="add-to-cart">
                                         <a id="addToCart" class="btn" style="cursor: pointer;">Thêm vào giỏ hàng</a>
-                                        {{-- <a href="#" class="btn min"><i class="ti-heart"></i></a>
-                                        <a href="#" class="btn min"><i class="fa fa-compress"></i></a> --}}
                                     </div>
-                                    {{-- <div class="default-social">
-                                        <h4 class="share-now">Share:</h4>
-                                        <ul>
-                                            <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-                                            <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                                            <li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-                                            <li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
-                                        </ul>
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -365,16 +258,14 @@ $(document).ready(function(){
 	let regex_paginate = /(?<=paginate=)(\w+)/
 	let regex_price = /(?<=price=)(\w+)/
 	let regex_page = /page=/
-
 	$('#show_paginate').change(function(){
 		$paginate = $(this).val();
 		var url = window.location.href;
 		if (regex_paginate.test(url)){
 			url = url.replace(regex_paginate,$paginate)
 			window.location.assign(url)
-			// console.log(url)
 		} else {
-			if (regex_page.test(url)){
+			if (url.includes('?')){
 				url = url + '&paginate=' + $paginate
 			} else {
 				url = url + '?paginate=' + $paginate
@@ -385,16 +276,46 @@ $(document).ready(function(){
 	$('#select_price').change(function(){
 		$select_price = $(this).val();
 		var url = window.location.href;
-		if (regex_price.test(url)){
-			url = url.replace(regex_price,$select_price)
-			window.location.assign(url)
-		} else {
-			if (regex_page.test(url)){
-				url = url + '&price=' + $select_price
-			} else if (regex_paginate.test(url)){
-				url = url + '&price=' + $select_price
+		if (url.includes('?page=')){
+			url = url.replace(regex_page,'');
+			url = url.replace('page=','');
+		} else if (url.includes('&page=')){
+			url = url.replace(regex_page,'');
+			url = url.replace('&page=','');
+		}
+		if ($select_price == 'none'){
+			if (url.includes('?search=')){
+				url = url.replace(regex_price,'');
+				url = url.replace('&price=','')
+			} else if (url.includes('&search=')){
+				url = url.replace(regex_price,'');
+				url = url.replace('price=','')
+				url = url.replace('&','')
+			} else if (url.includes('&paginate=')){
+				url = url.replace(regex_price,'');
+				url = url.replace('price=','')
+				url = url.replace('&','')
+			} else if (url.includes('?paginate=')){
+				url = url.replace(regex_price,'');
+				url = url.replace('&price=','')
 			} else {
-				url = url + '?price=' + $select_price
+				url = url.replace(regex_price,'');
+				url = url.replace('?price=','')
+			}
+			window.location.assign(url)
+		} else 
+		{	
+			if (regex_price.test(url)){
+				url = url.replace(regex_price,$select_price)
+			} else {
+				if (url.includes('?search=')){
+					url = url + '&price=' + $select_price
+				} else if (url.includes('?paginate=')){
+					url = url + '&price=' + $select_price
+				}
+				else {
+					url = url + '?price=' + $select_price
+				}
 			}
 			window.location.assign(url)
 		}
@@ -432,11 +353,15 @@ $(document).ready(function(){
 			success: function(data){
 				let sizes = data.sizes.split(",")
 				$count = 1
+				$('#select-size').append(`<option selected>Chọn size</option>`)
+				$('#size-color div ul').append(`<li data-value="" class="option selected focus">Chọn size</li>`)
+				$('#size-color div span').text('Chọn size')
+
 				sizes.forEach(element => {
 					$('#select-size').append(`<option>`+element.toUpperCase()+`</option>`)
-					// addOption(element)
+					
 					if ($count == 1) {
-						$('#size-color div ul').append(`<li data-value="`+element.toUpperCase()+`" class="option selected focus">`+element.toUpperCase()+`</li>`)
+						$('#size-color div ul').append(`<li data-value="`+element.toUpperCase()+`" class="option">`+element.toUpperCase()+`</li>`)
 					} else {
 						$('#size-color div ul').append(`<li data-value="`+element.toUpperCase()+`" class="option">`+element.toUpperCase()+`</li>`)
 					}
@@ -450,11 +375,14 @@ $(document).ready(function(){
 					modal.find('#price').text(parseInt(price).toLocaleString('it-IT')+' đ')
 					modal.find('#initial_price').text(parseInt(initial_price).toLocaleString('it-IT')+' đ')
 				}
+				$('#addToCart').attr('data-price',data.price)
+				$('#addToCart').attr('data-name',data.name)
 				modal.find('#name').text(data.name)
 				modal.find('#designs').text(data.designs)
 				modal.find('#material').text(data.material)
 				modal.find('#details').text(data.details)
 				modal.find('#color').text('Color: '+data.color)
+				
 				// $("#size-color select").niceSelect();
 
 			}
@@ -473,32 +401,59 @@ $(document).ready(function(){
 		modal.find('#material').text('')
 		modal.find('#details').text('')
 		modal.find('#select-size').empty()
-		$('#size-color div ul').empty()
+		modal.find('#size-color div ul').empty()
 		$(".carousel-inner").empty()
+		$('#select-size').removeClass('is-invalid')
+		$('#errorSize').text('')
+		$('.input-number').val(1);
 	});
 	$('#addToCart').click(function(){
-		let id = $(this).attr('data-id');
 		let size = $('#select-size').val()
-		// console.log(id)
 		if (size == 'Chọn size'){
 			$('#errorSize').text('Vui lòng chọn size')
 		} else {
 			$('#errorSize').text('')
-			let quantity = $('.input-number').val()
-			// console.log(quantity)
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "{{url('add-to-cart')}}",
-				data: {"_token": "{{ csrf_token() }}", 'id': id, 'size': size, 'quantity': quantity},
-				success: function(data){
-					if (data.result == 'success'){
-						window.location.reload()
-					}
+
+			let id = $(this).attr('data-id');
+			function ajax1(){
+				return $.ajax({
+						type: "POST",
+						dataType: "json",
+						url: "{{url('/get-type-info')}}",
+						data: {"_token": "{{ csrf_token() }}", 'id': id},
+						success: function(data_ajax){
+							return data_ajax
+						}
+				});
+			}
+			$.when(ajax1()).done(function(data){
+				let quantity = $('.input-number').val()
+				let update = false
+				let cart = []
+				if(localStorage.getItem('cart')){
+					cart = JSON.parse(localStorage.getItem('cart'));
+					cart.forEach(element => {
+						if (element['cart_id'] == id+'-'+size){
+							update = true
+							element['quantity'] += parseInt(quantity);
+						}
+					});
 				}
+				if (update == false){
+					cart.push({ 'cart_id' : id+'-'+size ,'id': id,'name': data.name, 'size': size, 'quantity': parseInt(quantity), 'price': parseInt(data.price), 'image' : data.image, 'link': data.link });
+				}
+				// console.log(cart)
+				localStorage.setItem('cart', JSON.stringify(cart));
+				refresh_cart();
+				toastr.options.fadeOut = 2000;
+				toastr.success("Đã thêm sản phẩm vào giỏ hàng");
+				$('#quickShopModal').modal('hide')
 			})
 		}
+		
 	})
+
+
 })
 </script>
 @endpush

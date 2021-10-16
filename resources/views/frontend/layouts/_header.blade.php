@@ -1,15 +1,15 @@
 
-{{-- <!-- Preloader -->
-	<div class="preloader">
+<!-- Preloader -->
+	{{-- <div class="preloader">
 		<div class="preloader-inner">
 			<div class="preloader-icon">
 				<span></span>
 				<span></span>
 			</div>
 		</div>
-	</div>
-	<!-- End Preloader -->
-	 --}}
+	</div> --}}
+<!-- End Preloader -->
+	
 	
 		
 		<!-- Header -->
@@ -57,49 +57,42 @@
 						<div class="col-lg-2 col-md-2 col-12">
 							<!-- Logo -->
 							<div class="logo">
-								<a href="index.html"><img src="{{asset('backend/assets/images/logoHotMan.png')}}" alt="logo"></a>
+								<a href="{{url('home')}}"><img src="{{asset('backend/assets/images/logoHotMan.png')}}" alt="logo"></a>
 							</div>
 							<!--/ End Logo -->
 							<!-- Search Form -->
 							<div class="search-top">
 								<div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
-								<!-- Search Form -->
-								<div class="search-top">
-									<form class="search-form">
-										<input type="text" placeholder="Search here..." name="search">
-										<button value="search" type="submit"><i class="ti-search"></i></button>
-									</form>
-								</div>
-								<!--/ End Search Form -->
 							</div>
 							<!--/ End Search Form -->
 							<div class="mobile-nav"></div>
 						</div>
 						<div class="col-lg-8 col-md-7 col-12">
 							<div class="search-bar-top">
-								<div class="search-bar">
+								<div class="search-bar" style="position: relative">
 									@php
-										$categories = \App\Models\Category::all(['id','name']);
+										$categories = \App\Models\Category::with('products')->get();
 									@endphp
-									<select>
-										<option selected="selected">All Category</option>
+									<select id="selectSearch">
+										<option selected="selected" value="all">Tất cả</option>
 										@foreach ($categories as $category)
 											<option value="{{$category->id}}">{{$category->name}}</option>	
 										@endforeach
 									</select>
-									<form>
-										<input name="search" placeholder="Search Products Here....." type="search">
+									<form method="GET" autocomplete="off">
+										<input name="search" placeholder="Tìm kiếm sản phẩm tại đây" type="text" id="search" value="@isset($search){{$search}}@endisset">
 										<button class="btnn"><i class="ti-search"></i></button>
 									</form>
+									<div class="mt-2 p-2 bg-light" id="resultSearch">
+										<ul>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-2 col-md-3 col-12">
 							<div class="right-bar">
-								<!-- Search Form -->
-								{{-- <div class="sinlge-bar">
-									<a href="#" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-								</div> --}}
+								
 								<div class="sinlge-bar user">
 									<a href="#" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
 									{{--user --}}
@@ -119,6 +112,7 @@
 											</div>
 											<div class="dropdown-user-action">
 												<p><a href="{{url('/user/information')}}">Thông tin tài khoản</a></p>
+												<p><a href="{{url('/user/orders')}}">Quản lý đơn hàng</a></p>
 												@if (Auth::guard('web')->user()->password_is_null == 'False')
 													<p><a href="{{url('/user/changepassword')}}">Đổi mật khẩu</a></p>
 												@endif
@@ -139,45 +133,23 @@
 									</div>
 								</div>
 								<div class="sinlge-bar shopping">
-									@php $count = 0 @endphp
-									@if(session('cart'))
-										@foreach(session('cart') as $id => $details)
-											@php $count += 1 @endphp
-										@endforeach
-									@endif
-									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{$count}}</span></a>
+									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="cart-total-count"></span></a>
 									<!-- Shopping Item -->
 									<div class="shopping-item">
 										<div class="dropdown-cart-header">
-											<span>{{$count}} Sản phẩm</span>
-											{{-- <a href="{{url('cart')}}"></a> --}}
+											<span></span>
 										</div>
 										<ul class="shopping-list">
-											@php $total = 0;@endphp
-											@if(session('cart'))
-												@foreach(session('cart') as $id => $details)
-													@php $total += $details['price'] * $details['quantity'];
-													@endphp
-												<li>
-													<a data-id="{{$id}}" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
-													<a class="cart-img" href="{{$details['link']}}"><img src="{{$details['image']}}" alt="#"></a>
-													<h4><a href="{{$details['link']}}">{{ $details['name'] }}</a></h4>
-													<p>Size: {{$details['size']}}</p>
-													<p class="quantity">{{$details['quantity']}}x - <span class="amount">{{ number_format($details['price'] * $details['quantity']) }} đ</span></p>
-												</li>
-												@endforeach
-											@endif
 										</ul>
 										<div class="bottom">
 											<div class="total">
 												<span>Tổng</span>
-												<span class="total-amount">{{ number_format($total) }} đ</span>
+												<span class="cart-total-amount"></span>
 											</div>
 											<a href="{{url('cart')}}" class="btn animate">Xem giỏ hàng</a>
 										</div>
 									</div>
 									<!--/ End Shopping Item -->
-									
 								</div>
 							</div>
 						</div>
@@ -196,17 +168,14 @@
 										<div class="navbar-collapse">	
 											<div class="nav-inner">	
 												<ul class="nav main-menu menu navbar-nav">
-													<li class="active"><a href="#">Home</a></li>
-													<li><a href="#">Categories<i class="ti-angle-down"></i></a>
+													<li @php if(isset($active) && $active == 'home') echo('class="active"');  @endphp><a href="{{url('home')}}">Trang chủ</a></li>
+													<li @php if(isset($active) && $active == 'categories') echo('class="active"');  @endphp><a style="cursor: pointer">Sản phẩm<i class="ti-angle-down"></i></a>
 														<ul class="dropdown">
 															@foreach ($categories as $category)
-																@php
-																	$products = \App\Models\Category::findOrFail($category->id)->products()->get()
-																@endphp
 																<li><a href="{{url('category/'.$category->id)}}">{{$category->name}}<i class="ti-angle-down"></i></a>
 																	<ul class="dropdown-child">
-																		@foreach ($products as $product)
-																			<li><a href="{{url('category/'.$category->id.'/product/'.$product->id)}}">{{$product->name}}</a></li>																	
+																		@foreach ($category->products as $product)
+																			<li><a href="{{url('product/'.$product->id)}}">{{$product->name}}</a></li>																	
 																		@endforeach
 																		
 																	</ul>
@@ -228,7 +197,7 @@
 															<li><a href="blog-single-sidebar.html">Blog Single Sidebar</a></li>
 														</ul>
 													</li>
-													<li><a href="{{url('/contact')}}">Contact Us</a></li>
+													<li @php if(isset($active) && $active == 'contact') echo('class="active"');  @endphp><a href="{{url('/contact')}}">Liên hệ</a></li>
 												</ul>
 											</div>
 										</div>
@@ -245,6 +214,7 @@
 		<!--/ End Header -->
 	
 	<!-- Breadcrumbs -->
+	@isset($breadCrumbs)
 	<div class="breadcrumbs">
 		<div class="container">
 			<div class="row">
@@ -261,6 +231,7 @@
 			</div>
 		</div>
 	</div>
+	@endisset
 	<!-- End Breadcrumbs -->
 	{{-- toast --}}
 

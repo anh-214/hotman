@@ -17,6 +17,7 @@
     <link href="{{ asset('backend/assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('backend/assets/css/soft-ui-dashboard.css?v=1.0.3') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @stack('link')
     @stack('css')
 </head>
@@ -65,6 +66,7 @@
     <script src="{{asset('backend/assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{asset('backend/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{asset('backend/assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -79,6 +81,19 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{asset('backend/assets/js/soft-ui-dashboard.min.js?v=1.0.3')}}"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+		$(document).ready(function(){
+			@if(session()->has('success'))
+				toastr.options.fadeOut = 2000;
+				toastr.success("{{session('success')}}");
+			@endif
+			@if(session()->has('fail'))
+				toastr.options.fadeOut = 2000;
+				toastr.error("{{session('fail')}}");
+			@endif
+		})
+	</script>
     @stack('js')
 </body>
 </html>

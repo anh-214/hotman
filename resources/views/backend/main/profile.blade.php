@@ -389,7 +389,6 @@
             // select
             $('#updateContent').addClass('d-none');
             $('#changePasswordContent').addClass('d-none');
-
             function chooseSetting(){
                 $('#changePasswordContent').addClass('d-none');
                 $('#updateContent').addClass('d-none');
@@ -414,12 +413,10 @@
             $("#changePassword").click(function(){
                 chooseChangePassword()
             });
-
             // check validation
             $oldPasswordInput = $("input[name=oldPassword]")
             $passwordInput = $("input[name=password]")
             $confirmPasswordInput = $("input[name=confirmPassword]")
-
             $("#updatePasswordButton").click(function(e){
                 e.preventDefault();
                 let $checkOldPassword = false
@@ -455,7 +452,6 @@
                     }
                 }
                 if ($checkPassword == true && $checkOldPassword == true){
-
                     $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -527,7 +523,6 @@
                 preview: '.preview'
                 });
             });   
-
             $("#crop").click(function(){
                 $modal.modal('hide');
                 });
@@ -552,7 +547,6 @@
                     $("#errorUpdateNameInput").text("")
                     $checkInformationName = true
                 }
-
                 if ($('.image').val() != '' && $checkInformationName == true){
                     canvas = cropper.getCroppedCanvas({
                         width: 160,
@@ -593,4 +587,3 @@
         });
     </script>
 @endpush
-

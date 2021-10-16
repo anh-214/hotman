@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    public function categories(Request $request){
+        $select = 'Categories';
+        $active = 'categories';
+        $categories = Category::paginate(15);
+        $search = '';
+        if ($request->has('id')) {
+            $category = Category::where('id',$request->input('id'))->first();
+            return view('backend.main.category',compact('select','active','category'));
+        }
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $categories = Category::where('name', 'LIKE', '%' . $request->input('search') . '%')->paginate(15);
+            $categories->appends(['search'=> $request->input('search')]);
+        }
+        return view('backend.main.category',compact(['select','active','categories','search']));
+    }
     public function delete(Request $request){
         if( $request->ajax()){
             $password = $request->input('confirmPassword');
@@ -38,10 +54,12 @@ class CategoryController extends Controller
                         };
                         Category::where('id', $id)->delete();
                     }
+                session()->flash('success','Xóa thể loại thành công');
                     return response()->json([
                         'result' => 'success'
                     ]);
                 } else {
+                session()->flash('fail','Xóa thể loại thất bại');
                     return response()->json([
                         'result' => 'failed'
                     ]);
@@ -66,10 +84,12 @@ class CategoryController extends Controller
                     Product::where('id', $product->id)->delete();
                 };
                 Category::where('id', $id)->delete();
+                session()->flash('success','Xóa thể loại thành công');
                 return response()->json([
                     'result' => 'success'
                 ]);
             } else {
+                session()->flash('fail','Xóa thể loại thất bại');
                 return response()->json([
                     'result' => 'failed'
                 ]);
@@ -89,18 +109,13 @@ class CategoryController extends Controller
                         'updated_at' => now()
                     ]);
             if ($result){
+                session()->flash('success','Cập nhật thể loại thành công');
                 return response()->json([
                     'result' => 'success',
                 ]);
-
-            } else {
-                return response()->json([
-                    'result' => 'failed',
-                ]);
             }
-        }
         // resize and crop avatar
-
+        }
         // dd($image);
     }
     public function create(Request $request){
@@ -112,6 +127,7 @@ class CategoryController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        session()->flash('success','Thêm thể loại thành công');
         return back();
     }
 }

@@ -14,6 +14,13 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        Product::factory(15)->create();
+        // Product::factory(15)->create();
+        Product::insert([
+            'name' => 'Áo dài tay nam',
+            'desc' => '.',
+            'category_id' => '1',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

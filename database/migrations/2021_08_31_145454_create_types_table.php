@@ -24,7 +24,8 @@ class CreateTypesTable extends Migration
             $table->text('material');
             $table->string('color');
             $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedBigInteger('promotion_id')->nullable();
+            $table->foreign('promotion_id')->references('id')->on('promotions');
             $table->timestamps();
         });
     }

@@ -29,4 +29,7 @@ class Type extends Model
     {
         return $this->orderBy($column, 'desc');
     } 
+    public function promotion(){
+        return $this->belongsTo(Promotion::class);
+    }
 }

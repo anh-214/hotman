@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @section('title')
-    Liên hệ với chúng tôi
+    Chi tiết sản phẩm
 @endsection
 @push('css')
     <style>
@@ -26,10 +26,8 @@
                                                 <div class="carousel-inner">
                                                     @php
                                                         $count = 1;
-                                                        $images = \App\Models\Type::findOrFail($type_info->id)->images()->get()
-
                                                     @endphp
-                                                    @foreach ($images as $image)
+                                                    @foreach ($type_info->images as $image)
                                                         @php
                                                         if (filter_var($image->name, FILTER_VALIDATE_URL)) { 
                                                             $image = $image->name;
@@ -89,10 +87,6 @@
                                                             @foreach ($sizes as $size)
                                                                 <option>{{$size}}</option>
                                                             @endforeach
-                                                            {{-- <option selected="selected">s</option>
-                                                            <option>m</option>
-                                                            <option>l</option>
-                                                            <option>xl</option> --}}
                                                         </select>
                                                         <div id="errorSize" style="color: red">
                                                         </div>
@@ -120,19 +114,10 @@
                                                 <!--/ End Input Order -->
                                             </div>
                                             <div class="add-to-cart">
-                                                <a id="addToCart" data-id="{{$type_info->id}}" class="btn" style="cursor: pointer;">Thêm vào giỏ hàng</a>
-                                                {{-- <a href="#" class="btn min"><i class="ti-heart"></i></a>
-                                                <a href="#" class="btn min"><i class="fa fa-compress"></i></a> --}}
+                                                <a id="addToCart" data-id="{{$type_info->id}}" data-price="{{$type_info->price}}" data-name="{{$type_info->name}}" class="btn" style="cursor: pointer;">Thêm vào giỏ hàng</a>
+                                               
                                             </div>
-                                            {{-- <div class="default-social">
-                                                <h4 class="share-now">Share:</h4>
-                                                <ul>
-                                                    <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-                                                    <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                                                    <li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-                                                    <li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                </ul>
-                                            </div> --}}
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -172,42 +157,49 @@
 @push('js')
     <script>
         $(document).ready(function(){
+            
             $('#addToCart').click(function(){
-            let id = $(this).attr('data-id');
-            let size = $('#select-size').val()
-            if (size == 'Chọn size'){
-                $('#errorSize').text('Vui lòng chọn size')
-            } else {
-                $('#errorSize').text('')
-                let quantity = $('.input-number').val()
-                // console.log(quantity)
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "{{url('add-to-cart')}}",
-                    data: {"_token": "{{ csrf_token() }}", 'id': id, 'size': size, 'quantity': quantity},
-                    success: function(data){
-                        if (data.result == 'success'){
-                            window.location.reload()
-                        }
+                let size = $('#select-size').val()
+                if (size == 'Chọn size'){
+                    $('#errorSize').text('Vui lòng chọn size')
+                } else {
+                    $('#errorSize').text('')
+
+                    let id = $(this).attr('data-id');
+                    function ajax1(){
+                        return $.ajax({
+                                type: "POST",
+                                dataType: "json",
+                                url: "{{url('/get-type-info')}}",
+                                data: {"_token": "{{ csrf_token() }}", 'id': id},
+                                success: function(data_ajax){
+                                    return data_ajax
+                                }
+                        });
                     }
-                })
-            }
-            })
-            $('.remove').click(function(){
-            let id = $(this).attr('data-id');
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "{{url('remove-from-cart')}}",
-                    data: {"_token": "{{ csrf_token() }}", 'id': id},
-                    success: function(data){
-                        if (data.result == 'success'){
-                            window.location.reload()
+                    $.when(ajax1()).done(function(data){
+                        let quantity = $('.input-number').val()
+                        let update = false
+                        let cart = []
+                        if(localStorage.getItem('cart')){
+                            cart = JSON.parse(localStorage.getItem('cart'));
+                            cart.forEach(element => {
+                                if (element['cart_id'] == id+'-'+size){
+                                    update = true
+                                    element['quantity'] += parseInt(quantity);
+                                }
+                            });
                         }
-                    }
-                })
-	        })
+                        if (update == false){
+                            cart.push({ 'cart_id' : id+'-'+size ,'id': id,'name': data.name, 'size': size, 'quantity': parseInt(quantity), 'price': parseInt(data.price), 'image' : data.image, 'link': data.link });
+                        }
+                       
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        refresh_cart();
+                    })
+                }
+		
+	})
         });
     </script>
 @endpush

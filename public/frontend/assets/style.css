@@ -632,7 +632,7 @@ Version:1.0
 .header .shopping-list li .remove {
 	position: absolute;
 	left: 0;
-	bottom: 16px;
+	bottom: 7px;
 	margin-top: -20px;
 	height: 20px;
 	width: 20px;
@@ -694,7 +694,7 @@ Version:1.0
 	font-weight:600;
 	float:left;
 }
-.header .shopping-item .total .total-amount {
+.header .shopping-item .total .cart-total-amount {
 	float:right;
 	font-size:14px;
 }
@@ -1151,7 +1151,7 @@ Version:1.0
 .header.shop .right-bar .sinlge-bar .single-icon:hover{
 	color:#F7941D;
 }
-.header.shop .right-bar .sinlge-bar .single-icon .total-count {
+.header.shop .right-bar .sinlge-bar .single-icon .cart-total-count {
 	position: absolute;
 	top: -7px;
 	right: -8px;
@@ -1326,7 +1326,7 @@ Version:1.0
 }
 .hero-slider .single-slider {
 	height: auto;
-	background-image: url('https://via.placeholder.com/1900x700');
+	background-image: url('https://www.bhomes.com/blog/wp-content/uploads/2019/12/sucessful-realestate-agent-1900x700.jpg');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -1350,12 +1350,12 @@ Version:1.0
 	font-size: 20px;
 	display: block;
 	margin-bottom: 12px;
-	color: #333;
+	color: white;
 	font-weight: 700;
 	line-height: initial;
 }
 .hero-slider .hero-text p {
-	color: #333;
+	color: white;
 	margin-bottom: 35px;
 }
 .hero-slider .hero-text .button{
@@ -4810,6 +4810,10 @@ Version:1.0
 }
 .contact-us .form-main {
 	box-shadow: 0px 0px 15px #0000001a;
+	padding: 50px;
+}
+.contact-us .form-main .order {
+	box-shadow: 0px 0px 10px #0000001a;
 	padding: 50px;
 }
 .contact-us .form-main p {

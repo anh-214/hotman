@@ -29,28 +29,29 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2">
+                <div class="card-body px-0 pt-0 pb-4">
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-1">
                             <thead>
                                 <tr>
-                                    <th class="p-4">
+                                    <th class="px-4">
                                         <span class="custom-checkbox">
                                             <input type="checkbox" id="selectAll">
                                             <label for="selectAll"></label>
                                         </span>
                                     </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Price</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Initial_price</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Images</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Designs</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Details</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Material</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Sizes</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Colors</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Product_id</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Price</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Initial_price</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Images</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Designs</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Details</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Material</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Sizes</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Colors</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Product</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Promotion</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Created_at</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
                                 </tr>
@@ -58,45 +59,41 @@
                             <tbody>
                                 @foreach ($types as $type )
                                     <tr>
-                                        <td class="p-4">
+                                        <td class="px-4">
                                             <span class="custom-checkbox">
                                                 <input type="checkbox" class="checkbox" name="checkbox[]" value="{{$type->id}}">
                                                 <label></label>
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{$type->id}}</h6>
-                                                </div>
-                                            </div>
+                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->id}}"> {{$type->id}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->name}}"> {{$type->name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->name}}"> {{$type->name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 text-center"> {{$type->price}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 text-center">{{number_format($type->price)}}đ</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 text-center"> {{$type->initial_price}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 text-center">{{number_format($type->initial_price)}}đ</p>
                                         </td>
                                         <td>
-                                            <p type="button" class="text-xs font-weight-bold mb-0 text-center showImages" data-id="{{$type->id}}">                                              
+                                            <p type="button" class="text-center text-xs font-weight-bold mb-0 text-center showImages" data-id="{{$type->id}}">                                              
                                                     Xem
                                             </p>
                                         </td>
                                         
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->designs}}"> {{$type->designs}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->designs}}"> {{$type->designs}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->details}}"> {{$type->details}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->details}}"> {{$type->details}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->material}}">{{$type->material}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->material}}">{{$type->material}}</p>
                                         </td>
                                         <td >
-                                            <select class="text-xs font-weight-bold mb-0 hint-text">
+                                            <select class="text-center text-xs font-weight-bold mb-0 hint-text">
                                                 @php
                                                     $sizes = explode(",",$type->sizes);
                                                 @endphp
@@ -108,20 +105,23 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->color}}">{{$type->color}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->color}}">{{$type->color}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->product_id.' - '.$type->product->name}}">
+                                            <p class="text-center text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->product_id.' - '.$type->product->name}}">
                                                 <a href="{{url('admin/products/?id='.$type->product_id)}}" type="button" class="text-secondary">
-                                                    {{$type->product_id.' - '.$type->product->name}}
+                                                    {{$type->product->name}}
                                                 </a>
                                             </p>                            
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->created_at}}"> {{$type->created_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="@php echo isset($type->promotion->name) ? $type->promotion->name : 'Không' @endphp">@php echo isset($type->promotion->name) ? $type->promotion->name : 'Không' @endphp</p>                            
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->created_at}}"> {{$type->created_at}}</p>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('admin/types/update?id='.$type->id)}}">
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('admin/types/update/'.$type->id)}}">
                                                 <span class="badge badge-sm bg-gradient-success">Cập nhật</span>
                                             </a>
                                             <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-name="{{$type->name}}" data-id="{{$type->id}}" >
@@ -194,22 +194,6 @@
         </div>
     </div>
 </div>
-{{-- modal notification --}}
-<div class="modal fade" id="notificationModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textNotificationModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 {{-- modal delete multiple --}}
 <div class="modal fade" id="confirmDeleteMutipleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -237,22 +221,6 @@
         </div>
     </div>
 </div>
-{{-- modal notification delete multiple --}}
-<div class="modal fade" id="notificationDeleteMutipleModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textNotificationDeleteMutipleModal">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeNotificationDeleteMutipleModal"  data-bs-dismiss="modal" aria-label="Close" onclick="window.location.reload()">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 @push('css')
     <style>
@@ -270,7 +238,6 @@
 {{-- validation delete mutiple modal & ajax --}}
 <script>
     $(document).ready(function(){
-
         $("#buttonConfirmDeleteMutiple").click(function(){
             if ($("input[name=confirmPasswordDeleteMutiple]").val() == ''){
                 $("input[name=confirmPasswordDeleteMutiple]").addClass('is-invalid');
@@ -291,16 +258,7 @@
                     url: "/admin/types/delete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa sản phẩm thành công')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        } else {
-                            $("#confirmDeleteMutipleModal").modal('hide')
-                            $("#textNotificationDeleteMutipleModal").text('Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationDeleteMutipleModal").modal('show')
-                        }
-                    
+                        window.location.reload()
                     }
                 });
             }
@@ -369,17 +327,7 @@
                     url: "/admin/types/delete",
                     data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
-                        if (data.result == 'success'){
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa loại sản phẩm thành công')
-                            $("#notificationModal").modal('show')
-                        } else if (data.result == 'failed') {
-                            $("#confirmDeleteModal").modal('hide')
-                            $("#textNotificationModal").text('Xóa loại sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu')
-                            $("#notificationModal").modal('show')
-                        
-                        }
-                    
+                        window.location.reload()
                     }
                 });
             }

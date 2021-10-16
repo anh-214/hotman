@@ -13,17 +13,6 @@
 							<div class="form-main">
 								<div class="title">
 									<h4>Đổi mật khẩu</h4>
-                                    @isset($result)
-                                        @if ($result == True)
-                                            <div>    
-                                                <span style="color: red">Đổi mật khẩu thành công</span>
-                                            </div>
-                                        @else
-                                            <div>    
-                                                <span style="color: red">Đổi mật khẩu thất bại, vui lòng kiểm tra lại mật khẩu cũ</span>
-                                            </div>
-                                        @endif
-                                    @endisset
 								</div>
 								<form class="form" method="POST" action="{{url('/user/changepassword')}}">
                                     @csrf

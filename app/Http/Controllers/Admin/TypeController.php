@@ -7,6 +7,7 @@ use App\Imports\TypesImport;
 use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,26 +19,39 @@ use function PHPSTORM_META\type;
 
 class TypeController extends Controller
 {
+    public function types(Request $request){
+        $select = 'Types';
+        $active = 'types';
+        $search = '';
+        $types = Type::with('promotion')->paginate(15);
+
+        if ($request->has(['product_id'])){
+            $types = Product::findOrFail($request->input('product_id'))->types()->paginate(15);
+            $types->appends(['product_id'=> $request->input('product_id')]);
+        };
+        if ($request->has('search')){
+            $search = $request->input('search');
+            $types = Type::where('name', 'LIKE', '%' . $request->input('search') . '%')->paginate(15);
+            $types->appends(['search'=> $request->input('search')]);
+        }
+        
+        return view('backend.main.type',compact('select','active','types','search'));
+    }
     public function showCreateForm(){
         $active = 'types';
         $select = 'Create type';
         $categories = Category::all('id','name');
-        return view('backend.type.createForm',compact('active','select','categories'));
+        $promotions = Promotion::all();
+        return view('backend.type.createForm',compact('active','select','categories','promotions'));
     }
-    public function showUpdateForm(Request $request){
+    public function showUpdateForm($id){
         $active = 'types';
         $select = 'Update type';
-        $id = $request->input('id');
-        $type = Type::where('id',$id)->first();
-
-        $oldProductId = $type->product_id;
-       
-        $product = Product::where('id',$oldProductId)->first();
-        $oldCategoryId = $product->category_id;
-
-        $oldProducts = Category::findOrFail($oldCategoryId)->products()->get();
+        $type = Type::where('id',$id)->with('product')->first();
+        $type->allProducts = Category::findOrFail($type->product->category_id)->products()->get();
+        $promotions = Promotion::all();
         $categories = Category::all('id','name');
-        return view('backend.type.updateForm',compact('active','select','categories','type','oldCategoryId','oldProductId','oldProducts'));
+        return view('backend.type.updateForm',compact('active','select','categories','type','promotions'));
     }
     public function getProductId(Request $request){
         if( $request->ajax()){
@@ -56,11 +70,18 @@ class TypeController extends Controller
             $sizes[$i] = trim($sizes[$i]," ");
         }
         $sizes = implode(",",$sizes);
-        
+        $promotion_id = $request->input('promotion_id');
+        $initial_price = $request->input('initialPriceType');
+        if ($promotion_id == 'none'){
+            $promotion_id = null;
+            $price = $initial_price;
+        } else {
+            $price = $initial_price - ($initial_price * (intval(Promotion::where('id',$promotion_id)->first()->discount)/100));
+        };
         $result =  Type::create([
                 'name' => $request->input('nameType'),
-                'price' => $request->input('priceType'),
-                'initial_price' => $request->input('initialPriceType'),
+                'price' => $price,
+                'initial_price' => $initial_price,
                 'sizes' => $sizes,
                 'color' => $color,
                 'designs' => $request->input('designsType'),
@@ -102,6 +123,7 @@ class TypeController extends Controller
                 };
             }
         }
+        session()->flash('success','Tạo loại sản phẩm thành công');
         return redirect('admin/types');
     }
     public function update(Request $request){
@@ -116,19 +138,28 @@ class TypeController extends Controller
         }
         $sizes = implode(",",$sizes);
         $type_id = $request->input('id');
-        $result =  Type::where('id',$type_id)->update([
-                'name' => $request->input('nameType'),
-                'price' => $request->input('priceType'),
-                'initial_price' => $request->input('initialPriceType'),
-                'sizes' => $sizes,
-                'color' => $color,
-                'designs' => $request->input('designsType'),
-                'details' => $request->input('detailsType'),
-                'material' => $request->input('materialType'),
-                'product_id' => $request->input('product_id'),
-                'updated_at' => now()
-            ]);
-
+        $promotion_id = $request->input('promotion_id');
+        $initial_price = $request->input('initialPriceType');
+        if ($promotion_id == 'none'){
+            $promotion_id = null;
+            $price = $initial_price;
+        } else {
+            $price = $initial_price - ($initial_price * (intval(Promotion::where('id',$promotion_id)->first()->discount)/100));
+        };
+        Type::where('id',$type_id)->update([
+            'name' => $request->input('nameType'),
+            'price' => $price,
+            'initial_price' => $initial_price,
+            'sizes' => $sizes,
+            'color' => $color,
+            'designs' => $request->input('designsType'),
+            'details' => $request->input('detailsType'),
+            'material' => $request->input('materialType'),
+            'product_id' => $request->input('product_id'),
+            'promotion_id' => $promotion_id,
+            'updated_at' => now()
+        ]);
+        
         $files = $request->file('images');
         // dd($files);
         if ($files != null){
@@ -165,6 +196,7 @@ class TypeController extends Controller
                 };
             }
         }
+        session()->flash('success','Cập nhật loại sản phẩm thành công');
         return redirect('admin/types');
     }
     
@@ -184,10 +216,12 @@ class TypeController extends Controller
                         }
                         Type::where('id',$id)->delete();
                     }
+                    session()->flash('success','Xóa loại sản phẩm thành công');
                     return response()->json([
                         'result' => 'success'
                     ]);
                 } else {
+                    session()->flash('fail','Xóa loại sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
                     return response()->json([
                         'result' => 'failed'
                     ]);
@@ -204,10 +238,12 @@ class TypeController extends Controller
                     }
                 }
                 Type::where('id',$id)->delete();
+                session()->flash('success','Xóa loại sản phẩm thành công');
                 return response()->json([
                     'result' => 'success'
                 ]);
             } else {
+                session()->flash('fail','Xóa loại sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
                 return response()->json([
                     'result' => 'failed'
                 ]);

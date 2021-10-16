@@ -78,13 +78,7 @@
                                     <a type="button" class="go-to-updateInformation">Cập nhật thông tin</a>
                                 </div>
                                 <div id="avatar">
-                                    <img src="
-                                    @if (filter_var(Auth::guard('web')->user()->avatar, FILTER_VALIDATE_URL))
-                                        {{Auth::guard('web')->user()->avatar}}
-                                    @else
-                                        {{Storage::disk('user-avatar')->url(Auth::guard('web')->user()->avatar == null ? 'unknown.png' : Auth::guard('web')->user()->avatar)}}
-                                    @endif
-                                    " alt="">
+                                    <img src="{{$image}}" alt="">
                                     <div id="uploadAvatar">
                                         <label for="file">
                                         <i class="fas fa-camera" style="color: white;font-size:20pt"></i>

@@ -20,7 +20,7 @@
                   <p class="mb-0">Nhập email của bạn để tiến hành tạo lại mật khẩu mới</p>
                 </div>
                 <div class="card-body">
-                  <form role="form" method="POST">
+                  <form role="form" method="POST" action="{{url('admin/forgotpassword')}}">
                     @csrf
                     <label>Email</label>
                     <div class="mb-3">
@@ -46,23 +46,6 @@
     </section>
   </main>
 
-{{-- modal notification update --}}
-<div class="modal fade" id="notificationResetPasswordModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="textNotificationResetPasswordModal">
-              Vui lòng kiểm tra email của bạn
-          </div>
-          <div class="modal-footer">
-              <button class="btn bg-gradient-info" id="closeNotificationResetPasswordModal" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-          </div>
-      </div>
-  </div>
-</div>
 @endsection
 @push('js')
   <script>
@@ -85,21 +68,22 @@
                 $checkEmail = true
             }
             if ($checkEmail == true){
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/admin/forgotpassword",
-                    timeout: 3000,
-                    data: {"_token": "{{ csrf_token() }}", 'email': $emailInput.val()},
-                    success: function(data){
-                        if (data.result == 'notExists'){
-                          $emailInput.addClass('is-invalid')
-                          $("#errorEmail").text("Email này chưa được đăng ký")
-                        } else {
-                          $("#notificationResetPasswordModal").modal('show')
-                        }
-                    },
-                });
+              $('form').submit();
+                // $.ajax({
+                //     type: "POST",
+                //     dataType: "json",
+                //     url: "/admin/forgotpassword",
+                //     timeout: 3000,
+                //     data: {"_token": "{{ csrf_token() }}", 'email': $emailInput.val()},
+                //     success: function(data){
+                //         if (data.result == 'notExists'){
+                //           $emailInput.addClass('is-invalid')
+                //           $("#errorEmail").text("Email này chưa được đăng ký")
+                //         } else {
+                //           $("#notificationResetPasswordModal").modal('show')
+                //         }
+                //     },
+                // });
             }
       })   
       $('#closeNotificationResetPasswordModal').click(function(){

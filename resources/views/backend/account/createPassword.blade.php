@@ -20,12 +20,10 @@
                 <p class="mb-0">Hãy nhập mật khẩu mới của bạn</p>
             </div>
             <div class="card-body">
-                <form role="form" method="POST">
+                <form role="form" method="POST" action="{{url('admin/createpassword/'.$token)}}">
                 @csrf
                 <label>Mật khẩu mới</label>
                 <div class="mb-3">
-                    <input type="hidden" name="email" value="{{$email}}">
-                    <input type="hidden" name="token" value="{{$token}}">
                     <input type="text" class="form-control" placeholder="Mật khẩu mới" aria-label="Email" aria-describedby="email-addon" name="password">
                     <div class="invalid-feedback" id="errorPassword">
                     </div>
@@ -104,19 +102,7 @@ $(document).ready(function(){
             }
         }
         if ($checkPassword == true) {
-            $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/admin/createpassword",
-                    timeout: 3000,
-                    data: {"_token": "{{ csrf_token() }}", 'token': $("input[name=token]").val(), 'email': $("input[name=email]").val() , 'password': $passwordInput.val()},
-                    success: function(data){
-                        if (data.result == 'success'){
-                            $("#notificationCreatePasswordModal").modal('show')
-                        }
-                    }
-            });
-            
+            $('form').submit();
         }
     });   
 });
