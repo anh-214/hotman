@@ -38,6 +38,13 @@
             border-radius: 100%;
             font-size: 11px;
         }
+        .hint-text{
+            width: 7em; /* the element needs a fixed width (in px, em, %, etc) */
+            overflow: hidden; /* make sure it hides the content that overflows */
+            white-space: nowrap; /* don't break the line */
+            text-overflow: ellipsis; /* give the beautiful '...' effect */
+            margin: auto
+        }
     </style>
 </head>
 <body class="g-sidenav-show  bg-gray-100">
@@ -99,6 +106,26 @@
                                                 </div>
                                                 </a>
                                             </li>`)
+                        $subdays = $('#subdays option:selected').val();
+                        $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                url: "/admin/dashboard/getchart",
+                                data: {"_token": "{{ csrf_token() }} ", 'subdays' : $subdays},
+                        }).done(function(response){
+                            var x = Object.keys(response['all']);
+                            var y1 = Object.values(response['all']);
+                            var y2 = Object.values(response['problems']);
+
+                            myChart.data.datasets[0].data = y1;
+                            myChart.data.datasets[1].data = y2;
+                            myChart.data.labels = x;
+                            myChart.update();
+                            $('#total_all').text(parseInt(response['total_all']).toLocaleString('it-IT')+' đ')
+                            $('#total_real').text(parseInt(response['total_real']).toLocaleString('it-IT')+' đ')
+                            $('#count_orders').text(response['count_orders'])
+                            $('#count_problems').text(response['count_problems'])
+                        });
                 });
             @endif
 			@if(session()->has('success'))

@@ -18,6 +18,8 @@ class CreateHomesortsTable extends Migration
             $table->string('role');
             $table->string('position');
             $table->text('content');
+            $table->string('show');
+            $table->string('description');
             $table->timestamps();
         });
     }

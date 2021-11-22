@@ -18,7 +18,7 @@ class UserLogged
     public function handle(Request $request, Closure $next)
     {
         if (Auth::guard('web')->check()){
-            return redirect('/home');
+            return redirect('/');
         } else {
             return $next($request);    
         }

@@ -1326,7 +1326,7 @@ Version:1.0
 }
 .hero-slider .single-slider {
 	height: auto;
-	background-image: url('https://www.bhomes.com/blog/wp-content/uploads/2019/12/sucessful-realestate-agent-1900x700.jpg');
+	/* background-image: url('https://www.bhomes.com/blog/wp-content/uploads/2019/12/sucessful-realestate-agent-1900x700.jpg'); */
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;

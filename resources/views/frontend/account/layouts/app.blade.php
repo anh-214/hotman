@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Document')</title>
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('backend/assets/images/apple-icon.png')}}">
-    <link rel="icon" type="image/png" href="{{ asset('backend/assets/images/favicon.png')}}">
+    {{-- <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('backend/assets/images/apple-icon.png')}}"> --}}
+    <link rel="icon" type="image/png" href="{{ asset('backend/assets/images/faviconHotMan.png')}}">
+    
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -23,42 +24,6 @@
 </head>
 <body>
 <div class="g-sidenav-show  bg-gray-100">
-
-    {{-- <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3  navbar-transparent mt-4">
-        <div class="container">
-        
-        <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon mt-2">
-            <span class="navbar-toggler-bar bar1"></span>
-            <span class="navbar-toggler-bar bar2"></span>
-            <span class="navbar-toggler-bar bar3"></span>
-            </span>
-        </button>
-        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
-            <ul class="navbar-nav navbar-nav-hover mx-auto">
-            <li class="nav-item dropdown dropdown-hover mx-2">
-                <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false">
-                Trang chủ
-                </a>
-            </li>
-            <li class="nav-item dropdown dropdown-hover mx-2">
-                <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " id="dropdownMenuAccount" data-bs-toggle="dropdown" aria-expanded="false">
-                Về chúng tôi
-                </a>
-            </li>
-            <li class="nav-item dropdown dropdown-hover mx-2">
-                <a role="button" href="{{url('/contact')}}" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center " >
-                Liên hệ
-                </a>
-            </li>
-            </ul>
-            <ul class="navbar-nav d-lg-block d-none">
-            
-            </ul>
-        </div>
-        </div>
-    </nav> --}}
     @yield('content')
     @include('frontend.account.layouts._footer')
 </div>

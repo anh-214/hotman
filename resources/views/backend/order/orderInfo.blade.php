@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    Quản lí đơn hàng
+    Chi tiết đơn hàng
 @endsection
 
 @section('content')
@@ -89,6 +89,20 @@
                         <div class="row">
                             <div class="col-xl-12 mb-4 pl-2">
                                 <div class="mb-2">
+                                    <h6>Phương thức thanh toán: {{strtoupper($order->payment_type)}}</h6>
+                                    <h6>Trạng thái thanh toán: 
+                                        @php   
+                                            if ($order->checkout_status == 0){
+                                                echo 'Chưa thanh toán';
+                                            };
+                                            if ($order->checkout_status == 1){
+                                                echo 'Đã thanh toán';
+                                            };
+                                            if ($order->checkout_status == 2){
+                                                echo 'Lỗi thanh toán';
+                                            };
+                                        @endphp
+                                    </h6>
                                     <h6 class="mb-0">Tình trạng đơn hàng</h6>
                                 </div>
                                 @if($order->confirmed_at == null && $order->deleted_at == null)
@@ -129,7 +143,6 @@
                             <div class="col-xl-12">
                                 <div class="row">
                                     @if($order->deleted_at != null)
-
                                     @elseif($order->confirmed_at == null)
                                             <div class="col-12 ">
                                                 <button class="btn btn-success btn-sm mb-0" id="confirm">Xác nhận đơn hàng</button>
@@ -230,8 +243,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/orders/confirm",
-                    data: {"_token": "{{ csrf_token() }}", 'id': '{{$order->id}}'},
+                    url: "/admin/orders/{{$order->id}}/confirm",
+                    data: {"_token": "{{ csrf_token() }}"},
                     success: function(data){
                         if (data.result == 'success'){
                             window.location.reload()
@@ -245,8 +258,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/orders/unconfirm",
-                    data: {"_token": "{{ csrf_token() }}", 'id': '{{$order->id}}'},
+                    url: "/admin/orders/{{$order->id}}/unconfirm",
+                    data: {"_token": "{{ csrf_token() }}"},
                     success: function(data){
                         if (data.result == 'success'){
                             window.location.reload()
@@ -259,8 +272,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/orders/start_deliver",
-                    data: {"_token": "{{ csrf_token() }}", 'id': '{{$order->id}}'},
+                    url: "/admin/orders/{{$order->id}}/start_deliver",
+                    data: {"_token": "{{ csrf_token() }}"},
                     success: function(data){
                         if (data.result == 'success'){
                             window.location.reload()
@@ -275,8 +288,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/orders/delivered",
-                    data: {"_token": "{{ csrf_token() }}", 'id': '{{$order->id}}'},
+                    url: "/admin/orders/{{$order->id}}/delivered",
+                    data: {"_token": "{{ csrf_token() }}"},
                     success: function(data){
                         if (data.result == 'success'){
                             window.location.reload()
@@ -295,8 +308,8 @@
                     $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "/admin/orders/problem",
-                        data: {"_token": "{{ csrf_token() }}", 'id': '{{$order->id}}','problem': $('input[name=desc]').val()},
+                        url: "/admin/orders/{{$order->id}}/problem",
+                        data: {"_token": "{{ csrf_token() }}",'problem': $('input[name=desc]').val()},
                         success: function(data){
                             if (data.result == 'success'){
                                 window.location.reload()

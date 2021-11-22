@@ -275,7 +275,6 @@
         <tbody>
             <tr>
             <td style="border: 0; margin: 0; padding: 0;">
-
                 <!-- Wrapper -->
                 <table class="st-Wrapper" align="center" bgcolor="ffffff" border="0" cellpadding="0" cellspacing="0" width="600" style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; margin: 0 auto; min-width: 600px;">
                 <tbody>
@@ -295,7 +294,6 @@
                             <td class="st-Header-logo" align="left" height="21" width="49" style="border: 0; margin: 0; padding: 0;">
                                 <div class="st-Header-area st-Target st-Target--mobile">
                                 <a style="border: 0; margin: 0; padding: 0; text-decoration: none;" href="{{url('/')}}">
-                                    {{-- <img alt="Chutrairau" border="0" class="st-Header-source" height="21" width="49" style="border: 0; margin: 0; padding: 0; color: #6772e5; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 12px; font-weight: normal;" src="{{asset('backend/assets/images/team-1.jpg')}}"> --}}
                                     <span class="st-Button-internal" id="insertText0" style="border: 0; margin: 0; padding: 0; color: #F7941D; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; font-weight: bold; height: 38px; line-height: 38px; mso-line-height-rule: exactly; text-decoration: none; vertical-align: middle; white-space: nowrap; width: 100%;">HOT MAN </span>
                                 </a>
                                 </div>
@@ -335,147 +333,15 @@
                             <tr>
                             <td align="center" height="0" style="border: 0; margin: 0; padding: 0; color: #ffffff; display: none !important; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; mso-hide: all !important; opacity: 0; overflow: hidden; visibility: hidden;">
                                 <span class="st-Delink st-Delink--preheader" style="color: #ffffff; text-decoration: none;">
-            </span>
+                                </span>
                             </td>
                             </tr>
                         </tbody>
                         </table>
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                        <tbody>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            <td class="st-Font st-Font--body" id="insertText1" style="border: 0; margin: 0; padding: 0; color: #525F7f !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-                                Xin chào,
-                            </td>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                        <tbody>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            <td class="st-Font st-Font--body" id="insertText2" style="border: 0; margin: 0; padding: 0; color: #525F7f !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-                                {{-- We’ve received a request to reset the password for the Stripe account associated with hello@SmilesDavis.yeah. No changes have been made to your account yet. --}}
-                                Chúng tôi gửi cho bạn mật khẩu của tài khoản liên kết với email {{$email}} là : {{$password}}
-                            </td>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                        <tbody>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            <td class="st-Font st-Font--body" id="insertText3" style="border: 0; margin: 0; padding: 0; color: #525F7f !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-                                {{-- You can reset your password by clicking the link below: --}}
-                                Vui lòng đăng nhập bằng cách nhấp vào liên kết bên dưới và đổi mật khẩu mới:
-                            </td>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                        <tbody>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            <td class="st-Font st-Font--body" style="border: 0; margin: 0; padding: 0; color: #525F7f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-
-                                <!-- Button & Modifier: fullWidth -->
-                                <table class="st-Button st-Button--fullWidth" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                <tbody>
-                                    <tr>
-                                    <td align="center" class="st-Button-area" height="38" valign="middle" style="border: 0; margin: 0; padding: 0; background-color: #F7941D; border-radius: 5px; text-align: center;">
-                                        <a class="st-Button-link" style="border: 0; margin: 0; padding: 0; color: #ffffff; display: block; height: 38px; text-align: center; text-decoration: none;" href="{{url('user/login/')}}">
-                                        <span class="st-Button-internal" id="insertText4" style="border: 0; margin: 0; padding: 0; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; font-weight: bold; height: 38px; line-height: 38px; mso-line-height-rule: exactly; text-decoration: none; vertical-align: middle; white-space: nowrap; width: 100%;">     Đăng nhập </span>
-                                        </a>
-                                    </td>
-                                    </tr>
-                                </tbody>
-                                </table> <!-- /Button & Modifier: fullWidth -->
-                            </td>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                        <tbody>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            <td class="st-Font st-Font--body" id="insertText5" style="border: 0; margin: 0; padding: 0; color: #525F7f !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-                                {{-- If you did not request a new password, please let us know immediately by replying to this email. --}}
-                               
-                            </td>
-                            <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="st-Spacer st-Spacer--filler"> </div>
-                            </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                        
-                        <table class="st-Copy st-Width st-Width--mobile" border="0" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
-                            <tbody>
-                                <tr>
-                                <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                    <div class="st-Spacer st-Spacer--filler"> </div>
-                                </td>
-                                <td class="st-Font st-Font--body" id="insertText6" style="border: 0; margin: 0; padding: 0; color: #525F7f !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; font-size: 16px; line-height: 24px;">
-                                   
-                                </td>
-                                <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="64">
-                                    <div class="st-Spacer st-Spacer--filler"> </div>
-                                </td>
-                                </tr>
-                                <tr>
-                                <td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                    <div class="st-Spacer st-Spacer--filler"> </div>
-                                </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div style="padding-left:10%;padding-right:10%">
+                            {!!$content!!}
+                        </div>
+                     
                     </td>
                     </tr>
                 </tbody>
@@ -484,9 +350,8 @@
             </tr>
         </tbody>
         </table> <!-- /Background -->
-        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-        <script>
-            
-        </script>
+        <div style="text-align: center;margin-top:30px">
+            <button type="button" style="background-color: #F7941D; border:none;color:white;padding:10px;border-radius:10px" onclick="window.history.back()">Quay lại</button>
+        </div>
     </body>
 </html>

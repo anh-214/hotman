@@ -8,6 +8,7 @@ use App\Http\Middleware\AuthIsAdmin;
 use App\Http\Middleware\AdminLogged;
 use App\Http\Middleware\UserLogged;
 use App\Http\Middleware\AuthIsUser;
+use App\Http\Middleware\NeedPhoneNumber;
 use App\Http\Middleware\PasswordIsNull;
 use App\Http\Middleware\NotSocialiteUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -79,6 +80,7 @@ class Kernel extends HttpKernel
         'passwordIsNull' => PasswordIsNull::class,
         'adminisrole1' => AdminIsRole1::class,
         'adminisrole12' => AdminIsRole12::class,
+        'needPhoneNumber' => NeedPhoneNumber::class,
 
 
 

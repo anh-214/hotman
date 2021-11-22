@@ -62,6 +62,10 @@ class CartController extends Controller
         }
     }
     // php artisan vietnam-map:download
+   
+    // 0 Chưa thanh toán
+    // 1 Đã thanh toán
+    // 2 Thanh toán lỗi
     public function checkout(Request $request){
         // dd($request->input());
         if ($request->ajax()){
@@ -77,6 +81,7 @@ class CartController extends Controller
             $result = Order::create([
                 'type'=> $string,
                 'payment_type' => $type_cart,
+                'checkout_status' => 0,
                 'user_id' => Auth::guard('web')->user()->id,
                 'ward_id' => $ward,
                 'details_address' => $detailsAddress,

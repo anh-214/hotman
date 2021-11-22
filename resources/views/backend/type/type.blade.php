@@ -1,18 +1,9 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    Quản lí sản phẩm
+    Quản lí loại sản phẩm
 @endsection
-@push('css')
-    <style>
-        .hint-text{
-            width: 5em; /* the element needs a fixed width (in px, em, %, etc) */
-            overflow: hidden; /* make sure it hides the content that overflows */
-            white-space: nowrap; /* don't break the line */
-            text-overflow: ellipsis; /* give the beautiful '...' effect */
-        }
-    </style>
-@endpush
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="row">
@@ -41,19 +32,13 @@
                                         </span>
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Price</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Initial_price</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Images</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Designs</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Details</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Material</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Sizes</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Colors</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Product</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Promotion</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Created_at</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Tên loại sản phẩm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Giá bán ra</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Giá gốc</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hình ảnh</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Thuộc sản phẩm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-0">Khuyến mại</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hành động</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,31 +67,6 @@
                                                     Xem
                                             </p>
                                         </td>
-                                        
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->designs}}"> {{$type->designs}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->details}}"> {{$type->details}}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->material}}">{{$type->material}}</p>
-                                        </td>
-                                        <td >
-                                            <select class="text-center text-xs font-weight-bold mb-0 hint-text">
-                                                @php
-                                                    $sizes = explode(",",$type->sizes);
-                                                @endphp
-                                                @foreach ($sizes as $size)
-                                                    <option class="text-xs">{{$size}}</option>    
-                                                @endforeach
-                                                
-
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->color}}">{{$type->color}}</p>
-                                        </td>
                                         <td>
                                             <p class="text-center text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->product_id.' - '.$type->product->name}}">
                                                 <a href="{{url('admin/products/?id='.$type->product_id)}}" type="button" class="text-secondary">
@@ -115,13 +75,21 @@
                                             </p>                            
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="@php echo isset($type->promotion->name) ? $type->promotion->name : 'Không' @endphp">@php echo isset($type->promotion->name) ? $type->promotion->name : 'Không' @endphp</p>                            
-                                        </td>
-                                        <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->created_at}}"> {{$type->created_at}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0 text-center hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="@php echo isset($type->promotion->name) ? $type->promotion->name : 'Không' @endphp">
+                                                @isset($type->promotion->name)
+                                                <a href="{{url('admin/promotions/'.$type->promotion->id)}}">
+                                                    <span>{{$type->promotion->name}}</span>
+                                                </a>
+                                                @else
+                                                    <span>Không</span>
+                                                @endisset
+                                            </p>                            
                                         </td>
                                         <td class="align-middle text-center">
-                                            <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('admin/types/update/'.$type->id)}}">
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('admin/types/'.$type->id)}}">
+                                                <span class="badge badge-sm bg-gradient-primary">Xem chi tiết</span>
+                                            </a>
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" href="{{url('admin/types/'.$type->id.'/update')}}">
                                                 <span class="badge badge-sm bg-gradient-success">Cập nhật</span>
                                             </a>
                                             <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-name="{{$type->name}}" data-id="{{$type->id}}" >
@@ -235,7 +203,7 @@
     </style>
 @endpush
 @push('js')
-{{-- validation delete mutiple modal & ajax --}}
+{{--  delete mutiple --}}
 <script>
     $(document).ready(function(){
         $("#buttonConfirmDeleteMutiple").click(function(){
@@ -255,7 +223,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/types/delete",
+                    url: "/admin/types/mutipledelete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
                         window.location.reload()
@@ -263,11 +231,6 @@
                 });
             }
         })
-    });
-</script>
-{{-- delete multiply --}}
-<script>
-    $(document).ready(function(){
         $("#deleteMutiple").click(function(){
             if ($('.checkbox:checked').length == 0) {
                 $("#textNotificationDeleteMutipleModal").text("Vui lòng chọn ít nhất 1 records");
@@ -276,7 +239,6 @@
                 $("#confirmDeleteMutipleModal").modal('show')
             }
 	    })
-        // Select/Deselect checkboxes
         let checkbox = $('table tbody input[type="checkbox"]');
         $("#selectAll").click(function(){
             if(this.checked){
@@ -294,26 +256,21 @@
                 $("#selectAll").prop("checked", false);
             }
 	    });
-        $("#closeNotificationDeleteMutipleModal").click(function(){
-            location.reload();
-        })
     });
 </script>
-{{-- data for delete modal boostrap --}}
-<script>
-    $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) 
-    var name = button.data('name')
-    var id = button.data('id')
-    
-    var modal = $(this)
-    modal.find('#confirmCategory').text(name)
-    modal.find('input[name=deleteId]').val(id)
-    });
-</script>
-{{-- validation delete modal & ajax --}}
+
+{{-- delete --}}
 <script>
     $(document).ready(function(){
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) 
+            var name = button.data('name')
+            var id = button.data('id')
+            
+            var modal = $(this)
+            modal.find('#confirmCategory').text(name)
+            modal.find('input[name=deleteId]').val(id)
+        });
         $("#buttonConfirmDelete").click(function(){
             if ($("input[name=confirmPasswordDelete]").val() == ''){
                 $("input[name=confirmPasswordDelete]").addClass('is-invalid');
@@ -324,16 +281,13 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/types/delete",
-                    data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
+                    url: "/admin/types/"+$("input[name=deleteId]").val()+"/delete",
+                    data: {"_token": "{{ csrf_token() }}", 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
                         window.location.reload()
                     }
                 });
             }
-        })
-        $("#closeNotificationModal").click(function(){
-            location.reload()
         })
     });
 </script>

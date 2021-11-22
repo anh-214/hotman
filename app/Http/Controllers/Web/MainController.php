@@ -18,24 +18,27 @@ class MainController extends Controller
 {   
     public function home(){
         $active = 'home';
-        $headers = Homesort::where('role','header')->orderBy('position','asc')->get();
-        $position1 = Promotion::where('id','3')->with('types')->first();
-        foreach ($position1->types as $type){
-            $image = Image::where('type_id',$type->id)->first()->name;
-
-            if (filter_var($image, FILTER_VALIDATE_URL)) { 
-                $type->image = $image;
-            } else {
-                $type->image = Storage::disk('type-image')->url($image);
-            }   
+        $sections = Homesort::where('role','section')->orderBy('position','asc')->get();
+        $promotions = Promotion::where('show','1')->orderBy('position','asc')->with('types')->get();
+        foreach ($promotions as $promotion){
+            foreach ($promotion->types as $type){
+                $image = Image::where('type_id',$type->id)->first()->name;
+    
+                if (filter_var($image, FILTER_VALIDATE_URL)) { 
+                    $type->image = $image;
+                } else {
+                    $type->image = Storage::disk('type-image')->url($image);
+                }   
+            }
         }
-        return view('frontend.home',compact('active','position1','headers'));
+        
+        return view('frontend.home',compact('active','promotions','sections'));
     }
     public function contactView(){
         $active = 'contact';
         $breadCrumbs = [
             [
-                'name' => 'Contact',
+                'name' => 'Liên hệ',
                 'link' => '/contact',
             ]
         ];

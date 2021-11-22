@@ -15,17 +15,21 @@ class Order extends Model
     protected $fillable = [
         'type',
         'payment_type',
+        'checkout_status',
         'user_id',
         'ward_id',
         'details_address',
         'is_read',
+        'created_at',
     ];
+    // public $timestamps = false;
     public function user(){
         return $this->belongsTo(User::class);
     }
     public function ward(){
         return $this->belongsTo(Ward::class);
     }
+    
     // public function getCreatedAtAttribute($time)
     // {   return $this->attributes['created_at'] = ConvertTimezone::convert_timezone($time);
     // }

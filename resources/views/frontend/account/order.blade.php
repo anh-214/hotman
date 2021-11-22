@@ -29,8 +29,21 @@
                                         @php $count+=1 @endphp
                                         <a href="{{url('user/orders/'.$order->id)}}">
                                             <div class="order p-3 mb-5">
+                                                @php   
+                                                    if ($order->checkout_status == 0){
+                                                        $checkout_status=  'Chưa thanh toán';
+                                                    };
+                                                    if ($order->checkout_status == 1){
+                                                        $checkout_status=  'Đã thanh toán ';
+                                                    };
+                                                    if ($order->checkout_status == 2){
+                                                        $checkout_status=  'Lỗi thanh toán';
+                                                    };
+                                                @endphp
                                                 <p class="m-0">Mã đơn hàng: {{$order->id}}</p>
                                                 <p class="m-0">Trạng thái: <span style="color: @if($order->status == 'Đơn rủi ro') {{'red'}} @else {{'green'}} @endif;">{{$order->status}}</span></p>
+                                                <p class="m-0">Phương thức thanh toán: {{strtoupper($order->payment_type)}}</p>
+                                                <p class="m-0">Trạng thái thanh toán: <span style="color: @if($order->checkout_status == 1 ) {{'green'}} @else {{'red'}} @endif;">{{$checkout_status}}</span></p>
                                                 <p class="m-0">Thời gian đặt: {{$order->created_at_converted}}</p>
                                             </div>
                                         </a>

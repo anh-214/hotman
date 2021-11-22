@@ -21,8 +21,7 @@ class CategoryController extends Controller
         $breadCrumbs = [
             [
                 'name' => $category_info->name,
-                'link' => '/category/'.$category_id,
-               
+                'link' => '/categories/'.$category_id,
             ],
         ];
         if ($request->has('paginate')){

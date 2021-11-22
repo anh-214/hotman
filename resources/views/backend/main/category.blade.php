@@ -36,11 +36,11 @@
                                     </th>
                                     @endisset
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Update_at</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Tên thể loại</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Mô tả</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Thời gian tạo</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Thời gian cập nhật</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hành động</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -260,11 +260,9 @@
 {{-- data for delete modal boostrap --}}
 <script>
     $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var name = button.data('name') // Extract info from data-* attributes
+    var button = $(event.relatedTarget) 
+    var name = button.data('name') 
     var id = button.data('id')
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('#confirmCategory').text(name)
     modal.find('input[name=deleteId]').val(id)
@@ -273,7 +271,6 @@
 {{-- validation delete modal & ajax --}}
 <script>
     $(document).ready(function(){
-
         $("#buttonConfirmDelete").click(function(){
             if ($("input[name=confirmPasswordDelete]").val() == ''){
                 $("input[name=confirmPasswordDelete]").addClass('is-invalid');
@@ -284,16 +281,13 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/categories/delete",
-                    data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
+                    url: "/admin/categories/"+$("input[name=deleteId]").val()+"/delete",
+                    data: {"_token": "{{ csrf_token() }}", 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
                         window.location.reload()
                     }
                 });
             }
-        })
-        $("#closeNotificationDeleteModal").click(function(){
-            location.reload()
         })
     });
 
@@ -302,7 +296,6 @@
 {{-- validation delete mutiple modal & ajax --}}
 <script>
     $(document).ready(function(){
-
         $("#buttonConfirmDeleteMutiple").click(function(){
             if ($("input[name=confirmPasswordDeleteMutiple]").val() == ''){
                 $("input[name=confirmPasswordDeleteMutiple]").addClass('is-invalid');
@@ -320,7 +313,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/categories/delete",
+                    url: "/admin/categories/mutipledelete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
                         window.location.reload()                    
@@ -359,9 +352,6 @@
                 $("#selectAll").prop("checked", false);
             }
 	    });
-        $("#closeNotificationDeleteMutipleModal").click(function(){
-            location.reload();
-        })
     });
 </script>
 
@@ -408,16 +398,13 @@
                 $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "/admin/categories/update",
-                        data: {"_token": "{{ csrf_token() }}", 'id': $("input[name=updateId]").val(), 'name': $("#nameCategory").val(),'desc': $("#descCategory").val()},
+                        url: "/admin/categories/"+$("input[name=updateId]").val()+"/update",
+                        data: {"_token": "{{ csrf_token() }}", 'name': $("#nameCategory").val(),'desc': $("#descCategory").val()},
                         success: function(data){
                             window.location.reload()
                         }
                     });
             }
-        })
-        $("#closeNotificationModal").click(function(){
-            location.reload()
         })
     });
 

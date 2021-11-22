@@ -36,12 +36,12 @@
                                     </th>
                                     @endisset
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Description</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Category</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Created_at</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Updated_at</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Tên sản phẩm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Mô tả</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Thuộc thể loại</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Thời gian tạo</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Thời gian cập nhật</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hành động</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -315,7 +315,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/products/delete",
+                    url: "/admin/products/mutipledelete",
                     data: {"_token": "{{ csrf_token() }}", 'mutipleId' : obj, 'confirmPassword': $("input[name=confirmPasswordDeleteMutiple]").val()},
                     success: function(data){
                         window.location.reload()
@@ -364,11 +364,9 @@
 {{-- data for delete modal boostrap --}}
 <script>
     $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var name = button.data('name') // Extract info from data-* attributes
+    var button = $(event.relatedTarget) 
+    var name = button.data('name') 
     var id = button.data('id')
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('#confirmCategory').text(name)
     modal.find('input[name=deleteId]').val(id)
@@ -388,8 +386,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/products/delete",
-                    data: {"_token": "{{ csrf_token() }}", 'deleteId': $("input[name=deleteId]").val(), 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
+                    url: "/admin/products/"+ $("input[name=deleteId]").val()+"/delete",
+                    data: {"_token": "{{ csrf_token() }}", 'confirmPassword': $("input[name=confirmPasswordDelete]").val()},
                     success: function(data){
                         window.location.reload()                    
                     }
@@ -432,13 +430,11 @@
 {{-- data for update modal boostrap --}}
 <script>
     $('#updateModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var name = button.data('name') // Extract info from data-* attributes
+    var button = $(event.relatedTarget) 
+    var name = button.data('name') 
     var id = button.data('id')
     var desc = button.data('desc')
     var categoryId = button.data('categoryid')
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('#nameProduct').val(name)
     modal.find('#descProduct').val(desc)
@@ -478,8 +474,8 @@
                 $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "/admin/products/update",
-                        data: {"_token": "{{ csrf_token() }}", 'id': $("input[name=updateId]").val(), 'name': $("#nameProduct").val(),'desc': $("#descProduct").val(), 'category_id': $("select[name=category_id_update]").val()},
+                        url: "/admin/products/"+$("input[name=updateId]").val()+"/update",
+                        data: {"_token": "{{ csrf_token() }}", 'name': $("#nameProduct").val(),'desc': $("#descProduct").val(), 'category_id': $("select[name=category_id_update]").val()},
                         success: function(data){
                             window.location.reload()
                         }

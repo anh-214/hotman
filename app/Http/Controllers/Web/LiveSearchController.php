@@ -31,7 +31,7 @@ class LiveSearchController extends Controller
                                 <img src="'.$type->images[0]->name.'" alt="">
                             </div>
                             <div class="col-9">
-                                <a href="'.url('type/'.$type->id).'"> 
+                                <a href="'.url('types/'.$type->id).'"> 
                                     <p>'.$type->name.'</p>
                                 </a>
                                 <p>'.number_format($type->price).' đ</p>

@@ -1,10 +1,4 @@
-/* =====================================
-Template Name: Eshop
-Author Name: Naimur Rahman
-Author URI: http://www.wpthemesgrid.com/
-Description: Eshop - eCommerce HTML5 Template.
-Version:1.0
-========================================*/
+
 /* Tablet Screen */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
 .section{
@@ -458,10 +452,11 @@ Version:1.0
 	display:none !important;
 }
 .header.shop .search-bar-top {
-	display: none;
+	/* display: none; */
 }
 .header.shop .right-bar {
-	display: none;
+	/* display: none; */
+	margin-bottom: 10px;
 }
 .header .middle-inner{
 	width:100%;
@@ -486,6 +481,7 @@ Version:1.0
 }
 .header.shop .logo {
 	margin: 0;
+	width: 40%;
 }
 .section{
 	padding:50px 0px;
@@ -1171,10 +1167,11 @@ Version:1.0
 	padding: 20px 0 30px 0;
 }
 .header.shop .search-bar-top {
-	display: none;
+	/* display: none; */
 }
 .header.shop .right-bar {
-	display: none;
+	/* display: none; */
+	margin-bottom: 5px;
 }
 /* Header Search */
 .header.shop .search-top {
@@ -1245,7 +1242,18 @@ Version:1.0
 	border-top: 1px solid #ffffff87;
 }
 .header.shop .search-bar {
-	width: 445px;
+	width: 245px;
+}
+.header.shop .search-bar form  {
+	width: 90%;
+}
+.header.shop .search-bar form input {
+	width: 60%;
+	padding: none;
+}
+.header.shop .search-bar .nice-select {
+	display: none;
+	/* width: 20%; */
 }
 .header.shop .search-bar input {
 	padding: 0 52px 0 20px;

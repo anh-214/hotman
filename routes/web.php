@@ -1,6 +1,8 @@
 <?php
 
 use App\Events\MessageNotification;
+use App\Http\Controllers\Admin\SubcriberController;
+use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Web\AuthenticateController;
 use App\Http\Controllers\Web\AccountController;
 use App\Http\Controllers\Web\ProductController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\Web\LiveSearchController;
 use App\Http\Controllers\Web\MainController;
 use App\Http\Controllers\Web\SocialiteController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\VNPayController;
 use App\Mail\SendPassword;
 use App\Models\Order;
 use Illuminate\Support\Carbon;
@@ -46,6 +49,8 @@ Route::group(['prefix' => '/user'],function () {
         Route::get('/google/callback',[SocialiteController::class,'handdleGoogleCallback']);
         Route::get('/github',[SocialiteController::class,'redirectToGithub']);
         Route::get('/github/callback',[SocialiteController::class,'handdleGithubCallback']);
+        Route::get('/facebook', [SocialiteController::class, 'redirectToFacebook']);
+        Route::get('/facebook/callback', [SocialiteController::class, 'handdleFacebookCallback']);
     });
 
     Route::group(['middleware'=> 'authisuser'], function(){ 
@@ -64,37 +69,42 @@ Route::group(['prefix' => '/user'],function () {
 Route::group(['middleware'=> 'authisuser'], function(){ 
     Route::post('/getdistricts',[CartController::class,'getDistricts']);
     Route::post('/getwards',[CartController::class,'getWards']);
-    Route::post('cart/checkout', [CartController::class, 'checkout']);
-    Route::get('cart/checkout', [CartController::class, 'showCheckoutForm']);
+    Route::get('cart/checkout/cod', [CartController::class, 'checkout']);
+    Route::get('cart/checkout/online', [VNPayController::class, 'create']);
+    Route::get('cart/return-vnpay', [VNPayController::class, 'return']);
+    Route::get('cart/checkout', [CartController::class, 'showCheckoutForm'])->middleware('needPhoneNumber');
 });
 
+Route::get('/',[MainController::class,'home']);
+
 Route::get('contact',[MainController::class,'contactView']);
-Route::get('home',[MainController::class,'home']);
-Route::get('/',function(){return redirect('home');});
-Route::get("/category/{category_id}",[CategoryController::class,'categoryView']);
-Route::get("/category/{category_id}/product/{product_id}",[ProductController::class,'productView']);
-Route::get("/category/{category_id}/product/{product_id}/type/{type_id}",[TypeController::class,'typeView']);
-Route::get('type/{id}',[TypeController::class,'getUrl']);
-Route::get('product/{id}',[ProductController::class,'getUrl']);
+Route::post('contact',[SupportController::class, 'store']);
+
+Route::get("/categories/{category_id}",[CategoryController::class,'categoryView']);
+Route::get("/categories/{category_id}/products/{product_id}",[ProductController::class,'productView']);
+Route::get("/categories/{category_id}/products/{product_id}/types/{type_id}",[TypeController::class,'typeView']);
+Route::get('products/{id}',[ProductController::class,'getUrl']);
+Route::get('/types/{id}',[TypeController::class,'getUrl']);
+Route::get('/types', [TypeController::class,'search']);
+
 Route::post("/get-type-info",[TypeController::class,'getTypeInfo']);
 Route::get('/search',[LiveSearchController::class,'search']);
-Route::post("product/quickshop",[ProductController::class,'quickShop']);
-Route::post('product/getimages',[ProductController::class,'getImages']);
+Route::get('/subcriber',[SubcriberController::class,'subcriber']);
+Route::post("products/quickshop",[ProductController::class,'quickShop']);
+Route::post('products/getimages',[ProductController::class,'getImages']);
 // cart
 Route::get('cart', [CartController::class, 'cart']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::post('update-cart', [CartController::class, 'update']);
 Route::post('remove-from-cart', [CartController::class, 'remove']);
-Route::get('cart/checkout', [CartController::class, 'showCheckoutForm']);
 
 
+// Route::get('/event', function(){
+//     // MessageNotification::dispatch('This is our first broadcasting message!');
+//     $order = Order::where('id','1')->first();
+//     event(new MessageNotification($order,'Đơn hàng từ khách hàng: '.Auth::guard('web')->user()->name));
 
-Route::get('/event', function(){
-    // MessageNotification::dispatch('This is our first broadcasting message!');
-    $order = Order::where('id','1')->first();
-    event(new MessageNotification($order,'Đơn hàng từ khách hàng: '.Auth::guard('web')->user()->name));
-
-});
-Route::get('/listen', function () {
-    return view('listen');
-});
+// });
+// Route::get('/listen', function () {
+//     return view('listen');
+// });

@@ -17,26 +17,26 @@ class TypeController extends Controller
         $category_info = Category::where('id',$category_id)->first();
         $product_info = Product::where('id',$product_id)->first();
         $type_info = Type::where('id',$type_id)->with('images')->first();
-        
+        $active = 'categories';
         // dd($type_info->sizes);
         $breadCrumbs = [
             [
                 'name' => $category_info->name,
-                // 'link' => '/category/'.$category_id,
-                'link' => '#'
+                'link' => '/categories/'.$category_id,
+                // 'link' => '#'
             ],
             [
                 'name' => $product_info->name,
-                'link' => '/category/'.$category_id.'/product/'.$product_info->id,
+                'link' => '/categories/'.$category_id.'/products/'.$product_info->id,
             ],
             [
                 'name' => $type_info->name,
-                'link' => '/category/'.$category_id.'/product/'.$product_info->id.'/type/'.$type_info->id,
+                'link' => '/categories/'.$category_id.'/products/'.$product_info->id.'/types/'.$type_info->id,
             ]
         ];
         // $images = \App\Models\Type::findOrFail($type_info->id)->images()->get();
         // dd($images);
-        return view('frontend.type',compact(['breadCrumbs','type_info','category_info','product_info']));
+        return view('frontend.type',compact(['breadCrumbs','active','type_info','category_info','product_info']));
     }
     public function getTypeInfo(Request $request){
         if ($request->ajax()){
@@ -55,7 +55,51 @@ class TypeController extends Controller
         $type = Type::where('id',$type_id)->first();
         $product_id= Type::where('id',$type->id)->first()->product_id;
         $category_id= Product::where('id',$product_id)->first()->category_id;
-        $link = url('category/'.$category_id.'/product/'.$product_id.'/type/'.$type->id);
+        $link = url('categories/'.$category_id.'/products/'.$product_id.'/types/'.$type->id);
         return redirect($link);
+    }
+    public function search(Request $request)
+    {   
+        $search = $request->input('search');
+        $sort_by_price = 'none';
+        $price = 'none';
+        $paginate = 9;
+        $breadCrumbs = [
+            [
+                'name' => 'Tìm kiếm',
+                'link' => '#',
+            ],
+            [
+                'name' => $request->input('search'),
+                'link' => '#',
+            ],
+        ];
+        if ($request->has('paginate')){
+            $paginate = $request->input('paginate');
+        }
+        if ($request->input('select') == 'all'){
+            $types = Type::where('name', 'LIKE', '%' . $search . '%')
+            ->when( request ('price', false) ,function($query,$price){
+                return $query->orderBy('price', $price);
+            })->paginate($paginate);
+
+        } else {
+            $types = Category::findOrFail($request->input('select'))
+            ->types()
+            ->where('types.name', 'LIKE', '%' . $search . '%')
+            ->when( request ('price', false) ,function($query,$price){
+                return $query->orderBy('price', $price);
+            })->paginate($paginate);
+        }
+        if ($request->has('price')){
+            $sort_by_price = $request->input('price');
+            $types->appends(['price'=> $request->input('price')]);
+        }
+        if ($request->has('paginate')){
+            $types->appends(['paginate'=> $request->input('paginate')]);
+        }
+        $types->appends(['select'=> $request->input('select')]);
+        $types->appends(['search'=> $search]);
+        return view('frontend.searchType',compact(['breadCrumbs','types','sort_by_price','search','paginate',]));
     }
 }

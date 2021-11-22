@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\verifyEmail;
+use App\Mail\VerifyEmail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Password;
 
@@ -38,7 +38,7 @@ class AuthenticateController extends Controller
                 return view('frontend.account.login', compact('loginFailed'));
             } else {
             session()->flash('success', 'Đăng nhập thành công');
-                return redirect('/home');
+                return redirect('/');
             }
         } else {
             session()->flash('fail', 'Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu của bạn');
@@ -47,7 +47,7 @@ class AuthenticateController extends Controller
     }
     public function logout(){
         Auth::guard('web')->logout();
-        return back();
+        return redirect('user/login');
     }
     public function showRegisterForm(){
         return view('frontend.account.register');
@@ -72,8 +72,8 @@ class AuthenticateController extends Controller
             'token' => $token,
             'created_at' => now(),
         ]);
-        Mail::to($request->input('email'))->send(new verifyEmail($request->input('email'),$token));
-        session()->put('result', 'success');
+        Mail::to($request->input('email'))->send(new VerifyEmail($request->input('email'),$token));
+        session()->flash('success', 'Đăng ký tài khoản thành công, vui lòng xác nhận email của bạn');
         return back();
     }
     public function checkEmailExists(Request $request){
@@ -127,7 +127,8 @@ class AuthenticateController extends Controller
             User::where('email',$check->email)->update([
                 'email_verified_at' => now()
             ]);
-            session()->put('verifyEmail', 'success');
+
+            session()->flash('success','Xác nhận email thành công');
             return redirect('user/login');
         }
     }
@@ -180,23 +181,29 @@ class AuthenticateController extends Controller
     public function createPasswordWhenForgot(Request $request,$token){
             $password = $request->input('password');
             $token = DB::table('password_resets')->where('token',$token)->first();
-            $token_latest = DB::table('password_resets')->where('email',$token->email)->latest()->first()->token;
-            if ($token_latest == $token->token){
-
-                if (Carbon::parse($token->created_at) < Carbon::yesterday()) {
-                    session()->flash('fail','Token đã hết hạn');
-                    return redirect('user/login');
-                }
+            // $token_latest = DB::table('password_resets')->where('email',$token->email)->latest()->first()->token;
+            // if ($token_latest == $token->token){
+            if ($token == null) {
+                session()->flash('fail','Tạo mật khẩu thất bại');
+                return redirect('user/login');
+            } else {
                 User::where('email', $token->email)->update([
                     'password' => Hash::make($password),
                     'password_is_null' => 'False'
                 ]);
-                session()->flash('success','Tạo mật khẩu mới thành công');
-                return redirect('user/login');
-            } else {
-                session()->flash('fail','Tạo mật khẩu thất bại');
-                return redirect('user/login');
+                DB::table('password_resets')->where('token',$token->token)->delete();
+                
+                if (Auth::guard('web')->attempt(['email' => $token->email, 'password' => $password])){
+                    session()->flash('success','Đăng nhập thành công');
+                    return redirect('/');
+                }
             }
+                // session()->flash('success','Tạo mật khẩu mới thành công');
+                // return redirect('user/login');
+            // } else {
+                // session()->flash('fail','Tạo mật khẩu thất bại');
+                // return redirect('user/login');
+            // }
         
     }
     // create password when login with socialite

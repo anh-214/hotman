@@ -11,6 +11,8 @@ class Promotion extends Model
     protected $fillable = [
         'name',
         'discount',
+        'position',
+        'show'
     ];
     public function types(){
         return $this->hasMany(Type::class,'promotion_id');

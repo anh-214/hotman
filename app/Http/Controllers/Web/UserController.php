@@ -29,11 +29,11 @@ class UserController extends Controller
     public function showInformation(){
         $breadCrumbs = [
             [
-                'name' => 'User',
+                'name' => 'Người dùng',
                 'link' => '#',
             ],
             [
-                'name' => 'Information',
+                'name' => 'Thông tin cá nhân',
                 'link' => '/user/information',
             ]
         ];
@@ -105,11 +105,11 @@ class UserController extends Controller
         // dd($orders);
         $breadCrumbs = [
             [
-                'name' => 'User',
+                'name' => 'Người dùng',
                 'link' => '#',
             ],
             [
-                'name' => 'Orders',
+                'name' => 'Đơn hàng',
                 'link' => '/user/orders',
             ]
         ];
@@ -151,11 +151,11 @@ class UserController extends Controller
         $order->details = $details;
         $breadCrumbs = [
             [
-                'name' => 'User',
+                'name' => 'Người dùng',
                 'link' => '#',
             ],
             [
-                'name' => 'Orders',
+                'name' => 'Đơn hàng',
                 'link' => '/user/orders',
             ],
             [

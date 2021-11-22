@@ -16,8 +16,8 @@ class CreateTypesTable extends Migration
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('price');
-            $table->text('initial_price');
+            $table->bigInteger('price');
+            $table->bigInteger('initial_price');
             $table->string('sizes');
             $table->text('designs');
             $table->text('details');

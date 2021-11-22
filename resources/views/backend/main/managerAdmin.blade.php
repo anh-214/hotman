@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    Quản lí tài khoản
+    Quản lí tài khoản Admin
 @endsection
 @push('link')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>    
@@ -24,11 +24,12 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created_at</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Quuyền</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thời gian tạo</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thời gian cập nhật</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hành động</th>
                                 <th class="text-secondary opacity-7"></th>
                                 </tr>
                             </thead>
@@ -55,6 +56,9 @@
                                             <td class="align-middle text-center text-sm">
                                                 <span class="text-secondary text-xs font-weight-bold">{{$admin->created_at}}</span>
                                             </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="text-secondary text-xs font-weight-bold">{{$admin->updated_at}}</span>
+                                            </td>
                                             <td class="align-middle text-center">
                                                 <a type="button" class="text-secondary font-weight-bold text-xs" >
                                                     <span class="badge badge-sm bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#updateModal" data-id="{{$admin->id}}" data-name="{{$admin->name}}" data-role="{{$admin->role}}">Cập nhật</span>
@@ -71,6 +75,7 @@
                     </div>
                     </div>
                 </div>
+                <div class="d-flex justify-content-center">{{$admins->links('vendor.pagination.bootstrap-4')}}</div>
                 </div>
             </div>
         </div>
@@ -84,7 +89,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form method="POST" action="{{url('admin/manager/delete')}}" id="deleteForm">
+                    <form method="GET" id="deleteForm">
                         @csrf
                         <div class="mb-3">
                         <label for="confirmPasswordDelete" class="col-form-label"><h6>Nhập mật khẩu của bạn để xác nhận xóa tài khoản</h6><span id="confirmEmail"></span></label>
@@ -164,7 +169,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="createForm" action="{{url('admin/manager/create')}}" class="needs-validation" enctype="multipart/form-data" method="POST">
+                        <form id="createForm" action="{{url('admin/manager/admins/create')}}" class="needs-validation" enctype="multipart/form-data" method="POST">
                             @csrf
                             <div class="mb-3 no-border-bottom">
                                 @error('email')
@@ -297,6 +302,9 @@
     var modal = $(this)
     modal.find('#confirmEmail').text(email)
     modal.find('input[name=deleteId]').val(id)
+    let link = window.location.protocol + window.location.pathname+'/'+id+'/delete'
+    // alert(link)
+    modal.find('#deleteForm').attr('action', link)
     });
 </script>
 
@@ -417,7 +425,7 @@
                 $("#errorUpdateRole").text("")
                 $checkRole = true
             }
-
+            let link = window.location.protocol + window.location.pathname+'/'+$("#confirmUpdateId").val()+'/update'
             if ($('.image').val() != '' && $checkName == true){
                 canvas = cropper.getCroppedCanvas({
                     width: 160,
@@ -429,10 +437,12 @@
                     reader.readAsDataURL(blob); 
                     reader.onloadend = function() {
                         var base64data = reader.result; 
+                       
+
                         $.ajax({
                             type: "POST",
                             dataType: "json",
-                            url: "/admin/manager/update",
+                            url: link,
                             data: {"_token": "{{ csrf_token() }}", 'upload': base64data, 'id': $("#confirmUpdateId").val(), 'name': $('#updateName').val(),'role':$('#updateRole').val()},
                             success: function(data){
                                 window.location.reload()
@@ -444,7 +454,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/manager/update",
+                    url: link,
                     data: {"_token": "{{ csrf_token() }}", 'id': $("#confirmUpdateId").val(), 'name': $('#updateName').val(),'role':$('#updateRole').val()},
                     success: function(data){
                        window.location.reload()

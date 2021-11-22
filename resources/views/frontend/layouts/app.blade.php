@@ -118,6 +118,7 @@
 			@if(session()->has('success'))
 				toastr.options.fadeOut = 2000;
 				toastr.success("{{session('success')}}");
+				localStorage.clear()
 			@endif
 			@if(session()->has('fail'))
 				toastr.options.fadeOut = 2000;
@@ -164,8 +165,39 @@
                 
             })
             $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+			$('#selectSearch').change(function(){
+				$select = $(this).val();
+				$('.search-bar-top .search-bar form input[name=select]').val($select)
+			})
 		})
 	</script>
+	<!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+		var chatbox = document.getElementById('fb-customer-chat');
+		chatbox.setAttribute("page_id", "101461992347860");
+		chatbox.setAttribute("attribution", "biz_inbox");
+
+		window.fbAsyncInit = function() {
+			FB.init({
+			xfbml            : true,
+			version          : 'v12.0'
+			});
+		};
+
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+    </script>
     @stack('js')
 	@if (Auth::guard('web')->check())
 	@if (Auth::guard('web')->user()->password_is_null == 'True')

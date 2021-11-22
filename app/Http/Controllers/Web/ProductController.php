@@ -21,11 +21,11 @@ class ProductController extends Controller
         $breadCrumbs = [
             [
                 'name' => $category_info->name,
-                'link' => '/category/'.$category_id,
+                'link' => '/categories/'.$category_id,
             ],
             [
                 'name' => $product->name,
-                'link' => '/category/'.$category_id.'/product/'.$product->id,
+                'link' => '/categories/'.$category_id.'/products/'.$product->id,
             ]
         ];
         $active = 'categories';
@@ -85,7 +85,7 @@ class ProductController extends Controller
     public function getUrl($product_id){
         $product= Type::where('id',$product_id)->first();
         $category_id= Product::where('id',$product_id)->first()->category_id;
-        $link = url('category/'.$category_id.'/product/'.$product_id);
+        $link = url('categories/'.$category_id.'/products/'.$product_id);
         return redirect($link);
     }
 

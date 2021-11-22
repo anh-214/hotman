@@ -9,23 +9,59 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card col-2">
-            <div class="card-header text-center">
-            {{-- <div class="icon icon-shape icon-lg bg-gradient-primary shadow text-center border-radius-lg">
-                <i class="fas fa-wallet"></i>
-            </div> --}}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3 py-2">
+                    <h6 class="text-center mb-0">@php echo ($displayTime == '') ? 'Tất cả các ngày' : $displayTime @endphp</h6>
+                </div>
             </div>
-            <div class="card-body pt-0 p-3 text-center">
-            <h6 class="text-center mb-0">Doanh thu tạm tính</h6>
-            <h6 class="text-center mb-0">@php echo ($from == '' && $to == '') ? 'Tất cả các ngày' : $from.' - '.$to @endphp</h6>
-            {{-- <span class="text-xs">Belong Interactive</span> --}}
-            <hr class="horizontal dark my-3">
-            <h5 class="mb-0">{{number_format($total_all)}} đ</h5>
-            </div>
+            <div class="col-md-2">
+                <div class="card mb-2">
+                    <div class="card-header text-center pt-1">
+                        </div>
+                        <div class="card-body pt-0 p-3 text-center">
+                        <h6 class="text-center mb-0">Doanh thu tạm tính</h6>
+                        <hr class="horizontal dark my-3">
+                        <h5 class="mb-0">{{number_format($total_all)}} đ</h5>
+                    </div>
+                </div>
+            </div> 
+            <div class="col-md-3">
+                <div class="card mb-2">
+                    <div class="card-header text-center pt-1">
+                    </div>
+                    <div class="card-body pt-0 p-3 text-center">
+                        <h6 class="text-center mb-0">Doanh thu thực (Đã hoàn thành)</h6>
+                        <hr class="horizontal dark my-3">
+                        <h5 class="mb-0">{{number_format($total_real)}} đ</h5>
+                    </div>
+                </div>
+            </div>  
+            <div class="col-md-3">
+                <div class="card mb-2">
+                    <div class="card-header text-center pt-1">
+                    </div>
+                    <div class="card-body pt-0 p-3 text-center">
+                        <h6 class="text-center mb-0">Tổng số đơn</h6>
+                        <hr class="horizontal dark my-3">
+                        <h5 class="mb-0">{{$count_orders}}</h5>
+                    </div>
+                </div>
+            </div>  
+            <div class="col-md-3">
+                <div class="card mb-2">
+                    <div class="card-header text-center pt-1">
+                    </div>
+                    <div class="card-body pt-0 p-3 text-center">
+                        <h6 class="text-center mb-0">Đơn rủi ro - bị hủy</h6>
+                        <hr class="horizontal dark my-3">
+                        <h5 class="mb-0">{{$count_problems}}</h5>
+                    </div>
+                </div>
+            </div>  
         </div>
     </div>
-
-    <div class="col-md-7 mt-4">
+    <div class="col-md-7 mt-2">
         <div class="card">
             <div class="card-header pb-0 px-3">
             <h6 class="mb-0">Đơn hàng</h6>
@@ -61,6 +97,21 @@
                                     <span class="ms-sm-2 font-weight-bold" style="color: green">{{$status}}</span>
                                 @endif
                             </span>
+                            <span class="mb-2 text-xs">Trạng thái thanh toán: 
+                                <span class="ms-sm-2 font-weight-bold" style="color: @if($order->checkout_status == 1 ) {{'green'}} @else {{'red'}} @endif;">
+                                @php   
+                                    if ($order->checkout_status == 0){
+                                        echo 'Chưa thanh toán';
+                                    };
+                                    if ($order->checkout_status == 1){
+                                        echo 'Đã thanh toán ';
+                                    };
+                                    if ($order->checkout_status == 2){
+                                        echo 'Lỗi thanh toán';
+                                    };
+                                @endphp
+                                </span>
+                            </span> 
                             <span class="mb-2 text-xs">Thời gian tạo: <span class="text-dark ms-sm-2 font-weight-bold">{{$order->created_at_converted}}</span></span>
                             <span class="mb-2 text-xs">Tổng đơn hàng: <span class="text-dark ms-sm-2 font-weight-bold">{{number_format($order->total)}} đ</span></span>
                         </div>
@@ -74,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5 mt-4">
+    <div class="col-md-5 mt-2">
         <div class="card mb-4 col-12">
             <div class="card-header pb-0 px-3">
             <div class="row">

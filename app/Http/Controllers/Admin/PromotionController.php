@@ -12,20 +12,39 @@ use Illuminate\Support\Facades\Hash;
 class PromotionController extends Controller
 {
     public function index(){
-        $select = 'Promotion';
+        $select = 'Quản lí khuyến mại';
         $active = 'promotion';
-        $promotions = Promotion::with('types')->get();
-        return view('backend.main.promotion',compact('select','active','promotions'));
+        $promotions = Promotion::with('types')->orderBy('position','asc')->get();
+        return view('backend.promotion.promotion',compact('select','active','promotions'));
+    }
+    public function info($id){
+        $select = 'Chi tiết khuyến mại';
+        $active = 'promotion';
+        $promotion = Promotion::where('id',$id)->first();
+        return view('backend.promotion.promotionInfo',compact('select','active','promotion'));
     }
     public function create(Request $request){
         $request->validate([
             'createName' => 'required',
-            'createDiscount' => 'required'
+            'createDiscount' => 'required',
+            'createShow' => 'required'
         ]);
-        Promotion::create([
-            'name' => $request->input('createName'),
-            'discount' => $request->input('createDiscount'),
-        ]);
+        $latest = Promotion::orderBy('position','desc')->first();
+        if ($latest == null){
+            Promotion::create([
+                'name' => $request->input('createName'),
+                'discount' => $request->input('createDiscount'),
+                'position' => 1,
+                'show' => $request->input('createShow'),
+            ]);
+        } else {
+            Promotion::create([
+                'name' => $request->input('createName'),
+                'discount' => $request->input('createDiscount'),
+                'position' => $latest->position+1,
+                'show' => $request->input('createShow'),
+            ]);
+        }
         session()->flash('success','Tạo chương trình khuyến mại thành công');
         return back();
     }
@@ -40,8 +59,7 @@ class PromotionController extends Controller
             'result'=>'success'
         ]);
     }
-    public function delete(Request $request){
-        $id = $request->input('id');
+    public function delete(Request $request,$id){
         $password = $request->input('password');
         if (Hash::check($password, Auth::guard('admin')->user()->password)){
             $types = Type::where('promotion_id',$id)->get();
@@ -51,7 +69,14 @@ class PromotionController extends Controller
                     'price' => $type->initial_price
                 ]);
             }
+            $current = Promotion::where('id',$id)->first();
+            $changes = Promotion::where('position','>',$current->position)->get();
             Promotion::where('id',$id)->delete();
+            foreach ($changes as $change){
+                Promotion::where('id',$change->id)->update([
+                    'position' => $change->position-1
+                ]);
+            }
             session()->flash('success','Xóa khuyến mại thành công');
             return response()->json([
                 'result' => 'success'
@@ -63,17 +88,18 @@ class PromotionController extends Controller
             ]);
         }
     }
-    public function update(Request $request){
+    public function update(Request $request,$id){
         $request->validate([
-            'updateId' => 'required',
             'updateName' => 'required',
             'updateDiscount' => 'required',
+            'updateShow' => 'required'
         ]);
-        Promotion::where('id',$request->input('updateId'))->update([
+        Promotion::where('id',$id)->update([
             'name' => $request->input('updateName'),
             'discount' => $request->input('updateDiscount'),
+            'show' => $request->input('updateShow')
         ]);
-        $types = Type::where('promotion_id',$request->input('updateId'))->get();
+        $types = Type::where('promotion_id',$id)->get();
             foreach ($types as $type){
                 $price = ($type->initial_price - ($type->initial_price*(intval($request->input('updateDiscount'))/100)));
                 Type::where('id',$type->id)->update([
@@ -81,7 +107,48 @@ class PromotionController extends Controller
                 ]);
             }
         session()->flash('success','Cập nhật khuyến mại thành công');
-        return back();
+        return response()->json([
+            'result' => 'success'
+        ]);
+    }
+    public function up($id){
+        $down = Promotion::where('id',$id)->first();
+        if ($down->position != '1'){
+            $up = Promotion::where('position',$down->position-1)->first();
+            if ($up != null){
+                Promotion::where('id',$up->id)->update([
+                    'position' => $down->position
+                ]);
+                Promotion::where('id',$down->id)->update([
+                    'position' => $down->position-1
+                ]);
+                session()->flash('success','Di chuyển khuyến mại thành công');
+                return back();
+            } else {
+                Promotion::where('id',$down->id)->update([
+                    'position' => $down->position-1
+                ]);
+                return back();
+            }
+        } else {
+            return back();
+        }
+    }
+    public function down($id){
+        $up = Promotion::where('id',$id)->first();
+        if ($up->position != Promotion::orderBy('position','desc')->first()->position){
+            $down = Promotion::where('position',$up->position+1)->first();
+            Promotion::where('id',$down->id)->update([
+                'position' => $up->position
+            ]);
+            Promotion::where('id',$up->id)->update([
+                'position' => $up->position+1
+            ]);
+            session()->flash('success','Di chuyển khuyến mại thành công');
+            return back();
+        } else {
+            return back();
+        }
     }
 }
 

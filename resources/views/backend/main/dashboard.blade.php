@@ -8,16 +8,29 @@
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-2 p-4">
+            <div class="row">
+              <div class="col-4">
+                <label for="subdays">Hiển thị</label>
+                <select class="form-control" name="" id="subdays">
+                  <option value="7">7 ngày</option>
+                  <option value="30">30 ngày</option>
+                  <option value="365">1 năm</option>
+                </select>  
+              </div>
+
+            </div>
+          </div>
+        </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Money</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      $53,000
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Doanh thu tạm tính</p>
+                    <h5 class="font-weight-bolder mb-0" id="total_all">
                     </h5>
                   </div>
                 </div>
@@ -30,16 +43,14 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-xl-3 col-sm-7 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Doanh thu thực (Hoàn thành)</p>
+                    <h5 class="font-weight-bolder mb-0" id="total_real">
                     </h5>
                   </div>
                 </div>
@@ -52,7 +63,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        {{-- <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
@@ -73,17 +84,16 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
         <div class="col-xl-3 col-sm-6">
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      $103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Tổng số đơn</p>
+                    <h5 class="font-weight-bolder mb-0" id="count_orders">
+                      {{-- <span class="text-success text-sm font-weight-bolder">+5%</span> --}}
                     </h5>
                   </div>
                 </div>
@@ -96,36 +106,39 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-lg-7 mb-lg-0 mb-4">
+        <div class="col-xl-3 col-sm-6">
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
-                <div class="col-lg-6">
-                  <div class="d-flex flex-column h-100">
-                    <p class="mb-1 pt-2 text-bold">Built by developers</p>
-                    <h5 class="font-weight-bolder">Soft UI Dashboard</h5>
-                    <p class="mb-5">From colors, cards, typography to complex elements, you will find the full documentation.</p>
-                    <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                      Read More
-                      <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                    </a>
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Đơn rủi ro - bị hủy</p>
+                    <h5 class="font-weight-bolder mb-0" id="count_problems">
+                    </h5>
                   </div>
                 </div>
-                <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
-                  <div class="bg-gradient-primary border-radius-lg h-100">
-                    <img src="../assets/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
-                    <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                      <img class="w-100 position-relative z-index-2 pt-4" src="../assets/img/illustrations/rocket-white.png" alt="rocket">
-                    </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                    <i class="fas fa-times-circle"></i>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-5">
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-lg-12 mb-lg-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <canvas id="myChart" width="100px" height="30px"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{-- <div class="col-lg-5">
           <div class="card h-100 p-3">
             <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('../assets/img/ivancik.jpg');">
               <span class="mask bg-gradient-dark"></span>
@@ -139,9 +152,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
-      <div class="row mt-4">
+      {{-- <div class="row mt-4">
         <div class="col-lg-5 mb-lg-0 mb-4">
           <div class="card z-index-2">
             <div class="card-body p-3">
@@ -619,7 +632,92 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> --}}
     </div>
     
 @endsection
+
+@push('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets:  [
+              {
+                label: 'Tổng số đơn',
+                data: [],
+                borderColor: ['rgba(41,122,254)'],
+                backgroundColor: ['rgba(41,122,254, 0.2)'],
+                yAxisID: 'y',
+              },
+              {
+                label: 'Đơn bị hủy',
+                data: [],
+                borderColor: ['rgba(255, 99, 132)'],
+                backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+                yAxisID: 'y',
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            stacked: false,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Thống kê đơn hàng'
+              }
+            },
+            scales: {
+            
+            }
+          }
+    });
+    $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/admin/dashboard/getchart",
+            data: {"_token": "{{ csrf_token() }}"},
+    }).done(function(response){
+      var x = Object.keys(response['all']);
+      var y1 = Object.values(response['all']);
+      var y2 = Object.values(response['problems']);
+      console.log(response['count_problems']);
+      myChart.data.datasets[0].data = y1;
+      myChart.data.datasets[1].data = y2;
+      myChart.data.labels = x;
+      myChart.update();
+      $('#total_all').text(parseInt(response['total_all']).toLocaleString('it-IT')+' đ')
+      $('#total_real').text(parseInt(response['total_real']).toLocaleString('it-IT')+' đ')
+      $('#count_orders').text(response['count_orders'])
+      $('#count_problems').text(response['count_problems'])
+
+    });
+    $('#subdays').change(function(){
+		  $subdays = $(this).val();
+      $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/admin/dashboard/getchart",
+            data: {"_token": "{{ csrf_token() }} ", 'subdays' : $subdays},
+      }).done(function(response){
+        var x = Object.keys(response['all']);
+        var y1 = Object.values(response['all']);
+        var y2 = Object.values(response['problems']);
+
+        myChart.data.datasets[0].data = y1;
+        myChart.data.datasets[1].data = y2;
+        myChart.data.labels = x;
+        myChart.update();
+        $('#total_all').text(parseInt(response['total_all']).toLocaleString('it-IT')+' đ')
+        $('#total_real').text(parseInt(response['total_real']).toLocaleString('it-IT')+' đ')
+        $('#count_orders').text(response['count_orders'])
+        $('#count_problems').text(response['count_problems'])
+      });
+      
+	  });
+    </script>
+@endpush

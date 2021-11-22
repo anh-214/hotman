@@ -7,19 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendPassword extends Mailable
+class NewEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $title;
+    protected $content;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(string $email,string $password)
-    {
-        $this->email = $email;
-        $this->password = $password;
+    public function __construct(string $title, string $content)
+    {   $this->title = $title;
+        $this->content = $content;
     }
 
     /**
@@ -29,6 +30,6 @@ class SendPassword extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.sendPassword',['email'=> $this->email,'password'=> $this->password])->subject('Mật khẩu của bạn');
+        return $this->view('mail.newEmail',['content'=> $this->content])->subject($this->title);
     }
 }

@@ -24,7 +24,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="form-group">
-                                    <label>Số điện thoại: <label style="font-weight:bolder;color:black">@if(Auth::guard('web')->user()->phonenumber == null) <a href="{{url('user/information')}}" style="color: red">Cập nhật số điện thoại</a> @else {{Auth::guard('web')->user()->phonenumber}} @endif</label></label>
+                                    <label>Số điện thoại: <label style="font-weight:bolder;color:black" id="phonenumber">@if(Auth::guard('web')->user()->phonenumber == null) <a href="{{url('user/information')}}" style="color: red">Cập nhật số điện thoại</a> @else {{Auth::guard('web')->user()->phonenumber}} @endif</label></label>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-12">
@@ -241,6 +241,8 @@
                 let $province = $('#provinces')
                 let $district = $('#districts')
                 let $ward = $('#wards')
+                let $phonenumber = $('#phonenumber').text();
+                
                 let $payment = $('input[name=payment]:checked')
                 $('input[name=type_payment]').val($payment.val())
                 $count = 0
@@ -279,22 +281,42 @@
                     $("#errorDetails").text("")
                     $count +=1
                 }
-                if ($count == 4){
+                if ($.isNumeric($phonenumber)){
+                    // alert($phonenumber)
+                    $count+=1
+                }
+                if ($count == 5){
                     cart = localStorage.getItem('cart');
                     let type_cart = $('input[name=payment]:checked').val()
                     // console.log(type_cart);
-                    $.ajax({
-						type: "POST",
-						dataType: "json",
-						url: "{{url('cart/checkout')}}",
-						data: {"_token": "{{ csrf_token() }}", 'cart': cart,'type_cart':type_cart, 'ward': $('select[name=ward]').val(), 'detailsAddress': $('input[name=detailsAddress]').val()},
-						success: function(data_ajax){
-							if (data_ajax.result == 'success'){
-                                localStorage.clear()
-                                window.location.assign("{{url('home')}}")
+                    if (type_cart == 'cod'){
+                        $.ajax({
+                            type: "GET",
+                            dataType: "json",
+                            url: "{{url('cart/checkout/cod')}}",
+                            data: {"_token": "{{ csrf_token() }}", 'cart': cart,'type_cart':type_cart, 'ward': $('select[name=ward]').val(), 'detailsAddress': $('input[name=detailsAddress]').val()},
+                            success: function(data_ajax){
+                                if (data_ajax.result == 'success'){
+                                    localStorage.clear()
+                                    window.location.assign("{{url('/')}}")
+                                }
                             }
-						}
-				    });
+                        });
+                    } else {
+                        $.ajax({
+                            type: "GET",
+                            dataType: "json",
+                            url: "{{url('cart/checkout/online')}}",
+                            data: {"_token": "{{ csrf_token() }}", 'cart': cart,'type_cart':type_cart, 'ward': $('select[name=ward]').val(), 'detailsAddress': $('input[name=detailsAddress]').val()},
+                            success: function(data_ajax){
+                                // alert(data_ajax.link)
+                                window.location.assign(data_ajax.link)
+                                // if (data_ajax.result == 'success'){
+                                    // localStorage.clear()
+                                // }
+                            }
+                        });
+                    }
                 }
             })
             checkout()

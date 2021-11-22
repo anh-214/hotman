@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,11 @@ use Illuminate\Support\Str;
 
 class ManagerController extends Controller
 {
-    public function manager(){
-        $select = 'Manager';
-        $active = 'manager';
-        $admins = Admin::all();
-        return view('backend.main.manager',compact(['select','admins','active']));
+    public function managerAdmins(){
+        $select = 'Quản lí tài khoản Admin';
+        $active = 'admins';
+        $admins = Admin::paginate(15);
+        return view('backend.main.managerAdmin',compact(['select','admins','active']));
     }
     public function update(Request $request){
         if( $request->ajax()){
@@ -102,6 +103,32 @@ class ManagerController extends Controller
         } else {
             return response()->json([
                 'result' => 'notExists',
+            ]);
+        }
+    }
+    public function managerUsers(){
+        $select = 'Quản lí tài khoản User';
+        $active = 'users';
+        $users = User::paginate(15);
+        return view('backend.main.managerUser',compact(['select','users','active']));
+    }
+    public function deleteUser(Request $request,$id){
+        $request->validate([
+            'confirmPassword' => 'required'
+        ]);
+        $password = $request->input('confirmPassword');
+        if (Hash::check($password, Auth::guard('admin')->user()->password)){
+            User::findOrFail($id)->orders()->delete();
+            User::where('id', $id)->delete();
+            Storage::disk('user-avatar')->delete($id.'.png');
+            session()->flash('success', 'Xóa tài khoản thành công');
+            return response()->json([
+                'result' => 'success',
+            ]);
+        } else {
+            session()->flash('fail', 'Xóa tài khoản thất bại, vui lòng kiểm tra lại mật khẩu');
+            return response()->json([
+                'result' => 'faild',
             ]);
         }
     }

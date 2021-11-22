@@ -1,7 +1,13 @@
 	<!-- Start Footer Area -->
 	<footer class="footer">
+		@php
+		$footers = \App\Models\Homesort::where('role','footer')->where('show','1')->orderBy('position','asc')->get();
+		@endphp
+		@foreach ($footers as $footer)
+			{!! $footer->content !!}
+		@endforeach
 		<!-- Footer Top -->
-		<div class="footer-top section">
+		{{-- <div class="footer-top section">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-5 col-md-6 col-12">
@@ -29,20 +35,6 @@
 						</div>
 						<!-- End Single Widget -->
 					</div>
-					{{-- <div class="col-lg-2 col-md-6 col-12">
-						<!-- Single Widget -->
-						<div class="single-footer links">
-							<h4>Customer Service</h4>
-							<ul>
-								<li><a href="#">Payment Methods</a></li>
-								<li><a href="#">Money-back</a></li>
-								<li><a href="#">Returns</a></li>
-								<li><a href="#">Shipping</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-							</ul>
-						</div>
-						<!-- End Single Widget -->
-					</div> --}}
 					<div class="col-lg-3 col-md-6 col-12">
 						<!-- Single Widget -->
 						<div class="single-footer social">
@@ -68,9 +60,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> --}}
 		<!-- End Footer Top -->
-		<div class="copyright">
+		{{-- <div class="copyright">
 			<div class="container">
 				<div class="inner">
 					<div class="row">
@@ -87,7 +79,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> --}}
 	</footer>
 	<!-- /End Footer Area -->
 	

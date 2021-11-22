@@ -95,8 +95,8 @@ return [
             'host' => 'smtp.gmail.com',
             'port' =>  465,
             'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
-            'username' => 'thuyanh1x2@gmail.com',
-            'password' => 'qpzxrjihlfsgrubx',
+            'username' => 'hotmanoffical@gmail.com',
+            'password' => 'Thuyanh1x2@',
         ],
 
     ],

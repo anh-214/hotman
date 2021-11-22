@@ -1,29 +1,30 @@
 
-<!-- Preloader -->
-	{{-- <div class="preloader">
-		<div class="preloader-inner">
-			<div class="preloader-icon">
-				<span></span>
-				<span></span>
-			</div>
-		</div>
-	</div> --}}
-<!-- End Preloader -->
-	
-	
-		
-		<!-- Header -->
+
 		<header class="header shop">
-			{{-- <!-- Topbar -->
-			<div class="topbar">
+			@php
+			$headers = \App\Models\Homesort::where('role','header')->where('show','1')->orderBy('position','asc')->get();
+			@endphp
+			@foreach ($headers as $header)
+				{!! $header->content !!}
+			@endforeach
+			{{-- <div class="preloader">
+				<div class="preloader-inner">
+					<div class="preloader-icon">
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+			</div> --}}
+			<!-- Topbar -->
+			{{-- <div class="topbar">
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-4 col-md-12 col-12">
 							<!-- Top Left -->
 							<div class="top-left">
 								<ul class="list-main">
-									<li><i class="ti-headphone-alt"></i> +060 (800) 801-582</li>
-									<li><i class="ti-email"></i> support@shophub.com</li>
+									<li><i class="ti-headphone-alt"></i> +84 869967421</li>
+									<li><i class="ti-email"></i> support@hotman.com</li>
 								</ul>
 							</div>
 							<!--/ End Top Left -->
@@ -33,17 +34,14 @@
 							<div class="right-content">
 								<ul class="list-main">
 									<li><i class="ti-location-pin"></i> Store location</li>
-									<li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-									<li><i class="ti-user"></i> <a href="#">My account</a></li>
-									<li><i class="ti-power-off"></i><a href="login.html#">Login</a></li>
 								</ul>
 							</div>
-							<!-- End Top Right -->
+							
 						</div>
 					</div>
 				</div>
-			</div>
-			<!-- End Topbar --> --}}
+			</div> --}}
+			<!-- End Topbar -->
 			@if (Auth::check())
 				@if (Auth::guard('web')->user()->phonenumber == null)
 					<div class="alert alert-warning" role="alert">
@@ -57,13 +55,13 @@
 						<div class="col-lg-2 col-md-2 col-12">
 							<!-- Logo -->
 							<div class="logo">
-								<a href="{{url('home')}}"><img src="{{asset('backend/assets/images/logoHotMan.png')}}" alt="logo"></a>
+								<a href="{{url('/')}}"><img src="{{asset('backend/assets/images/logoHotMan.png')}}" alt="logo"></a>
 							</div>
 							<!--/ End Logo -->
 							<!-- Search Form -->
-							<div class="search-top">
+							{{-- <div class="search-top">
 								<div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
-							</div>
+							</div> --}}
 							<!--/ End Search Form -->
 							<div class="mobile-nav"></div>
 						</div>
@@ -79,8 +77,9 @@
 											<option value="{{$category->id}}">{{$category->name}}</option>	
 										@endforeach
 									</select>
-									<form method="GET" autocomplete="off">
-										<input name="search" placeholder="Tìm kiếm sản phẩm tại đây" type="text" id="search" value="@isset($search){{$search}}@endisset">
+									<form method="GET" action="{{url('types')}}" autocomplete="off">
+										<input type="hidden" name="select" value="all">
+										<input name="search" placeholder="Tìm kiếm sản phẩm tại đây" type="text" id="search" value="@isset($search){{$search}}@endisset" required>
 										<button class="btnn"><i class="ti-search"></i></button>
 									</form>
 									<div class="mt-2 p-2 bg-light" id="resultSearch">
@@ -168,14 +167,14 @@
 										<div class="navbar-collapse">	
 											<div class="nav-inner">	
 												<ul class="nav main-menu menu navbar-nav">
-													<li @php if(isset($active) && $active == 'home') echo('class="active"');  @endphp><a href="{{url('home')}}">Trang chủ</a></li>
+													<li @php if(isset($active) && $active == 'home') echo('class="active"');  @endphp><a href="{{url('/')}}">Trang chủ</a></li>
 													<li @php if(isset($active) && $active == 'categories') echo('class="active"');  @endphp><a style="cursor: pointer">Sản phẩm<i class="ti-angle-down"></i></a>
 														<ul class="dropdown">
 															@foreach ($categories as $category)
-																<li><a href="{{url('category/'.$category->id)}}">{{$category->name}}<i class="ti-angle-down"></i></a>
+																<li><a href="{{url('categories/'.$category->id)}}">{{$category->name}}<i class="ti-angle-down"></i></a>
 																	<ul class="dropdown-child">
 																		@foreach ($category->products as $product)
-																			<li><a href="{{url('product/'.$product->id)}}">{{$product->name}}</a></li>																	
+																			<li><a href="{{url('products/'.$product->id)}}">{{$product->name}}</a></li>																	
 																		@endforeach
 																		
 																	</ul>
@@ -183,20 +182,7 @@
 															@endforeach
 														</ul>
 													</li>												
-													{{-- <li><a href="#">Service</a></li> --}}
-													{{-- <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
-														<ul class="dropdown">
-															<li><a href="shop-grid.html">Shop Grid</a></li>
-															<li><a href="cart.html">Cart</a></li>
-															<li><a href="checkout.html">Checkout</a></li>
-														</ul>
-													</li> --}}
-													{{-- <li><a href="#">Pages</a></li>									 --}}
-													<li><a href="#">Blog<i class="ti-angle-down"></i></a>
-														<ul class="dropdown">
-															<li><a href="blog-single-sidebar.html">Blog Single Sidebar</a></li>
-														</ul>
-													</li>
+								
 													<li @php if(isset($active) && $active == 'contact') echo('class="active"');  @endphp><a href="{{url('/contact')}}">Liên hệ</a></li>
 												</ul>
 											</div>
@@ -221,7 +207,7 @@
 				<div class="col-12">
 					<div class="bread-inner">
 						<ul class="bread-list">
-							<li><a href="{{url('/home')}}">Home</a></li>
+							<li><a href="{{url('/')}}">Trang chủ</a></li>
 							@foreach ( $breadCrumbs as $breadCrumb )
 								<li class=""><i class="ti-arrow-right"></i><a href="{{url($breadCrumb['link'])}}">{{$breadCrumb['name']}}</a></li>
 							@endforeach

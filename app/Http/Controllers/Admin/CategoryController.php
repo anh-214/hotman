@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class CategoryController extends Controller
 {
     public function categories(Request $request){
-        $select = 'Categories';
+        $select = 'Quản lí thể loại';
         $active = 'categories';
         $categories = Category::paginate(15);
         $search = '';
@@ -30,43 +30,42 @@ class CategoryController extends Controller
         }
         return view('backend.main.category',compact(['select','active','categories','search']));
     }
-    public function delete(Request $request){
+    public function mutipleDelete(Request $request){
+        $password = $request->input('confirmPassword');
+        if (Hash::check($password, Auth::guard('admin')->user()->password)){
+            $ids = $request->input('mutipleId');
+            foreach ($ids as $id){
+                $products = Category::findOrFail($id)->products()->get();
+                foreach ($products as $product){
+                    $types = Product::findOrFail($product->id)->types()->get();
+                    foreach ($types as $type){
+                        $files = Type::findOrFail($type->id)->images()->get();
+                        Type::findOrFail($type->id)->images()->delete();
+                        foreach ($files as $file){
+                            if (!filter_var($file->name, FILTER_VALIDATE_URL)){
+                                Storage::disk('type-image')->delete($file->name);
+                            }
+                        }
+                        Type::where('id', $type->id)->delete();
+                    }
+                    Product::where('id', $product->id)->delete();
+                };
+                Category::where('id', $id)->delete();
+            }
+        session()->flash('success','Xóa thể loại thành công');
+            return response()->json([
+                'result' => 'success'
+            ]);
+        } else {
+        session()->flash('fail','Xóa thể loại thất bại, vui lòng kiểm tra lại mật khẩu');
+            return response()->json([
+                'result' => 'failed'
+            ]);
+        }
+    }
+    public function delete(Request $request,$id){
         if( $request->ajax()){
             $password = $request->input('confirmPassword');
-            if ($request->has('mutipleId')){
-                if (Hash::check($password, Auth::guard('admin')->user()->password)){
-                    $ids = $request->input('mutipleId');
-                    foreach ($ids as $id){
-                        $products = Category::findOrFail($id)->products()->get();
-                        foreach ($products as $product){
-                            $types = Product::findOrFail($product->id)->types()->get();
-                            foreach ($types as $type){
-                                $files = Type::findOrFail($type->id)->images()->get();
-                                Type::findOrFail($type->id)->images()->delete();
-                                foreach ($files as $file){
-                                    if (!filter_var($file->name, FILTER_VALIDATE_URL)){
-                                        Storage::disk('type-image')->delete($file->name);
-                                    }
-                                }
-                                Type::where('id', $type->id)->delete();
-                            }
-                            Product::where('id', $product->id)->delete();
-                        };
-                        Category::where('id', $id)->delete();
-                    }
-                session()->flash('success','Xóa thể loại thành công');
-                    return response()->json([
-                        'result' => 'success'
-                    ]);
-                } else {
-                session()->flash('fail','Xóa thể loại thất bại');
-                    return response()->json([
-                        'result' => 'failed'
-                    ]);
-                }
-            }
-
-            $id = $request->input('deleteId'); 
             if (Hash::check($password, Auth::guard('admin')->user()->password)){
                 $products = Category::findOrFail($id)->products()->get();
                 foreach ($products as $product){
@@ -89,7 +88,7 @@ class CategoryController extends Controller
                     'result' => 'success'
                 ]);
             } else {
-                session()->flash('fail','Xóa thể loại thất bại');
+                session()->flash('fail','Xóa thể loại thất bại, vui lòng kiểm tra lại mật khẩu');
                 return response()->json([
                     'result' => 'failed'
                 ]);
@@ -97,12 +96,10 @@ class CategoryController extends Controller
             
         }
     }
-    public function update(Request $request){
+    public function update(Request $request,$id){
         if( $request->ajax()){
             $name = $request->input('name');
-            $id = $request->input('id');
             $desc = $request->input('desc');
-            
             $result = Category::where('id', $id)->update([
                         'name' => $name,
                         'desc' => $desc,
@@ -114,9 +111,7 @@ class CategoryController extends Controller
                     'result' => 'success',
                 ]);
             }
-        // resize and crop avatar
         }
-        // dd($image);
     }
     public function create(Request $request){
         $name = $request->input('name');

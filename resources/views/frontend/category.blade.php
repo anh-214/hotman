@@ -37,7 +37,7 @@
 									<h3 class="title">{{$category_info->name}}</h3>
 									<ul class="categor-list">
 										@foreach ($category_info->products as $product_info)
-											<li><a href="{{url('product/'.$product_info->id)}}">{{$product_info->name}}</a></li>
+											<li><a href="{{url('products/'.$product_info->id)}}">{{$product_info->name}}</a></li>
 										@endforeach
 									</ul>
 								</div>
@@ -67,22 +67,22 @@
 											</select>
 										</div>
 									</div>
-									<ul class="view-mode">
+									{{-- <ul class="view-mode">
 										<li class="active"><a href="shop-grid.html"><i class="fa fa-th-large"></i></a></li>
 										<li><a href="shop-list.html"><i class="fa fa-th-list"></i></a></li>
-									</ul>
+									</ul> --}}
 								</div>
 								<!--/ End Shop Top -->
 							</div>
 						</div>
 						<div class="row">
-							
-                            @foreach ($types as  $type)
+						
+							@foreach ($types as  $type)
 							<div class="col-lg-4 col-md-6 col-12">
-                                <div class="single-product">
-                                    <div class="product-img">
-                                        <a href="{{url('type/'.$type->id)}}">
-                                            <img class="default-img" src="@php
+								<div class="single-product">
+									<div class="product-img">
+										<a href="{{url('types/'.$type->id)}}">
+											<img class="default-img" src="@php
 												if (filter_var($type->images[0]->name, FILTER_VALIDATE_URL)) { 
 													echo($type->images[0]->name);
 												} else {
@@ -91,28 +91,29 @@
 												@endphp" alt="#">
 										</a>
 										<div class="button-head">
-                                            <div class="product-action">
-                                                <a data-id= "{{$type->id}}" class="quickshop"><i class="ti-eye"></i><span>Quick Shop</span></a>
+											<div class="product-action">
+												<a data-id= "{{$type->id}}" class="quickshop"><i class="ti-eye"></i><span>Quick Shop</span></a>
 												{{-- <a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
 												<a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a> --}}
 											</div>
 											{{-- <div class="product-action-2">
-                                                <a title="Add to cart" href="{{url('add-to-cart/'.$type->id)}}">Add to cart</a>
+												<a title="Add to cart" href="{{url('add-to-cart/'.$type->id)}}">Add to cart</a>
 											</div> --}}
 										</div>
 									</div>
 									<div class="product-content">
-                                        <h3><a href="{{url('type/'.$type->id)}}">{{$type->name}}</a></h3>
+										<h3><a href="{{url('types/'.$type->id)}}">{{$type->name}}</a></h3>
 										<div class="product-price">
 											@if($type->initial_price != $type->price)
 											<span class="old">{{number_format($type->initial_price)}}đ</span>
 											@endif
-                                            <span>{{number_format($type->price).' đ'}}</span>
+											<span>{{number_format($type->price).' đ'}}</span>
 										</div>
 									</div>
 								</div>
 							</div>
-                            @endforeach
+							@endforeach
+						
 						</div>
 						@isset($types)
 							<div class="d-flex justify-content-center">{{$types->links('vendor.pagination.bootstrap-4')}}</div>
@@ -126,26 +127,7 @@
     
 
     <!-- Start Shop Newsletter  -->
-    <section class="shop-newsletter section">
-        <div class="container">
-            <div class="inner-top">
-                <div class="row">
-                    <div class="col-lg-8 offset-lg-2 col-12">
-                        <!-- Start Newsletter Inner -->
-                        <div class="inner">
-                            <h4>Thông báo mới</h4>
-                            <p> Đăng ký nhận tin </p>
-                            <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-                                <input name="EMAIL" placeholder="Địa chỉ email của bạn" required="" type="email">
-                                <button class="btn">Đăng ký</button>
-                            </form>
-                        </div>
-                        <!-- End Newsletter Inner -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+	@include('frontend.layouts._subcriber')
     <!-- End Shop Newsletter -->
     <!-- Modal -->
         <div class="modal fade" id="quickShopModal" tabindex="-1" role="dialog">
@@ -309,7 +291,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "{{url('product/getimages')}}",
+			url: "{{url('products/getimages')}}",
 			data: {"_token": "{{ csrf_token() }}", 'id': id},
 			success: function(data){
 				let count = 0;
@@ -330,13 +312,13 @@ $(document).ready(function(){
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "{{url('product/quickshop')}}",
+			url: "{{url('products/quickshop')}}",
 			data: {"_token": "{{ csrf_token() }}", 'id': id},
 			success: function(data){
 				let sizes = data.sizes.split(",")
 				$count = 1
 				$('#select-size').append(`<option selected>Chọn size</option>`)
-				$('#size-color div ul').append(`<li data-value="" class="option selected focus">Chọn size</li>`)
+				$('#size-color div ul').append(`<li data-value="Chọn size" class="option selected focus">Chọn size</li>`)
 				$('#size-color div span').text('Chọn size')
 
 				sizes.forEach(element => {

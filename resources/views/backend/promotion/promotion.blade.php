@@ -1,17 +1,10 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    Quản lí thể loại
+    Quản lí khuyến mãi
 @endsection
 @push('css')
-    <style>
-        .hint-text{
-            width: 5em; /* the element needs a fixed width (in px, em, %, etc) */
-            overflow: hidden; /* make sure it hides the content that overflows */
-            white-space: nowrap; /* don't break the line */
-            text-overflow: ellipsis; /* give the beautiful '...' effect */
-        }
-    </style>
+   
 @endpush
 @section('content')
 <div class="container-fluid py-4">
@@ -26,15 +19,9 @@
                 </div>
             </div>
         </div>
-        @foreach ($promotions as $promotion )
-        <div class="col-lg-6 col-md-12">
+        <div class="col-lg-12 col-md-12">
             <div class="card mb-4">
                 <div class="card-header pb-0" style="display: flex; align-items:center;justify-content: space-between;">
-                    <h6>{{$promotion->name}} - Giảm giá {{$promotion->discount}}%</h6>
-                    <div>
-                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updatePromotion" data-id="{{$promotion->id}}" data-name="{{$promotion->name}}" data-discount="{{$promotion->discount}}">Cập nhật khuyến mại</button>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeletePromotionModal" data-promotion="{{$promotion->id}}">Xóa khuyến mãi</button>
-                    </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-4 mx-2">
                     <div class="table-responsive p-0">
@@ -42,31 +29,50 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Name</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Price</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Initial_price</th>
-                                    {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Update_at</th> --}}
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Action</th>                                   
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Tên</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Giảm giá</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Vị trí</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hiển thị</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Số lượng sản phẩm</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Hành động</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($promotion->types as $type)
+                                @foreach ($promotions as $promotion )
                                     <tr>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->id}}"> {{$type->id}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$promotion->id}}"> {{$promotion->id}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0 hint-text" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$type->name}}"> {{$type->name}}</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{$promotion->name}}"> {{$promotion->name}}</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{number_format($type->price)}}đ"> {{number_format($type->price)}}đ</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"  data-bs-placement="top" > {{$promotion->discount}}%</p>
                                         </td>
                                         <td>
-                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="{{number_format($type->initial_price)}}đ"> {{number_format($type->initial_price)}}đ</p>
+                                            <p class="text-center text-xs font-weight-bold mb-0"  data-bs-placement="top" > {{$promotion->position}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-placement="top" >{{$promotion->show == '1' ? 'Có' : 'Không'}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-center text-xs font-weight-bold mb-0" data-bs-placement="top" >{{count($promotion->types)}}</p>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <a type="button" class="text-secondary font-weight-bold text-xs deleteTypeFromPromotion"data-type={{$type->id}}>
-                                                <span class="badge badge-sm bg-gradient-danger">Xóa khỏi khuyến mãi</span>
+                                            <a type="button" href="{{url('admin/promotions/'.$promotion->id.'/up')}}" class="text-secondary font-weight-bold text-xs">
+                                                <span class="badge badge-sm bg-gradient-primary"><i class="fas fa-arrow-up"></i></span>
+                                            </a>
+                                            <a type="button" href="{{url('admin/promotions/'.$promotion->id.'/down')}}" class="text-secondary font-weight-bold text-xs">
+                                                <span class="badge badge-sm bg-gradient-primary"><i class="fas fa-arrow-down"></i></i></span>
+                                            </a>
+                                            <a type="button" href="{{url('admin/promotions/'.$promotion->id)}}" class="text-secondary font-weight-bold text-xs">
+                                                <span class="badge badge-sm bg-gradient-primary">Xem chi tiết</span>
+                                            </a>
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#updatePromotion" data-id="{{$promotion->id}}" data-name="{{$promotion->name}}" data-discount="{{$promotion->discount}}" data-show="{{$promotion->show}}">
+                                                <span class="badge badge-sm bg-gradient-success">Cập nhật</span>
+                                            </a>
+                                            <a type="button" class="text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#confirmDeletePromotionModal" data-promotion={{$promotion->id}}>
+                                                <span class="badge badge-sm bg-gradient-danger">Xóa</span>
                                             </a>
                                         </td>
                                     </tr>
@@ -77,7 +83,6 @@
                 </div>
             </div>
         </div>
-        @endforeach
     </div>
 </div>
 
@@ -115,9 +120,8 @@
             <h5 class="modal-title" id="exampleModalLabel">Cập nhật khuyến mại</h5>
             </div>
             <div class="modal-body">
-                <form method="POST" id="updateForm" action="{{url('admin/promotions/update')}}">
-                    @csrf
-                    <input type="hidden" name="updateId">
+                <form id="updateForm" >
+                    <input type="hidden" id="updateId">
                     <div class="mb-3">
                         <label for="updateName" class="col-form-label"><h6>Tên:</h6></label>
                         <input type="text" class="form-control" id="updateName" name="updateName">
@@ -129,6 +133,13 @@
                         <input type="number" class="form-control" id="updateDiscount" name="updateDiscount">
                         <div class="invalid-feedback" id="errorupdateDiscount">
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateShow" class="col-form-label"><h6>Hiển thị:</h6></label>
+                        <select class="form-control" name="updateShow" id="updateShow">
+                            <option value="1">Có</option>
+                            <option value="0">Không</option>
+                        </select>
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
@@ -148,7 +159,7 @@
             <h5 class="modal-title" id="exampleModalLabel">Thêm chương trình khuyến mãi</h5>
             </div>
             <div class="modal-body">
-            <form method="POST" id="createForm" action="{{url('admin/promotions/create')}}">
+            <form method="POST" id="createForm" action="{{url('admin/promotions')}}">
                 @csrf
                 <div class="mb-3">
                     <label for="createName" class="col-form-label"><h6>Tên:</h6></label>
@@ -161,6 +172,13 @@
                     <input type="number" class="form-control" id="createDiscount" name="createDiscount">
                     <div class="invalid-feedback" id="errorCreateDiscount">
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label for="createShow" class="col-form-label"><h6>Hiển thị:</h6></label>
+                    <select class="form-control" name="createShow" id="createShow">
+                        <option value="1">Có</option>
+                        <option value="0">Không</option>
+                    </select>
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
@@ -209,8 +227,8 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/admin/promotions/delete",
-                    data: {"_token": "{{ csrf_token() }}", 'id': $id, 'password':$password.val()},
+                    url: "/admin/promotions/"+$id+"/delete",
+                    data: {"_token": "{{ csrf_token() }}", 'password':$password.val()},
                     success: function(data){
                         window.location.reload()                    
                     }
@@ -245,11 +263,17 @@
         var name = button.data('name') // Extract info from data-* attributes
         var id = button.data('id')
         var discount = button.data('discount')
-        
-        var modal = $(this)
-        modal.find('#updateName').val(name)
-        modal.find('#updateDiscount').val(discount)
-        modal.find('input[name=updateId]').val(id)
+        var show = button.data('show')
+
+        if ( show == '1') {
+            $(this).find('option[value=1]').attr('selected','selected')
+        } else {
+            $(this).find('option[value=0]').attr('selected','selected')
+        }
+            var modal = $(this)
+            modal.find('#updateName').val(name)
+            modal.find('#updateDiscount').val(discount)
+            modal.find('#updateId').val(id)
         });
         $("#buttonUpdate").click(function(){
             $count = 0
@@ -270,7 +294,15 @@
                 $count += 1
             }
             if ($count ==2 ){
-                $('#updateForm').submit()
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/admin/promotions/"+$('#updateId').val()+"/update",
+                    data: {"_token": "{{ csrf_token() }}", 'updateName': $("#updateName").val(), 'updateDiscount': $("#updateDiscount").val(), 'updateShow': $("#updateShow").val()},
+                    success: function(data){
+                        window.location.reload()                    
+                    }
+                });
             }
         })
     });
@@ -309,3 +341,4 @@
 
 </script>
 @endpush
+

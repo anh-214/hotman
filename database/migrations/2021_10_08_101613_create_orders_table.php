@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->text('type');
             $table->string('payment_type');
+            $table->integer('checkout_status');
             $table->text('details_address');
             $table->string('confirmed_at')->nullable();
             $table->string('start_deliver_at')->nullable();
@@ -28,7 +29,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('ward_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('ward_id')->references('id')->on('wards');
-            $table->timestamps('created_at');
+            $table->timestamps();
 
         });
     }

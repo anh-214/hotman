@@ -19,12 +19,14 @@
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <form method="GET" id="formSearch">
-                    <div class="input-group">
-                        <span id="btnSearch" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm" value="@php echo isset($search) ? $search : ''; @endphp">
-                    </div>
-                </form>
+                @isset($search)
+                    <form method="GET" id="formSearch">
+                        <div class="input-group">
+                            <span id="btnSearch" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm" value="{{$search}}">
+                        </div>
+                    </form>
+                @endisset
             </div>
             <ul class="navbar-nav  justify-content-end">
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -77,6 +79,13 @@
                                 </a>
                             </li>
                         @endforeach
+                        @if($not_reads->count() == 0)
+                            <li class="mb-2">
+                                <span class="dropdown-item border-radius-md">
+                                    Bạn hiện không có thông báo nào 
+                                </span>
+                            </li>
+                        @endif
                     </ul>
                 </li>
             </ul>

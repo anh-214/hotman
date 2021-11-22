@@ -11,6 +11,9 @@
             <div class="card mb-4">
                 <div class="card-header pb-0" style="display: flex; align-items:center;justify-content: space-between;">
                     <h6>Cập nhật loại sản phẩm</h6>
+                    <a onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
@@ -23,9 +26,8 @@
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive px-3">
-                        <form method="POST" id="updateForm" action="{{url('admin/types/update')}}" enctype="multipart/form-data">
+                        <form method="POST" id="updateForm" action="{{url('admin/types/'.$type->id.'/update')}}" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="id" value="{{$type->id}}">
                             <div class="form-group">
                                 <label>Tên sản phẩm</label>
                                 <input type="text" class="form-control" name="nameType" value="{{$type->name}}">

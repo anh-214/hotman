@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Order;
 use App\Models\Type;
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
@@ -25,16 +26,25 @@ class ConvertTimezone
 class OrderController extends Controller
 {
     public function orders($from = '',$to = ''){
-        $select = 'Orders';
+        $select = 'Quản lí đơn hàng';
         $active = 'orders';
+        $displayTime = '';
         if ($from == '' && $to == ''){
             $orders = Order::with('user')->orderBy('created_at','desc')->get();
         } else {
-            $from = date($from);
-            $to = date($to);
             $orders = Order::with('user')->whereBetween('created_at', [$from, $to])->orderBy('created_at','desc')->get();
+            $from1 = Carbon::parse($from);
+            $to1 = Carbon::parse($to);
+            if ($from1->diffInDays($to1) == 1){
+                $displayTime = $from1->format('d/m/Y');
+            } else {
+                $displayTime = $from1->format('d/m/Y').' - '.$to1->format('d/m/Y');
+            }
         }
         $total_all = 0;
+        $total_real = 0;
+        $count_orders = 0;
+        $count_problems = 0;
         foreach ($orders as $order){
             $order->created_at_converted = ConvertTimezone::convert_timezone($order->created_at);
             $all_order = explode(',',$order->type);
@@ -48,18 +58,26 @@ class OrderController extends Controller
                 $total_one += $quantity*intval($type_info->price);
             }
             $order->total = $total_one;
-            if ($order->problem == null){
+            
+            if ($order->problem != null){
+                $count_problems += 1;
+            } else {
                 $total_all += $total_one;
             }
+            if ($order->delivered_at != null){
+                $total_real += $total_one;
+            }
+            $count_orders += 1;
+
         }
-        return view('backend.main.order',compact('select','active','orders','from','to','total_all'));
+        return view('backend.order.order',compact('select','active','orders','from','to','displayTime','total_all','total_real','count_orders','count_problems'));
     }
     public function orderInfo($id){
         $order = Order::where('id',$id)->with(['user'])->first();
         Order::where('id',$id)->update([
             'is_read' => 'true'
         ]);
-        $select = 'Orders';
+        $select = 'Chi tiết đơn hàng';
         $active = 'orders';
         // dd($order->confirmed_at);
         $order->created_at_converted = ConvertTimezone::convert_timezone($order->created_at);
@@ -92,11 +110,10 @@ class OrderController extends Controller
             array_push($details,$type_info);
         }
         $order->details = $details;
-        return view('backend.main.orderInfo',compact('select','active','order'));
+        return view('backend.order.orderInfo',compact('select','active','order'));
     }
-    public function confirm(Request $request){
+    public function confirm(Request $request,$id){
         if ($request->ajax()){
-            $id = $request->id;
             if (Order::where('id',$id)->first()->delivered_at == null){
                 Order::where('id',$id)->update([
                     'confirmed_at' => now(),
@@ -114,9 +131,8 @@ class OrderController extends Controller
             }
         }
     }
-    public function unConfirm(Request $request){
+    public function unConfirm(Request $request,$id){
         if ($request->ajax()){
-            $id = $request->id;
             if (Order::where('id',$id)->first()->delivered_at == null){
             Order::where('id',$id)->update([
                 'confirmed_at' => null,
@@ -134,9 +150,8 @@ class OrderController extends Controller
             }
         }
     }
-    public function start_deliver(Request $request){
+    public function start_deliver(Request $request,$id){
         if ($request->ajax()){
-            $id = $request->id;
             Order::where('id',$id)->update([
                 'start_deliver_at' => now(),
             ]);
@@ -147,10 +162,10 @@ class OrderController extends Controller
             ]);
         }
     }
-    public function delivered(Request $request){
+    public function delivered(Request $request,$id){
         if ($request->ajax()){
-            $id = $request->id;
             Order::where('id',$id)->update([
+                'checkout_status' => 1,
                 'delivered_at' => now(),
             ]);
             // dd('ahihi');
@@ -160,9 +175,8 @@ class OrderController extends Controller
             ]);
         }
     }
-    public function problem(Request $request){
+    public function problem(Request $request,$id){
         if ($request->ajax()){
-            $id = $request->id;
             Order::where('id',$id)->update([
                 'problem' => $request->input('problem'),
             ]);

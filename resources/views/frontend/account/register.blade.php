@@ -39,7 +39,7 @@
                 </div>
                 <div class="row px-xl-5 px-sm-4 px-3">
                 <div class="col-3 ms-auto px-1">
-                    <a class="btn btn-outline-light w-100" href="javascript:;">
+                    <a class="btn btn-outline-light w-100" href="{{url('/user/facebook')}}">
                     <svg width="24px" height="32px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink32">
                         <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <g id="facebook-3" transform="translate(3.000000, 3.000000)" fill-rule="nonzero">
@@ -76,10 +76,6 @@
                 </div>
                 </div>
                 <div class="card-body">
-                @if(session()->has('resultFailed'))
-                    <small class="form-text text-muted"><span class="text-danger">{{session()->get('resultFailed')}}</span></small>
-                    {{session()->forget('resultFailed')}}
-                @endif
                 <form role="form text-left" method="POST" action="{{url('/user/register')}}">
                     @csrf
                     <div class="mb-3">
@@ -128,47 +124,6 @@
         </div>
         </div>
     </section>
-
-@if(Session::has('result'))
-@if(Session::get('result') == 'success')
-  
-  <div class="modal fade" id="resultModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="textUpdateModal">
-                Tạo tài khoản thành công, vui lòng xác nhận email của bạn để tiến hành đăng nhập</a>
-            </div>
-            <div class="modal-footer">
-                <button class="btn custom-btn-register" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-  </div>
-@endif
-@endif
-
-@isset($message)
-<div class="modal fade" id="resultModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel">Thông báo</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="textUpdateModal">
-              Tạo tài khoản không thành công
-          </div>
-          <div class="modal-footer">
-              <button class="btn custom-btn-register" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-          </div>
-      </div>
-  </div>
-</div>
-@endisset
 
 @endsection
 @push('js')

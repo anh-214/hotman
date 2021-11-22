@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ProductController extends Controller
 {   
     public function products(Request $request){
-        $select = 'Products';
+        $select = 'Quản lí sản phẩm';
         $active = 'products';
         $search = '';
         $categories = Category::all(['id','name']); 
@@ -63,39 +63,40 @@ class ProductController extends Controller
         session()->flash('success','Thêm sản phẩm thành công');
         return back();
     }
-    public function delete(Request $request){
+    public function mutipleDelete(Request $request){
+        if ($request->ajax()){
+            $password = $request->input('confirmPassword');
+            if (Hash::check($password, Auth::guard('admin')->user()->password)){
+                $ids = $request->input('mutipleId');
+                foreach ($ids as $id){
+                    $types = Product::findOrFail($id)->types()->get();
+                    foreach ($types as $type){
+                        $files = Type::findOrFail($type->id)->images()->get();
+                        Type::findOrFail($type->id)->images()->delete();
+                        foreach ($files as $file){
+                            if (!filter_var($file->name, FILTER_VALIDATE_URL)){
+                                Storage::disk('type-image')->delete($file->name);
+                            }
+                        }
+                        Type::where('id', $type->id)->delete();
+                    }
+                    Product::where('id',$id)->delete();
+                }
+                session()->flash('success','Xóa sản phẩm thành công');
+                return response()->json([
+                    'result' => 'success'
+                ]);
+            } else {
+                session()->flash('fail','Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
+                return response()->json([
+                    'result' => 'failed'
+                ]);
+            }
+        }
+    }
+    public function delete(Request $request,$id){
         if( $request->ajax()){
             $password = $request->input('confirmPassword');
-            if ($request->has('mutipleId')){
-                if (Hash::check($password, Auth::guard('admin')->user()->password)){
-                    $ids = $request->input('mutipleId');
-                    foreach ($ids as $id){
-                        $types = Product::findOrFail($id)->types()->get();
-                        foreach ($types as $type){
-                            $files = Type::findOrFail($type->id)->images()->get();
-                            Type::findOrFail($type->id)->images()->delete();
-                            foreach ($files as $file){
-                                if (!filter_var($file->name, FILTER_VALIDATE_URL)){
-                                    Storage::disk('type-image')->delete($file->name);
-                                }
-                            }
-                            Type::where('id', $type->id)->delete();
-                        }
-                        Product::where('id',$id)->delete();
-                    }
-                    session()->flash('success','Xóa sản phẩm thành công');
-                    return response()->json([
-                        'result' => 'success'
-                    ]);
-                } else {
-                    session()->flash('fail','Xóa sản phẩm thất bại, vui lòng kiểm tra lại mật khẩu');
-                    return response()->json([
-                        'result' => 'failed'
-                    ]);
-                }
-            }
-
-            $id = $request->input('deleteId');
             if (Hash::check($password, Auth::guard('admin')->user()->password)){
                 $types = Product::findOrFail($id)->types()->get();
                 foreach ($types as $type){
@@ -122,10 +123,9 @@ class ProductController extends Controller
             
         }
     }
-    public function update(Request $request){
+    public function update(Request $request,$id){
         if( $request->ajax()){
             $name = $request->input('name');
-            $id = $request->input('id');
             $desc = $request->input('desc');
             $category_id = $request->input('category_id');
             $result = Product::where('id', $id)->update([
